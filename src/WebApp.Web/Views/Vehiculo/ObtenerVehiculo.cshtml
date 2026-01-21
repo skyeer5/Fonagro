@@ -1,0 +1,57 @@
+@model WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoResponse
+
+@{
+    ViewData["Title"] = "Detalle del Vehiculo";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Detalle del Vehículo</h5>
+        </div>
+
+        <div class="card-body">
+            <dl class="row">
+
+                <dt class="col-sm-4">Placa</dt>
+                <dd class="col-sm-8">@Model.Placa</dd>
+
+                <dt class="col-sm-4">Marca</dt>
+                <dd class="col-sm-8">@Model.Marca</dd>
+
+                <dt class="col-sm-4">Modelo</dt>
+                <dd class="col-sm-8">@Model.Modelo</dd>
+
+                <dt class="col-sm-4">Tipo de Vehículo</dt>
+                <dd class="col-sm-8">@Model.Tipo_Vehiculo</dd>
+
+                <dt class="col-sm-4">Color</dt>
+                <dd class="col-sm-8">@Model.Color</dd>
+
+                <dt class="col-sm-4">Capacidad de Pasajeros</dt>
+                <dd class="col-sm-8">
+                    @(Model.Capacidad_Pasajeros.HasValue 
+                        ? Model.Capacidad_Pasajeros.ToString() 
+                        : "No especificado")
+                </dd>
+
+                <dt class="col-sm-4">Tipo de Motor</dt>
+                <dd class="col-sm-8">@Model.Tipo_Motor</dd>
+
+                <dt class="col-sm-4">Kilometraje</dt>
+                <dd class="col-sm-8">
+                    @(Model.Kilometraje.HasValue 
+                        ? $"{Model.Kilometraje:N0} km" 
+                        : "No especificado")
+                </dd>
+
+            </dl>
+        </div>
+
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-secondary">
+                Volver
+            </a>
+        </div>
+    </div>
+</div>

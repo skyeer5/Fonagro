@@ -1,0 +1,73 @@
+@model WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateRequest
+
+@{
+    ViewData["Title"] = "Crear Vehículo";
+}
+
+<h2>Crear Vehículo</h2>
+
+<form asp-action="Crear" method="post" class="mt-3">
+
+    <div class="mb-3">
+        <label asp-for="Placa" class="form-label"></label>
+        <input asp-for="Placa" class="form-control" />
+        <span asp-validation-for="Placa" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Marca" class="form-label"></label>
+        <input asp-for="Marca" class="form-control" />
+        <span asp-validation-for="Marca" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Modelo" class="form-label"></label>
+        <input asp-for="Modelo" class="form-control" />
+        <span asp-validation-for="Modelo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Anio" class="form-label"></label>
+        <input asp-for="Anio" type="number" class="form-control" />
+        <span asp-validation-for="Anio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Color" class="form-label"></label>
+        <input asp-for="Color" class="form-control" />
+        <span asp-validation-for="Color" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Capacidad_Pasajeros" class="form-label"></label>
+        <input asp-for="Capacidad_Pasajeros" type="number" class="form-control" />
+        <span asp-validation-for="Capacidad_Pasajeros" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Kilometraje" class="form-label"></label>
+        <input asp-for="Kilometraje" type="number" class="form-control" />
+        <span asp-validation-for="Kilometraje" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GasolinaId" class="form-label"></label>
+        <input asp-for="GasolinaId" type="number" class="form-control" />
+        <span asp-validation-for="GasolinaId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Creado_Por" class="form-label"></label>
+        <input asp-for="Creado_Por" type="number" class="form-control" />
+        <span asp-validation-for="Creado_Por" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Guardar
+    </button>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
