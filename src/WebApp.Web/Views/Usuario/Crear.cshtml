@@ -1,0 +1,69 @@
+@model WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateRequest;
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+}
+
+<h2 class="text-xl font-semibold mb-4">Crear Usuario</h2>
+
+<form asp-action="Crear" method="post" class="space-y-4 max-w-xl">
+
+    <div>
+        <label asp-for="Nombre_Completo" class="block text-sm font-medium">Nombre completo</label>
+        <input asp-for="Nombre_Completo" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Nombre_Completo" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="NIT" class="block text-sm font-medium">NIT</label>
+        <input asp-for="NIT" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="NIT" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Puesto" class="block text-sm font-medium">Puesto</label>
+        <input asp-for="Puesto" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Puesto" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Unidad" class="block text-sm font-medium">Unidad</label>
+        <input asp-for="Unidad" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Unidad" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Tipo_Servicios" class="block text-sm font-medium">Tipo de servicios</label>
+        <input asp-for="Tipo_Servicios" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Tipo_Servicios" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Numero_Contrato" class="block text-sm font-medium">Número de contrato</label>
+        <input asp-for="Numero_Contrato" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Numero_Contrato" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Email" class="block text-sm font-medium">Correo electrónico</label>
+        <input asp-for="Email" type="email" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password" class="block text-sm font-medium">Contraseña</label>
+        <input asp-for="Password" type="password" class="mt-1 block w-full border rounded p-2" />
+        <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div class="pt-4">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+            Crear usuario
+        </button>
+        <a asp-action="Index" class="ml-2 text-sm text-gray-600">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

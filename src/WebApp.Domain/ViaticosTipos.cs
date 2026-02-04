@@ -7,5 +7,5 @@ public static class ViaticosTipos
     public const string Cena = nameof(Cena);
     public const string Hospedaje = nameof(Hospedaje);
     public const string ViaticoCombustibleQ100 = "Viatico Combustible Q100";
-    public const string ViaticoCombustibleQ50 ="Viatico Combustible Q50)";
+    public const string ViaticoCombustibleQ50 ="Viatico Combustible Q50";
 }

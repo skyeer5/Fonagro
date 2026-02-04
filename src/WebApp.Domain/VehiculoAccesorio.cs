@@ -9,4 +9,13 @@ public class VehiculoAccesorio
     public Accesorio? Accesorio { get; set; }
     public string? Comentario { get; set; }
     public bool Activo { get; set; }
+
+    public static VehiculoAccesorio AsignarAVehiculo(int accesorioId)
+    {
+        return new VehiculoAccesorio
+        {
+            AccesorioId = accesorioId,
+            Activo = true
+        };
+    }
 }

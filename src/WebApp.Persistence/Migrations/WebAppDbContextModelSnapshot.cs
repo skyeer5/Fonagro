@@ -17,7 +17,7 @@ namespace WebApp.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.22")
+                .HasAnnotation("ProductVersion", "8.0.23")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -296,6 +296,9 @@ namespace WebApp.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccesorioId"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
 
@@ -553,7 +556,7 @@ namespace WebApp.Persistence.Migrations
                     b.Property<int?>("Modificado_Por")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Precio")
+                    b.Property<decimal>("Precio")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
@@ -571,6 +574,9 @@ namespace WebApp.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParteId"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
@@ -603,11 +609,11 @@ namespace WebApp.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehiculoId"));
 
-                    b.Property<int?>("Anio")
+                    b.Property<int>("Anio")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Capacidad_Pasajeros")
-                        .HasColumnType("int");
+                    b.Property<string>("Cilindraje")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
@@ -628,7 +634,7 @@ namespace WebApp.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<double?>("Kilometraje")
+                    b.Property<double>("Kilometraje")
                         .HasColumnType("float");
 
                     b.Property<string>("Marca")
@@ -641,9 +647,6 @@ namespace WebApp.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Placa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tipo_Motor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo_Vehiculo")
@@ -715,7 +718,7 @@ namespace WebApp.Persistence.Migrations
                     b.Property<int?>("Modificado_Por")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Monto")
+                    b.Property<decimal>("Monto")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

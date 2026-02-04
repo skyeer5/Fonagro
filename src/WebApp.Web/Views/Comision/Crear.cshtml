@@ -1,0 +1,119 @@
+@model WebApp.Application.Comisiones.ComisionCreate.ComisionCreateRequest;
+
+@{
+    ViewData["Title"] = "Crear Comisión";
+}
+
+<h2>Crear Comisión</h2>
+
+<form asp-action="Crear" method="post">
+
+    <!-- ================= DATOS GENERALES ================= -->
+
+    <div class="mb-3">
+        <label>Fecha salida</label>
+        <input asp-for="Fecha_Salida" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha regreso</label>
+        <input asp-for="Fecha_Regreso" type="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Responsable</label>
+        <select asp-for="UsuarioId" asp-items="ViewBag.Usuarios"  class="form-select">
+            <option value="">-- Seleccione --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Vehículo</label>
+        <select asp-for="VehiculoId" asp-items="ViewBag.Vehiculos" class="form-select">
+            <option value="">-- Seleccione --</option>
+        </select>
+    </div>
+
+    <hr />
+
+    <!-- ================= USUARIOS NOMBRADOS ================= -->
+
+    <h4>Usuarios nombrados</h4>
+
+    <table class="table table-bordered" id="tablaUsuarios">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>No. Nombramiento</th>
+                <th>Piloto</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary" onclick="agregarUsuario()">
+        + Agregar usuario
+    </button>
+
+    <br /><br />
+
+    <button type="submit" class="btn btn-primary">
+        Guardar comisión
+    </button>
+
+</form>
+
+<!-- ================= TEMPLATE OCULTO ================= -->
+
+<script type="text/template" id="usuarioTemplate">
+<tr>
+    <td>
+        <select name="UsuariosNombrados[__i__].UsuariosId"
+                class="form-select"
+                required>
+            <option value="">-- Seleccione --</option>
+            @foreach (var u in (SelectList)ViewBag.Usuarios)
+            {
+                <option value="@u.Value">@u.Text</option>
+            }
+        </select>
+    </td>
+
+    <td>
+        <input name="UsuariosNombrados[__i__].Numero_Nombramiento"
+               class="form-control" />
+    </td>
+
+    <td class="text-center">
+        <input type="checkbox"
+               name="UsuariosNombrados[__i__].Es_Piloto" />
+    </td>
+
+    <td class="text-center">
+        <button type="button"
+                class="btn btn-danger btn-sm"
+                onclick="eliminarFila(this)">
+            X
+        </button>
+    </td>
+</tr>
+</script>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+let index = 0;
+
+function agregarUsuario() {
+    const template = document.getElementById("usuarioTemplate").innerHTML;
+    const fila = template.replaceAll("__i__", index++);
+    document.querySelector("#tablaUsuarios tbody")
+        .insertAdjacentHTML("beforeend", fila);
+}
+
+function eliminarFila(btn) {
+    btn.closest("tr").remove();
+}
+</script>

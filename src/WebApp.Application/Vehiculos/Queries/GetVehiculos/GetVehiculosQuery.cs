@@ -7,7 +7,6 @@ public class GetVehiculosQuery
 {
     public record GetVehiculosQueryRequest : IRequest<Result<GetVehiculosResponse>>
     {
-        public string? Placa { get; set; }
-        public string? Tipo_Vehiculo { get; set; }
+        public GetVehiculosRequest? request { get; set; }
     }
 }

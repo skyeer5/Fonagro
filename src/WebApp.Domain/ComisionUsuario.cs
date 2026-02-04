@@ -11,4 +11,14 @@ public class ComisionUsuario : AuditableEntity
     public int UsuarioId { get; set; }
     public ICollection<ComisionViaticos>? ComisionViaticos { get; set; }
 
-}
+    public static ComisionUsuario AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto = false)
+    {
+        return new ComisionUsuario
+        {
+            Nombramiento = nombramiento,
+            Es_Piloto = es_Piloto,
+            Estado = EstadosTipos.Asignado,
+            UsuarioId = usuarioId
+        };
+    }
+};

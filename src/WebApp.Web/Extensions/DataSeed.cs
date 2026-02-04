@@ -38,6 +38,43 @@ public static class DataSeed
                 }
                 await userManager.AddToRoleAsync(userAdmin, RolesTipos.Administrador);
             }
+
+            if(!context.Partes.Any())
+            {
+                var partes = new List<Parte>
+                {
+                    new Parte { Nombre = "Chasis" , Activo = true},
+                    new Parte { Nombre = "Carroceria" , Activo = true},
+                    new Parte { Nombre = "Pintura" , Activo = true},
+                    new Parte { Nombre = "Vidrios" , Activo = true},
+                    new Parte { Nombre = "Tapiceria" , Activo = true},
+                    new Parte { Nombre = "Emblemas" , Activo = true},
+                    new Parte { Nombre = "Luces" , Activo = true},
+                    new Parte { Nombre = "Pidevias" , Activo = true}
+                };
+                await context.Partes.AddRangeAsync(partes);
+            }
+
+            if(!context.Accesorios.Any())
+            {
+                var accesorios = new List<Accesorio>
+                {
+                    new Accesorio { Nombre = "Herramientas" , Activo = true},
+                    new Accesorio { Nombre = "Triangulos" , Activo = true},
+                    new Accesorio { Nombre = "Alfombras" , Activo = true},
+                    new Accesorio { Nombre = "Llanta de repuesto" , Activo = true},
+                    new Accesorio { Nombre = "Encendedor" , Activo = true},
+                    new Accesorio { Nombre = "Bateria" , Activo = true},
+                    new Accesorio { Nombre = "Retrovisor interior" , Activo = true},
+                    new Accesorio { Nombre = "Llave de chucho" , Activo = true},
+                    new Accesorio { Nombre = "Espejos retrovisores" , Activo = true},
+                    new Accesorio { Nombre = "Tricket" , Activo = true},
+                    new Accesorio { Nombre = "Defensa" , Activo = true},
+                    new Accesorio { Nombre = "Radio" , Activo = true}
+                };
+                await context.Accesorios.AddRangeAsync(accesorios);
+            }
+            await context.SaveChangesAsync();
         }
         catch (Exception e)
         {

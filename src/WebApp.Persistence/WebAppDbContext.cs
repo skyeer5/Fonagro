@@ -16,6 +16,14 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<GasolinaPrecio> GasolinaPrecios { get; set; }
     public DbSet<Vehiculo> Vehiculos { get; set; }
     public DbSet<Viatico> Viaticos { get; set; }
+    public DbSet<Accesorio> Accesorios { get; set; }
+    public DbSet<Parte> Partes { get; set; }
+    public DbSet<VehiculoAccesorio> VehiculoAccesorios { get; set; }
+    public DbSet<VehiculoParte> VehiculoPartes { get; set; }
+    public DbSet<Comision> Comisiones { get; set; }
+    public DbSet<ComisionDestino> ComisionDestinos { get; set; }
+    public DbSet<ComisionUsuario> ComisionUsuarios { get; set; }
+    public DbSet<ComisionViaticos> ComisionViaticos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

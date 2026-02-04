@@ -1,5 +1,6 @@
 using MediatR;
 using WebApp.Application.Core;
+using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
@@ -8,50 +9,44 @@ namespace WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 
 public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreateCommandRequest, Result<int>>
     {
-        private readonly WebAppDbContext _context;
+    private readonly IVehiculoRepository _vehiculoRepository;
+    private readonly IGasolinaService _gasolinaService;
+    private readonly IUsuarioService _usuarioService;
 
-        public VehiculoCreateCommandHandler(WebAppDbContext context)
+    public VehiculoCreateCommandHandler(IVehiculoRepository vehiculoRepository, IGasolinaService gasolinaService, IUsuarioService usuarioService)
+    {
+        _vehiculoRepository = vehiculoRepository;
+        _gasolinaService = gasolinaService;
+        _usuarioService = usuarioService;
+    }
+
+    public async Task<Result<int>> Handle(VehiculoCreateCommandRequest request, CancellationToken cancellationToken)
         {
-            _context = context;
-        }
-
-        public async Task<Result<int>> Handle(VehiculoCreateCommandRequest request, CancellationToken cancellationToken)
-        {
-            var vehiculo = new Vehiculo
+            if(!await _gasolinaService.GasolinaExistsAsync(request.VehiculoCreateRequest.GasolinaId, cancellationToken))
             {
-                Placa = request.VehiculoCreateRequest.Placa,
-                Marca = request.VehiculoCreateRequest.Marca,
-                Modelo = request.VehiculoCreateRequest.Modelo,
-                Anio = request.VehiculoCreateRequest.Anio,
-                Tipo_Vehiculo = request.VehiculoCreateRequest.Tipo_Vehiculo,
-                Color = request.VehiculoCreateRequest.Color,
-                Capacidad_Pasajeros = request.VehiculoCreateRequest.Capacidad_Pasajeros,
-                Tipo_Motor = request.VehiculoCreateRequest.Tipo_Motor,
-                Kilometraje = request.VehiculoCreateRequest.Kilometraje,
-                Estado = EstadosTipos.Disponible,
-                Fecha_Creacion = DateTime.Now
-            };
-
-            if(request.VehiculoCreateRequest.GasolinaId is not null)
-            {
-                var gasolina = await _context.Gasolinas.FindAsync(request.VehiculoCreateRequest.GasolinaId , cancellationToken);
-                if (gasolina is null)
-                {
-                    return Result<int>.Failure("Gasolina no encontrada");
-                }
-                vehiculo.GasolinaId = gasolina.GasolinaId;
+                return Result<int>.Failure("Tipo de gasolina no encontrado");
             }
-            if(request.VehiculoCreateRequest.Creado_Por is 0)
+
+            if(!await _usuarioService.UsuariosExistsAsync(request.VehiculoCreateRequest.Creado_Por))
             {
-                var usuario = await _context.Users.FindAsync(request.VehiculoCreateRequest.Creado_Por, cancellationToken);
-                if (usuario is null)
-                {
-                    return Result<int>.Failure("Usuario no encontrado");
-                }
-                vehiculo.Creado_Por = usuario.Id;
+                return Result<int>.Failure("Usuario creador no encontrado");
             }
-            await _context.Vehiculos.AddAsync(vehiculo, cancellationToken);
-            var resultado = await _context.SaveChangesAsync(cancellationToken) > 0;
-            return resultado ? Result<int>.Success(0) : Result<int>.Failure("Error al crear el vehículo");
+
+            var vehiculo = Vehiculo.Crear(request.VehiculoCreateRequest.Placa!,
+                                request.VehiculoCreateRequest.Marca!,
+                                request.VehiculoCreateRequest.Modelo!,
+                                request.VehiculoCreateRequest.Anio,
+                                request.VehiculoCreateRequest.Tipo_Vehiculo!,
+                                request.VehiculoCreateRequest.Color!,
+                                request.VehiculoCreateRequest.Cilindraje!,
+                                request.VehiculoCreateRequest.Kilometraje,
+                                request.VehiculoCreateRequest.GasolinaId,
+                                request.VehiculoCreateRequest.Creado_Por);
+
+            vehiculo.AgregarListaAccesorios(request.VehiculoCreateRequest.Accesorios);
+
+            var resultado = await _vehiculoRepository.CreateVehiculoAsync(vehiculo, cancellationToken);
+
+            return resultado.IsSuccess ? Result<int>.Success(vehiculo.VehiculoId) : Result<int>.Failure(resultado.Error!);
         }
     }

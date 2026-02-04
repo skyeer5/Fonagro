@@ -15,5 +15,43 @@ public class Comision : AuditableEntity
     public int VehiculoId { get; set; }
     public Vehiculo? Vehiculo { get; set; }
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
-    public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; }
+    public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; } 
+
+    public static Comision Crear(DateTime fecha_Salida,
+                                 DateTime fecha_Regreso,
+                                 int vehiculoId,
+                                 decimal gasolinaPrecio,
+                                 int usuarioId
+                                 )
+    {
+        return new Comision
+        {
+            Fecha_Salida = fecha_Salida,
+            Fecha_Regreso = fecha_Regreso,
+            Precio_Galon_Usado = gasolinaPrecio,
+            UsuarioId = usuarioId,
+            VehiculoId = vehiculoId,
+            Estado = EstadosTipos.Programada
+        };
+    }
+
+    public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados)
+    {
+        this.ComisionUsuarios ??= new List<ComisionUsuario>();
+        if(!usuariosNombrados.Any())
+        {
+            throw new Exception("Debe asignar al menos un usuario");
+        }
+        usuariosNombrados = usuariosNombrados.DistinctBy(u => u.UsuariosId).ToList();
+        foreach(var usuario in usuariosNombrados)
+        {
+            var comisionUsuario = ComisionUsuario.AsignarAComision(
+                usuario.UsuariosId,
+                usuario.Numero_Nombramiento!,
+                usuario.Es_Piloto
+            );
+            ComisionUsuarios.Add(comisionUsuario);
+        }
+        
+    }
 }
