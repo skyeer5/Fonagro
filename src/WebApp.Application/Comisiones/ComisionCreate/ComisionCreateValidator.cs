@@ -23,6 +23,9 @@ public class ComisionCreateValidator : AbstractValidator<ComisionCreateRequest>
         
         RuleFor(x => x.UsuariosNombrados)
             .NotEmpty().WithMessage("La lista de IDs de usuarios no debe estar vacía.");
+            
+        RuleFor(x => x.Departamento)
+            .NotEmpty().WithMessage("El departamento no debe estar vacío.");
         
         RuleFor(x => x.UsuariosNombrados)
             .Must(x=>x.Count<=5 && x.Count>0).WithMessage("La lista de IDs de usuarios debe contener entre 1 y 5.");

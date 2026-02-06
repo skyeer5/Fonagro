@@ -333,6 +333,9 @@ namespace WebApp.Persistence.Migrations
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
 
+                    b.Property<string>("Departamento")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 

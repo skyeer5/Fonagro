@@ -12,7 +12,7 @@ using WebApp.Persistence;
 namespace WebApp.Persistence.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    [Migration("20260206182036_MigracionInicial")]
+    [Migration("20260206185057_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -335,6 +335,9 @@ namespace WebApp.Persistence.Migrations
 
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
+
+                    b.Property<string>("Departamento")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");

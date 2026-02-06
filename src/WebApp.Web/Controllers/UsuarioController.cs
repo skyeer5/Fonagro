@@ -15,11 +15,12 @@ public class UsuarioController : Controller
     {
         _mediator = mediator;
     }
+    [HttpGet("crear")]
     public IActionResult Crear()
     {
         return View();
     }
-    [HttpPost]
+    [HttpPost("crear")]
     public async Task<ActionResult<Result<int>>> Crear(
         [FromForm] UsuarioCreateRequest request,
         CancellationToken cancellationToken

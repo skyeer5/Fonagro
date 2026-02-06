@@ -54,6 +54,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
         }
 
         var comision = Domain.Comision.Crear(
+            request.ComisionCreateRequest.Departamento!,
             request.ComisionCreateRequest.Fecha_Salida,
             request.ComisionCreateRequest.Fecha_Regreso,
             request.ComisionCreateRequest.VehiculoId,
@@ -61,7 +62,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             request.ComisionCreateRequest.UsuarioId
             );
         comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNombrados);
-
+    
         var comisionAdded = await _comisionRepository.AddAsync(comision, cancellationToken);
 
         return comisionAdded.IsSuccess ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure(comisionAdded.Error!);

@@ -4,6 +4,7 @@ namespace WebApp.Domain;
 public class Comision : AuditableEntity
 {
     public int ComisionId { get; set; }
+    public string? Departamento { get; set; }
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public decimal Precio_Galon_Usado { get; set; }
@@ -17,7 +18,9 @@ public class Comision : AuditableEntity
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
     public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; } 
 
-    public static Comision Crear(DateTime fecha_Salida,
+    public static Comision Crear(
+                                 string departamento,
+                                 DateTime fecha_Salida,
                                  DateTime fecha_Regreso,
                                  int vehiculoId,
                                  decimal gasolinaPrecio,
@@ -26,6 +29,7 @@ public class Comision : AuditableEntity
     {
         return new Comision
         {
+            Departamento = departamento,
             Fecha_Salida = fecha_Salida,
             Fecha_Regreso = fecha_Regreso,
             Precio_Galon_Usado = gasolinaPrecio,

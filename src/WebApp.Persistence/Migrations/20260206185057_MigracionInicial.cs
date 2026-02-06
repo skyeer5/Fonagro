@@ -304,6 +304,7 @@ namespace WebApp.Persistence.Migrations
                 {
                     ComisionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Fecha_Salida = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Fecha_Regreso = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Precio_Galon_Usado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),

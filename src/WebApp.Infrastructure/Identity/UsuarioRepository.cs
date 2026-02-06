@@ -31,10 +31,12 @@ public class UsuarioRepository : IUsuarioRepository
             UserName = request.Email
         };
         var result = await _userManager.CreateAsync(usuario, request.Password!);
-        foreach(var res in result.Errors)
+        if (!result.Succeeded)
         {
-            Console.WriteLine(res.Description);
+            var stringErrors = "Errores al crear el usuario: " + string.Join(", ", result.Errors.Select(e => e.Description));
+            return Result<int>.Failure(stringErrors);
         }
-        return result.Succeeded ? Result<int>.Success(usuario.Id) : Result<int>.Failure("Error al crear el usuario");
+
+        return Result<int>.Success(usuario.Id);
     }
 }

@@ -9,7 +9,11 @@
 <form asp-action="Crear" method="post">
 
     <!-- ================= DATOS GENERALES ================= -->
-
+    <div class="mb-3">
+        <label>Lugar de visita</label>
+        <input asp-for="Departamento" class="form-control" />
+    </div>
+    
     <div class="mb-3">
         <label>Fecha salida</label>
         <input asp-for="Fecha_Salida" type="date" class="form-control" />
