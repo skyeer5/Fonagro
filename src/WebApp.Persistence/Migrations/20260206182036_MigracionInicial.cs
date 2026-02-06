@@ -367,7 +367,8 @@ namespace WebApp.Persistence.Migrations
                 {
                     VehiculoId = table.Column<int>(type: "int", nullable: false),
                     ParteId = table.Column<int>(type: "int", nullable: false),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

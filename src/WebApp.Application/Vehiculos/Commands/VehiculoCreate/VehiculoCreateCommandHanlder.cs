@@ -44,7 +44,13 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
                                 request.VehiculoCreateRequest.Creado_Por);
 
             vehiculo.AgregarListaAccesorios(request.VehiculoCreateRequest.Accesorios);
+            
+            var partes = request.VehiculoCreateRequest.Partes
+                .Select(p => Parte.CrearParteDeRequest(p.Id, p.Descripcion!))
+                .ToList();
 
+            vehiculo.AgregarListaPartes(partes);
+            
             var resultado = await _vehiculoRepository.CreateVehiculoAsync(vehiculo, cancellationToken);
 
             return resultado.IsSuccess ? Result<int>.Success(vehiculo.VehiculoId) : Result<int>.Failure(resultado.Error!);

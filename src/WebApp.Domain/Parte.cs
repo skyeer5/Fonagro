@@ -8,4 +8,14 @@ public class Parte : AuditableEntity
     public bool Activo { get; set; }
     public ICollection<Vehiculo>? Vehiculos { get; set; }
     public ICollection<VehiculoParte>? VehiculoPartes { get; set; }
+
+    public static Parte CrearParteDeRequest(int id, string Descripcion)
+    {
+        return new Parte
+        {
+            ParteId = id,
+            Descripcion = Descripcion,
+            Activo = true
+        };
+    }
 }

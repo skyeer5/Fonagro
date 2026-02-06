@@ -36,6 +36,8 @@ public class VehiculoController : Controller
             return View();
         }
         ViewBag.Partes = new SelectList(partes.Result.Value, "id", "Nombre");
+
+        
         var accesorios = _mediator.Send(new GetAccesoriosQueryRequest());
         if (!accesorios.Result.IsSuccess)
         {

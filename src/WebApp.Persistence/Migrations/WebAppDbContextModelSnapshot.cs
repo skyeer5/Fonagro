@@ -688,6 +688,9 @@ namespace WebApp.Persistence.Migrations
                     b.Property<int>("ParteId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Comentario")
                         .HasColumnType("nvarchar(max)");
 

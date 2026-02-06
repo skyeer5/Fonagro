@@ -41,7 +41,7 @@ public class Vehiculo : AuditableEntity
     }
     public void AgregarListaAccesorios(List<int> accesorios)
     {
-        this.VehiculoAccesorios ??= new List<VehiculoAccesorio>();
+        VehiculoAccesorios ??= new List<VehiculoAccesorio>();
         foreach (var accesorio in accesorios)
         {
             var vehiculoAccesorio = VehiculoAccesorio.AsignarAVehiculo(accesorio);
@@ -53,11 +53,8 @@ public class Vehiculo : AuditableEntity
         VehiculoPartes ??= new List<VehiculoParte>();
         foreach (var parte in partes)
         {
-            VehiculoPartes.Add(new VehiculoParte
-            {
-                Vehiculo = this,
-                Parte = parte
-            });
+            var vehiculoParte = VehiculoParte.AsignarAVehiculo(parte.ParteId, parte.Descripcion);
+            VehiculoPartes.Add(vehiculoParte);
         }
     }
     public void ModificarEstadoEnComision()

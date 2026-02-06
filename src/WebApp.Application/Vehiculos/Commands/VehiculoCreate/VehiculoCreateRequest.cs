@@ -1,3 +1,5 @@
+using WebApp.Application.Partes.ParteCreate;
+
 namespace WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 
     public class VehiculoCreateRequest
@@ -12,6 +14,6 @@ namespace WebApp.Application.Vehiculos.Commands.VehiculoCreate;
         public double Kilometraje { get; set; }
         public int GasolinaId { get; set; }
         public int Creado_Por { get; set; } 
-        public List<int> Partes { get; set; } = new();
+        public List<ParteCreateRequest> Partes { get; set; } = new();
         public List<int> Accesorios { get; set; } = new();       
     }

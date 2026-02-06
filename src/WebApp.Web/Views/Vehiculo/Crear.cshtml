@@ -1,7 +1,9 @@
+@using WebApp.Domain
 @model WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateRequest
 
 @{
     ViewData["Title"] = "Crear Vehículo";
+    var index = 0;
 }
 
 <h2>Crear Vehículo</h2>
@@ -83,6 +85,29 @@
         }
     </div>
 
+   @foreach (var parte in ViewBag.Partes!)
+{
+    <div class="border rounded p-2 mb-2">
+        <strong>@parte.Text</strong>
+
+        <input type="hidden"
+               name="Partes[@index].Id"
+               value="@parte.Value" />
+
+        <select class="form-select mt-2"
+                name="Partes[@index].Descripcion"
+                required>
+            <option value="">-- Seleccione estado --</option>
+            <option value="@EstadosTipos.Buen_Estado">@EstadosTipos.Buen_Estado</option>
+            <option value="@EstadosTipos.Rayon">@EstadosTipos.Rayon</option>
+            <option value="@EstadosTipos.Hundimiento">@EstadosTipos.Hundimiento</option>
+            <option value="@EstadosTipos.Golpe">@EstadosTipos.Golpe</option>
+            <option value="@EstadosTipos.Otro">@EstadosTipos.Otro</option>
+        </select>
+    </div>
+
+    index++;
+}
     <button type="submit" class="btn btn-primary">
         Guardar
     </button>
