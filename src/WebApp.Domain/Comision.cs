@@ -39,7 +39,7 @@ public class Comision : AuditableEntity
         };
     }
 
-    public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados)
+    public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
         this.ComisionUsuarios ??= new List<ComisionUsuario>();
         if(!usuariosNombrados.Any())
@@ -54,7 +54,9 @@ public class Comision : AuditableEntity
                 usuario.Numero_Nombramiento!,
                 usuario.Es_Piloto
             );
+            comisionUsuario.AsignarViaticos(viaticos, salida, regreso);
             ComisionUsuarios.Add(comisionUsuario);
+            
         }
         
     }

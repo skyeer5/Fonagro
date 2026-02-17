@@ -58,8 +58,8 @@ public class VehiculoController : Controller
         return result.IsSuccess ? RedirectToAction("ObtenerVehiculo", new { id = result.Value }) : BadRequest(result.Error);
     }
 
-    [HttpGet("ObtenerVehiculo/{id}")]
-    public async Task<ActionResult<Result<GetVehiculoResponse>>> ObtenerVehiculo(
+    [HttpGet("Detalle/{id}")]
+    public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(
         int id,
         CancellationToken cancellationToken
     )

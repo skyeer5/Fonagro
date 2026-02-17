@@ -12,7 +12,7 @@ using WebApp.Persistence;
 namespace WebApp.Persistence.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    [Migration("20260206185057_MigracionInicial")]
+    [Migration("20260211212842_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -484,6 +484,9 @@ namespace WebApp.Persistence.Migrations
 
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("Monto_Total")
                         .HasPrecision(18, 2)

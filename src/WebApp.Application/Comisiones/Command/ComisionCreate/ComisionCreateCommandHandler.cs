@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
@@ -12,14 +13,16 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
     private readonly IUsuarioService _usuarioService;
     private readonly IComisionRepository _comisionRepository;
     private readonly IComisionUsuarioPolicy _comisionUsuarioPolicy;
+    private readonly IViaticosService _viaticosService;
 
-    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IUsuarioService usuarioService, IComisionRepository comisionRepository, IComisionUsuarioPolicy comisionUsuarioPolicy)
+    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IUsuarioService usuarioService, IComisionRepository comisionRepository, IComisionUsuarioPolicy comisionUsuarioPolicy, IViaticosService viaticosService)
     {
         _gasolinaPrecioService = gasolinaPrecioService;
         _vehiculoService = vehiculoService;
         _usuarioService = usuarioService;
         _comisionRepository = comisionRepository;
         _comisionUsuarioPolicy = comisionUsuarioPolicy;
+        _viaticosService = viaticosService;
     }
 
     public async Task<Result<int>> Handle(ComisionCreateCommandRequest request, CancellationToken cancellationToken)
@@ -49,6 +52,17 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             return Result<int>.Failure("El usuario(s) ya se encuentra en otra comisión");
         }
 
+        var viaticosVigentes = await _viaticosService.GetViaticosVigentesAsync();
+        if(viaticosVigentes.IsNullOrEmpty())
+        {
+            return Result<int>.Failure("No hay viáticos vigentes para asignar a la comisión");
+        }
+        var viaticos = new List<Domain.Viatico>();
+        foreach(var viatico in viaticosVigentes)
+        {
+            viaticos.Add(new Domain.Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
+        }
+
         var comision = Domain.Comision.Crear(
             request.ComisionCreateRequest.Departamento!,
             request.ComisionCreateRequest.Fecha_Salida,
@@ -57,8 +71,10 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             gasolinaPrecio.Value,
             request.ComisionCreateRequest.UsuarioId
             );
-        comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNombrados);
-    
+        comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNombrados, viaticos, request.ComisionCreateRequest.Fecha_Salida, request.ComisionCreateRequest.Fecha_Regreso);
+
+        
+
         var comisionAdded = await _comisionRepository.AddAsync(comision, cancellationToken);
 
         return comisionAdded.IsSuccess ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure(comisionAdded.Error!);

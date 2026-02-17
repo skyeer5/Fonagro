@@ -482,6 +482,9 @@ namespace WebApp.Persistence.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Monto_Total")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");

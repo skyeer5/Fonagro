@@ -173,7 +173,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
 
         modelBuilder.Entity<ComisionViaticos>()
             .HasOne(cv => cv.ComisionUsuario)
-            .WithMany(cu => cu.ComisionViaticos)
+            .WithMany(cu => cu.ComisionViaticosList)
             .HasForeignKey(cv => new { cv.ComisionId, cv.UsuarioId })
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);

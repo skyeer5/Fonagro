@@ -2,8 +2,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Comisiones.ComisionCreate;
+using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 using WebApp.Application.Core;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
+using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -17,11 +19,11 @@ public class ComisionController : Controller
     {
         _mediator = mediator;
     }
-
-    public IActionResult Index()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Result<List<GetComisionesActivasResponse>>>> Index(int id)
     {
-
-        return View();
+        var comisiones = await _mediator.Send(new GetComisionesActivasQueryRequest{UsuarioId = id});
+        return View(comisiones.Value);
     }
     [HttpGet("Crear")]
     public IActionResult Crear()
@@ -55,8 +57,8 @@ public class ComisionController : Controller
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }
 
-    // [HttpGet("ObtenerComision/{id}")]
-    // public async Task<ActionResult<Result<GetVehiculoResponse>>> ObtenerVehiculo(
+    // [HttpGet("Detalle/{id}")]
+    // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(
     //     int id,
     //     CancellationToken cancellationToken
     // )

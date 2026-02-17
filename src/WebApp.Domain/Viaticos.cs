@@ -7,4 +7,15 @@ public class Viatico : AuditableEntity
     public decimal Monto { get; set; }
     public bool? Vigente { get; set; }
     public ICollection<ComisionViaticos>? ComisionViaticos { get; set; }
+
+    public Viatico()
+    {
+        
+    }
+    public Viatico(int id, string? nombre, decimal monto)
+    {
+        ViaticoId = id;
+        Nombre = nombre;
+        Monto = monto;
+    }
 }

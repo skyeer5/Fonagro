@@ -456,6 +456,7 @@ namespace WebApp.Persistence.Migrations
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Monto_Unitario_Usado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Monto_Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ComisionId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     ViaticoId = table.Column<int>(type: "int", nullable: false)
