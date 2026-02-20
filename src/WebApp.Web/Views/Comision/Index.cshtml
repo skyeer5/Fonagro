@@ -1,59 +1,145 @@
-@model List<WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasResponse>
+@model WebApp.Web.Models.ComisionViewModel
+
 
 @{
-    ViewBag.Title = "Comisiones Activas";
+    ViewBag.Title = "Mi Comisión";
 }
 
-<h2>Comisiones Activas</h2>
+<h2>Mi Comisión</h2>
 
-<table class="table table-bordered table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Nombramiento</th>
-            <th>Departamento</th>
-            <th>Fecha Salida</th>
-            <th>Fecha Regreso</th>
-            <th>Estado</th>
-            <th>Piloto</th>
-            <th style="width:120px;">Acción</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Nombramiento</td>
-                    <td>@item.Departamento</td>
-                    <td>@item.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>
-                        <span class="badge bg-success">
-                            @item.Estado
-                        </span>
-                    </td>
-                    <td>
-                        @(item.Piloto ? "Sí" : "No")
-                    </td>
-                    <td>
-                        <a asp-controller="Comisiones"
-                           asp-action="Detalle"
-                           asp-route-id="@item.id"
-                           class="btn btn-primary btn-sm">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="7" class="text-center">
-                    No hay comisiones activas registradas.
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (Model?.Comision is null)
+{
+    <div class="alert alert-info">
+        No tienes una comisión activa.
+    </div>
+
+}
+else{
+<!-- RESUMEN -->
+<div class="card mb-4">
+    <div class="card-header">
+        Información de la Comisión
+    </div>
+    <div class="card-body">
+        <p><strong>Nombramiento:</strong> @Model.Comision!.Nombramiento</p>
+        <p><strong>Departamento:</strong> @Model.Comision.Departamento</p>
+        <p><strong>Salida:</strong> @Model.Comision.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Regreso:</strong> @Model.Comision.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Estado:</strong> @Model.Comision.Estado</p>
+    </div>
+</div>
+
+<!-- ACCIONES SEGÚN ETAPA -->
+
+<div class="d-flex flex-wrap gap-2 mb-4">
+
+    @if (Model.TieneComisionCreada && Model.Comision.Piloto && !Model.TieneDestinosDefinidos)
+    {
+        <a asp-controller="Comision"
+           asp-action="AgregarDestinos"
+           asp-route-id="@Model.Comision.id"
+           class="btn btn-primary">
+            Definir Destinos
+        </a>
+    }
+
+    @if (Model.TieneDestinosDefinidos && !Model.TieneCombustiblesAprobados)
+    {
+        <span class="badge bg-warning text-dark p-2">
+            Pendiente aprobación de combustible
+        </span>
+    }
+
+    @if (Model.TieneCombustiblesAprobados)
+    {
+        <a asp-controller="Comision"
+           asp-action="ImprimirPlanViaje"
+           asp-route-id="@Model.Comision.id"
+           class="btn btn-success">
+            Imprimir Plan de Viaje
+        </a>
+
+        <a asp-controller="Comision"
+           asp-action="ImprimirViaticos"
+           asp-route-id="@Model.Comision.id"
+           class="btn btn-success">
+            Imprimir Viáticos
+        </a>
+    }
+
+    @if (Model.TieneComisionEnCurso)
+    {
+        <span class="badge bg-info p-2">
+            Comisión en curso
+        </span>
+    }
+
+</div>
+
+<!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
+@if (Model.TieneComisionCreada && Model.Comision.Piloto && !Model.TieneDestinosDefinidos)
+{
+    <div class="card">
+        <div class="card-header">
+            Agregar Destinos
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Comision"
+                  asp-action="AgregarDestinos"
+                  method="post">
+
+                <input type="hidden" name="ComisionId" value="@Model.Comision.id" />
+
+                <div id="destinos-container">
+                    <div class="row mb-2 destino-row">
+                        <div class="col-md-6">
+                            <input name="comisionAddDestinosItemRequests[0].Descripcion" class="form-control" placeholder="Descripción" />
+                        </div>
+                        <div class="col-md-4">
+                            <input name="comisionAddDestinosItemRequests[0].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="btnAddDestino" class="btn btn-secondary mb-3">
+                    + Agregar otro destino
+                </button>
+
+                <br />
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar Destinos
+                </button>
+
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts{
+<script>
+let index = 1;
+
+document.getElementById("btnAddDestino")?.addEventListener("click", function () {
+
+    const container = document.getElementById("destinos-container");
+
+    const row = document.createElement("div");
+    row.className = "row mb-2";
+
+    row.innerHTML = `
+        <div class="col-md-6">
+            <input name="Destinos[${index}].descripcion" class="form-control" placeholder="Descripción" />
+        </div>
+        <div class="col-md-4">
+            <input name="Destinos[${index}].kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+        </div>
+    `;
+
+    container.appendChild(row);
+    index++;
+});
+</script>
+}
+}

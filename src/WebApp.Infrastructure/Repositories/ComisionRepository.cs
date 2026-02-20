@@ -21,4 +21,12 @@ public class ComisionRepository : IComisionRepository
         return result > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al agregar la comisión");
     }
 
+    public async Task<Result<int>> AddDestinosAsync(Comision comision, CancellationToken cancellationToken)
+    {
+        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+        var resultado = await _context.SaveChangesAsync(cancellationToken);
+
+        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al agregar los destinos de la comisión");
+    }
 }

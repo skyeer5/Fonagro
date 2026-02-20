@@ -4,5 +4,6 @@ namespace WebApp.Application.Interfaces;
 
 public interface IComisionService
 {
-    Task<List<GetComisionesActivasResponse>> GetComisionesActivasListAsync(int usuarioId);
+    Task<GetComisionActivaResponse?> GetComisionActivaAsync(int usuarioId);
+    Task<Domain.Comision?> GetComisionByIdAsync(int comisionId);
 }

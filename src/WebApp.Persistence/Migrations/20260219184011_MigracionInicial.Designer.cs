@@ -12,7 +12,7 @@ using WebApp.Persistence;
 namespace WebApp.Persistence.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    [Migration("20260211212842_MigracionInicial")]
+    [Migration("20260219184011_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -627,6 +627,9 @@ namespace WebApp.Persistence.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ConsumoKmPorGalon")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
 
@@ -939,7 +942,7 @@ namespace WebApp.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("WebApp.Domain.ComisionUsuario", "ComisionUsuario")
-                        .WithMany("ComisionViaticos")
+                        .WithMany("ComisionViaticosList")
                         .HasForeignKey("ComisionId", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1023,7 +1026,7 @@ namespace WebApp.Persistence.Migrations
 
             modelBuilder.Entity("WebApp.Domain.ComisionUsuario", b =>
                 {
-                    b.Navigation("ComisionViaticos");
+                    b.Navigation("ComisionViaticosList");
                 });
 
             modelBuilder.Entity("WebApp.Domain.Gasolina", b =>

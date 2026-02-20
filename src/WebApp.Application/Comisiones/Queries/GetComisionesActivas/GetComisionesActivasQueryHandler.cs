@@ -4,19 +4,24 @@ using WebApp.Application.Interfaces;
 
 namespace WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 
-public class GetComisionesActivasQueryHandler
-            : IRequestHandler<GetComisionesActivasQuery.GetComisionesActivasQueryRequest, Result<List<GetComisionesActivasResponse>>>
+public class GetComisionActivaQueryHandler
+            : IRequestHandler<GetComisionesActivasQuery.GetComisionActivaQueryRequest, Result<GetComisionActivaResponse>>
 {
     private readonly IComisionService _comisionService;
 
-    public GetComisionesActivasQueryHandler(IComisionService comisionService)
+    public GetComisionActivaQueryHandler(IComisionService comisionService)
     {
         _comisionService = comisionService;
     }
 
-    public async Task<Result<List<GetComisionesActivasResponse>>> Handle(GetComisionesActivasQuery.GetComisionesActivasQueryRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetComisionActivaResponse>> Handle(GetComisionesActivasQuery.GetComisionActivaQueryRequest request, CancellationToken cancellationToken)
     {
-        var comisiones = await _comisionService.GetComisionesActivasListAsync(request.UsuarioId);
-        return Result<List<GetComisionesActivasResponse>>.Success(comisiones);
+        var comisiones = await _comisionService.GetComisionActivaAsync(request.UsuarioId);
+        if (comisiones is null)
+        {
+             return Result<GetComisionActivaResponse>.Failure("No se encontró comisión activa para el usuario.");
+        }
+
+        return Result<GetComisionActivaResponse>.Success(comisiones);
     }
 }

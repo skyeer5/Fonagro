@@ -16,7 +16,7 @@ public class ViaticosService : IViaticosService
     public async Task<List<GetViaticosVigentesResponse>> GetViaticosVigentesAsync()
     {
         var viaticos = new List<string> { ViaticosTipos.Almuerzo, ViaticosTipos.Cena, ViaticosTipos.Desayuno, ViaticosTipos.Hospedaje };
-        return _context.Viaticos.Where(v => v.Vigente==true && viaticos.Contains(v.Nombre!))
+        return await _context.Viaticos.Where(v => v.Vigente==true && viaticos.Contains(v.Nombre!))
                .Select(v => new GetViaticosVigentesResponse
                {
                    Id = v.ViaticoId,
@@ -24,6 +24,6 @@ public class ViaticosService : IViaticosService
                    Monto = v.Monto
                })
                .AsNoTracking()
-               .ToList();
+               .ToListAsync();
     }
 }

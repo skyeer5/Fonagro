@@ -74,6 +74,29 @@ public static class DataSeed
                 };
                 await context.Accesorios.AddRangeAsync(accesorios);
             }
+            if(!context.Gasolinas.Any())
+            {
+                var gasolinas = new List<Gasolina>
+                {
+                    new Gasolina { Nombre = GasolinaTipos.Super},
+                    new Gasolina { Nombre = GasolinaTipos.Regular},
+                    new Gasolina { Nombre = GasolinaTipos.Disel}
+                };
+                await context.Gasolinas.AddRangeAsync(gasolinas);
+            }
+
+            if(!context.Viaticos.Any())
+            {
+                var viaticos = new List<Viatico>
+                {
+                    new Viatico { Nombre = ViaticosTipos.Desayuno, Monto = 63, Vigente = true},
+                    new Viatico { Nombre = ViaticosTipos.Almuerzo, Monto = 84, Vigente = true},
+                    new Viatico { Nombre = ViaticosTipos.Cena, Monto = 63, Vigente = true},
+                    new Viatico { Nombre = ViaticosTipos.Hospedaje, Monto = 210, Vigente = true}
+                };
+                await context.Viaticos.AddRangeAsync(viaticos);
+            }
+
             await context.SaveChangesAsync();
         }
         catch (Exception e)

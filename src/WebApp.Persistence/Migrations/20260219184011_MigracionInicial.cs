@@ -279,6 +279,7 @@ namespace WebApp.Persistence.Migrations
                     Tipo_Vehiculo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cilindraje = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConsumoKmPorGalon = table.Column<int>(type: "int", nullable: false),
                     Kilometraje = table.Column<double>(type: "float", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GasolinaId = table.Column<int>(type: "int", nullable: false),

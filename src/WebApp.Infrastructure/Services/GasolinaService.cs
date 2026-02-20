@@ -16,4 +16,9 @@ public class GasolinaService : IGasolinaService
         return await _context.Gasolinas.AsNoTracking().AnyAsync(g => g.GasolinaId == gasolinaId, cancellationToken);
 
     }
+
+    public async Task<string?> GetNombreByIdAsync(int gasolinaId, CancellationToken cancellationToken)
+    {
+        return await _context.Gasolinas.Where(x=>x.GasolinaId == gasolinaId).Select(x=>x.Nombre).FirstOrDefaultAsync();
+    }
 }

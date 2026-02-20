@@ -624,6 +624,9 @@ namespace WebApp.Persistence.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ConsumoKmPorGalon")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Creado_Por")
                         .HasColumnType("int");
 
@@ -936,7 +939,7 @@ namespace WebApp.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("WebApp.Domain.ComisionUsuario", "ComisionUsuario")
-                        .WithMany("ComisionViaticos")
+                        .WithMany("ComisionViaticosList")
                         .HasForeignKey("ComisionId", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1020,7 +1023,7 @@ namespace WebApp.Persistence.Migrations
 
             modelBuilder.Entity("WebApp.Domain.ComisionUsuario", b =>
                 {
-                    b.Navigation("ComisionViaticos");
+                    b.Navigation("ComisionViaticosList");
                 });
 
             modelBuilder.Entity("WebApp.Domain.Gasolina", b =>

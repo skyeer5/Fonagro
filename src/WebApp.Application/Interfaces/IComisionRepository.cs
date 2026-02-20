@@ -5,4 +5,5 @@ namespace WebApp.Application.Interfaces;
 public interface IComisionRepository
 {
     Task<Result<int>> AddAsync(Domain.Comision comision, CancellationToken cancellationToken);
+    Task<Result<int>> AddDestinosAsync(Domain.Comision comision, CancellationToken cancellationToken);
 }

@@ -31,6 +31,8 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
             {
                 return Result<int>.Failure("Usuario creador no encontrado");
             }
+            
+            var gasoNombre= await _gasolinaService.GetNombreByIdAsync(request.VehiculoCreateRequest.GasolinaId, cancellationToken);
 
             var vehiculo = Vehiculo.Crear(request.VehiculoCreateRequest.Placa!,
                                 request.VehiculoCreateRequest.Marca!,
@@ -41,6 +43,7 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
                                 request.VehiculoCreateRequest.Cilindraje!,
                                 request.VehiculoCreateRequest.Kilometraje,
                                 request.VehiculoCreateRequest.GasolinaId,
+                                gasoNombre!,
                                 request.VehiculoCreateRequest.Creado_Por);
 
             vehiculo.AgregarListaAccesorios(request.VehiculoCreateRequest.Accesorios);

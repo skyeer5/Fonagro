@@ -1,6 +1,9 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 using WebApp.Application.Interfaces;
+using WebApp.Domain;
 using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Services;
@@ -14,13 +17,13 @@ public class ComisionService : IComisionService
         _context = context;
     }
 
-    public async Task<List<GetComisionesActivasResponse>> GetComisionesActivasListAsync(int usuarioId)
+    public async Task<GetComisionActivaResponse?> GetComisionActivaAsync(int usuarioId)
     {
         return await _context.Comisiones
                 .AsNoTracking()
                 .Where(c => c.ComisionUsuarios!
                     .Any(cu => cu.UsuarioId == usuarioId))
-                .Select(c => new GetComisionesActivasResponse
+                .Select(c => new GetComisionActivaResponse
                 {
                     id = c.ComisionId,
                     Departamento = c.Departamento,
@@ -32,10 +35,23 @@ public class ComisionService : IComisionService
                         .First(cu => cu.UsuarioId == usuarioId).Nombramiento,
 
                     Piloto = c.ComisionUsuarios!
-                        .First(cu => cu.UsuarioId == usuarioId).Es_Piloto
+                        .First(cu => cu.UsuarioId == usuarioId).Es_Piloto,
+                    destinos = c.ComisionDestinos!
+                                    .Select( x=> new GetComisionDestinosResponse
+                                    {
+                                        id = x.ComisionDestinoId,
+                                        descripcion =x.Descripcion,
+                                        kilometros = x.Kilometros
+                                    }).ToList()
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
 
     }
+
+    public async Task<Comision?> GetComisionByIdAsync(int comisionId)
+    {
+       return await _context.Comisiones.Where(x=>x.ComisionId == comisionId).Include(x=>x.Vehiculo).FirstOrDefaultAsync();
+    }
+
 }

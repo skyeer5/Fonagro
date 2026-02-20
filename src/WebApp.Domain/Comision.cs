@@ -35,7 +35,7 @@ public class Comision : AuditableEntity
             Precio_Galon_Usado = gasolinaPrecio,
             UsuarioId = usuarioId,
             VehiculoId = vehiculoId,
-            Estado = EstadosTipos.Programada
+            Estado = EstadosTipos.Creada
         };
     }
 
@@ -58,6 +58,20 @@ public class Comision : AuditableEntity
             ComisionUsuarios.Add(comisionUsuario);
             
         }
+        this.Estado = EstadosTipos.DestinosDefinidos;
         
+    }
+    public void AgregarDestinos(List<ComisionDestino> comisionDestinos)
+    {
+        this.ComisionDestinos ??= new List<ComisionDestino>();
+        if(!comisionDestinos.Any())
+        {
+            throw new Exception("Debe asignar al menos un destino");
+        }
+
+        foreach(var destino in comisionDestinos)
+        {
+            this.ComisionDestinos.Add(destino);
+        }
     }
 }

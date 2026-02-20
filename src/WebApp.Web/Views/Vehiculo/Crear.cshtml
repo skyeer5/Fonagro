@@ -35,6 +35,18 @@
     </div>
 
     <div class="mb-3">
+        <label asp-for="Tipo_Vehiculo" class="form-label"></label>
+        <select asp-for="Tipo_Vehiculo" class="form-control">
+            <option value="">Seleccionar Tipo de Vehiculo</option>
+            <option value="@WebApp.Domain.VehiculosTipos.Automovil">@WebApp.Domain.VehiculosTipos.Automovil</option>
+            <option value="@WebApp.Domain.VehiculosTipos.Pickup">@WebApp.Domain.VehiculosTipos.Pickup</option>
+            <option value="@WebApp.Domain.VehiculosTipos.Jeep">@WebApp.Domain.VehiculosTipos.Jeep</option>
+            <option value="@WebApp.Domain.VehiculosTipos.Panel">@WebApp.Domain.VehiculosTipos.Panel</option>
+            <option value="@WebApp.Domain.VehiculosTipos.Camionetilla">@WebApp.Domain.VehiculosTipos.Camionetilla</option>
+        </select>
+        <span asp-validation-for="Cilindraje" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
         <label asp-for="Color" class="form-label"></label>
         <input asp-for="Color" class="form-control" />
         <span asp-validation-for="Color" class="text-danger"></span>
@@ -97,7 +109,6 @@
         <select class="form-select mt-2"
                 name="Partes[@index].Descripcion"
                 required>
-            <option value="">-- Seleccione estado --</option>
             <option value="@EstadosTipos.Buen_Estado">@EstadosTipos.Buen_Estado</option>
             <option value="@EstadosTipos.Rayon">@EstadosTipos.Rayon</option>
             <option value="@EstadosTipos.Hundimiento">@EstadosTipos.Hundimiento</option>
