@@ -35,7 +35,7 @@ public class ComisionAddDestinosCommandHandler : IRequestHandler<ComisionAddDest
         
         comision.AgregarDestinos(destinos);
 
-         var resultado = await _comisionRepository.AddDestinosAsync(comision, cancellationToken);
+         var resultado = await _comisionRepository.UpdateComisionAsync(comision, cancellationToken);
 
          return resultado.IsSuccess ? Result<int>.Success(resultado.Value) : Result<int>.Failure(resultado.Error!);
     }

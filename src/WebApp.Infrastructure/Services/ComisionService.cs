@@ -1,4 +1,5 @@
 using System.Reflection;
+using Bogus;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
@@ -31,6 +32,7 @@ public class ComisionService : IComisionService
                     Fecha_Regreso = c.Fecha_Regreso,
                     Estado = c.Estado,
 
+                    Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
                     Nombramiento = c.ComisionUsuarios!
                         .First(cu => cu.UsuarioId == usuarioId).Nombramiento,
 

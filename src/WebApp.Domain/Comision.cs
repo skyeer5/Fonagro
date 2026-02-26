@@ -58,7 +58,6 @@ public class Comision : AuditableEntity
             ComisionUsuarios.Add(comisionUsuario);
             
         }
-        this.Estado = EstadosTipos.DestinosDefinidos;
         
     }
     public void AgregarDestinos(List<ComisionDestino> comisionDestinos)
@@ -68,10 +67,20 @@ public class Comision : AuditableEntity
         {
             throw new Exception("Debe asignar al menos un destino");
         }
-
+        Console.WriteLine("\n\n\n\n");
         foreach(var destino in comisionDestinos)
         {
             this.ComisionDestinos.Add(destino);
+            Console.WriteLine(destino.Galones);
         }
+        this.Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
+        this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Galon_Usado, Galon_Estimado);
+        this.Estado = EstadosTipos.DestinosDefinidos;
+
+    }
+    public void AgregarPresupuestoGas(decimal prespuestoGas)
+    {
+        this.Presupuesto_Combustible_Aprobado = prespuestoGas;
+        this.Estado = EstadosTipos.CombustibleAprobado;
     }
 }

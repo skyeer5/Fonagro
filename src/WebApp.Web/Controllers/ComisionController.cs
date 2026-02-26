@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Comisiones.ComisionCreate;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
+using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Core;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
+using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
@@ -44,6 +46,10 @@ public class ComisionController : Controller
         if(resultado.Value!.destinos!.Any())
         {
             vm.TieneDestinosDefinidos = true;
+        }
+        if(resultado.Value!.Prespuesto_Aprobado)
+        {
+            vm.TieneCombustiblesAprobados = true;
         }
         return View(vm);
     }
@@ -85,6 +91,21 @@ public class ComisionController : Controller
     )
     {
         var command = new ComisionAddDestinosCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+        return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
+    }
+    [HttpGet("AgregarGasolina")]
+    public IActionResult AgregarGasolina()
+    {
+        return View();
+    }
+    [HttpPost("AgregarGasolina")]
+    public async Task<ActionResult<Result<int>>> AgregarGasolina(
+        [FromForm] ComisionApprovalGasRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new ComisionApprovalGasCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }
