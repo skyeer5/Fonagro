@@ -11,5 +11,6 @@ public interface IUsuarioService
     Task<bool> UsuariosExistsAsync(int usuarioId, List<int> usuariosIds);
     Task<List<GetUsuariosActivosResponse>> getUsuariosActivosAsync();
     Task<List<GetUsuariosSinComisionResponse>> getUsuariosSinComisionAsync();
+    Task<string?> GetNombreUsuarioAsync(int usuarioId); 
     
 }

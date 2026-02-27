@@ -10,6 +10,7 @@ using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
 using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
+using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -109,6 +110,18 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }
+    [HttpGet("ImprimirPlanViaje/{idUsuario}/{idComision}")]
+    public async Task<IActionResult> ImprimirPlanViaje(int idUsuario, int idComision)
+    {
+        var query = new PlanViajeQueryRequest(idUsuario, idComision);
+        var result = await _mediator.Send(query);
+        if (!result.Any())
+        {
+            return NotFound("Plan de viaje no encontrado");
+        }
+        return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PlanViaje_{idComision}.xlsx");
+    }
+
 
     // [HttpGet("Detalle/{id}")]
     // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(

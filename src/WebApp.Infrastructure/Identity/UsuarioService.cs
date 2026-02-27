@@ -22,6 +22,13 @@ public class UsuarioService : IUsuarioService
         _context = context;
     }
 
+    public async Task<string?> GetNombreUsuarioAsync(int usuarioId)
+    {
+        return await _userManager.Users.Where(u => u.Id == usuarioId)
+            .Select(u => u.Nombre_Completo)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<List<GetUsuariosActivosResponse>> getUsuariosActivosAsync()
     {
         return await _userManager.Users
