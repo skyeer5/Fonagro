@@ -1,10 +1,13 @@
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Interfaces;
+using WebApp.Domain;
 using WebApp.Infrastructure.Identity;
 using WebApp.Persistence;
 
@@ -13,80 +16,143 @@ namespace WebApp.Infrastructure.Services;
 public class ReportService : IReportService
 {
     private readonly IWebHostEnvironment _env;
-    private readonly WebAppDbContext _context;
     private readonly IUsuarioService _usuarioService;
+    private readonly IComisionService _comisionService;
 
-    public ReportService(IWebHostEnvironment env, WebAppDbContext context, IUsuarioService usuarioService)
+    public ReportService(IWebHostEnvironment env, IUsuarioService usuarioService, IComisionService comisionService )
     {
         _env = env;
-        _context = context;
         _usuarioService = usuarioService;
+        _comisionService = comisionService;
     }
 
     public async Task<byte[]> GetExcelPlanViajeAsync(int idUsuario, int idComision)
     {
-        var planViaje = await _context.Comisiones
-            .Where(p => p.ComisionId == idComision)
-            .Select(p => new PlanViajeResponse
-            {
-                Departamento = p.Departamento,
-                Fecha_Salida = p.Fecha_Salida,
-                Fecha_Regreso = p.Fecha_Regreso,
-                Descripcion = p.ComisionUsuarios!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion
-                })
-            .FirstOrDefaultAsync();
-        if(planViaje == null)
-        {
-            throw new Exception("Plan de viaje no encontrado");
-        }
+        var planViaje = await _comisionService.GetPlanViajeResponseAsync(idUsuario, idComision);
         planViaje.Nombre = await _usuarioService.GetNombreUsuarioAsync(idUsuario);
 
-        
-        
+        var filasViaticos = ConstruirFilasViaticos(planViaje);
+
         var path = Path.Combine(_env.ContentRootPath, "Templates", "PlanViajeTemplate.xlsx");
-        var memory = new MemoryStream(File.ReadAllBytes(path));
 
-        using (var document = SpreadsheetDocument.Open(memory, true))
-        {
-            RemplazarDatosSimples(document, planViaje);
-            document.WorkbookPart!.Workbook!.Save();
-        }
-        memory.Position = 0;
-        
-        return memory.ToArray();
+        using var workbook = new XLWorkbook(path);
+        var sheet = workbook.Worksheet(1);
+
+        InsertarDatosSimples(sheet, planViaje);
+        InsertarTablaViaticos(sheet, filasViaticos);
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+
+        return stream.ToArray();
     }
-
-
-    private void RemplazarDatosSimples(SpreadsheetDocument document, PlanViajeResponse planViaje)
+    private List<PlanViajeFilaViatico> ConstruirFilasViaticos(PlanViajeResponse planViaje)
     {
-        RemplazarTexto(document, "{{Departamento}}", planViaje.Departamento ?? string.Empty);
-        RemplazarTexto(document, "{{Fecha_Salida}}", planViaje.Fecha_Salida.ToShortDateString());
-        RemplazarTexto(document, "{{Hora_Salida}}", planViaje.Fecha_Salida.ToShortTimeString());
-        RemplazarTexto(document, "{{Fecha_Regreso}}", planViaje.Fecha_Regreso.ToShortDateString());
-        RemplazarTexto(document, "{{Hora_Regreso}}", planViaje.Fecha_Regreso.ToShortTimeString());
-        RemplazarTexto(document, "{{Descripcion}}", planViaje.Descripcion ?? string.Empty);
-        RemplazarTexto(document, "{{Nombre}}", planViaje.Nombre ?? string.Empty);
+        var resultado = new List<PlanViajeFilaViatico>();
 
-    }
-    private void RemplazarTexto(SpreadsheetDocument document, string placeholder, string value)
-    {
-        var sharedStringPart = document.WorkbookPart!.SharedStringTablePart;
-        if (sharedStringPart == null) return;
+        if (planViaje.Viaticos == null)
+            return resultado;
 
-        var table = sharedStringPart.SharedStringTable;
+        var fechaInicio = DateOnly.FromDateTime(planViaje.Fecha_Salida);
+        var fechaFin = DateOnly.FromDateTime(planViaje.Fecha_Regreso);
 
-        foreach (var item in table!.Elements<SharedStringItem>())
+        while (fechaInicio <= fechaFin)
         {
-            var texto = item.InnerText;
+            var viaticosDelDia = planViaje.Viaticos
+                .Where(v => v.Fecha == fechaInicio)
+                .ToList();
 
-            if (!string.IsNullOrWhiteSpace(texto) && texto.Contains(placeholder))
+            decimal? desayuno = null;
+            decimal? almuerzo = null;
+            decimal? cena = null;
+            decimal? hospedaje = null;
+
+            if (viaticosDelDia.Any())
             {
-                Console.WriteLine($"Remplazando {placeholder} por {value}");
-                item.RemoveAllChildren();
-                item.AppendChild(new Text(texto.Replace(placeholder, value)));
+                desayuno = viaticosDelDia
+                    .Where(v => v.Tipo_viatico == ViaticosTipos.Desayuno)
+                    .Sum(v => v.Monto);
+
+                almuerzo = viaticosDelDia
+                    .Where(v => v.Tipo_viatico == ViaticosTipos.Almuerzo)
+                    .Sum(v => v.Monto);
+
+                cena = viaticosDelDia
+                    .Where(v => v.Tipo_viatico == ViaticosTipos.Cena)
+                    .Sum(v => v.Monto);
+
+                hospedaje = viaticosDelDia
+                    .Where(v => v.Tipo_viatico == ViaticosTipos.Hospedaje)
+                    .Sum(v => v.Monto);
+
+                if (desayuno == 0) desayuno = null;
+                if (almuerzo == 0) almuerzo = null;
+                if (cena == 0) cena = null;
+                if (hospedaje == 0) hospedaje = null;
             }
+
+            resultado.Add(new PlanViajeFilaViatico
+            {
+                Fecha = fechaInicio,
+                Desayuno = desayuno,
+                Almuerzo = almuerzo,
+                Cena = cena,
+                Hospedaje = hospedaje
+            });
+
+            fechaInicio = fechaInicio.AddDays(1);
         }
 
-        table.Save();
+        return resultado;
     }
+    private void InsertarDatosSimples(IXLWorksheet sheet, PlanViajeResponse planViaje)
+    {
+        sheet.Cell("B7").Value = planViaje.Departamento;
+        sheet.Cell("B10").Value = planViaje.Fecha_Salida.ToShortDateString();
+        sheet.Cell("B11").Value = planViaje.Fecha_Salida.ToShortTimeString();
+        sheet.Cell("E10").Value = planViaje.Fecha_Regreso.ToShortDateString();
+        sheet.Cell("E11").Value = planViaje.Fecha_Regreso.ToShortTimeString();
+        sheet.Cell("A30").Value = planViaje.Nombre;
+        sheet.Cell("A14").Value = planViaje.Descripcion;
+        sheet.Cell("F26").Value = planViaje.TotalCombustibleAutorizado;
+        sheet.Cell("B19").Value = planViaje.TotalDesayuno;
+        sheet.Cell("C19").Value = planViaje.TotalAlmuerzo;
+        sheet.Cell("D19").Value = planViaje.TotalCena;
+        sheet.Cell("E19").Value = planViaje.TotalHospedaje;
+        sheet.Cell("F19").Value = planViaje.TotalViaticos;
+    }
+    private void InsertarTablaViaticos(IXLWorksheet sheet, List<PlanViajeFilaViatico> filas)
+    {
+        int filaInicio = 18;
+
+        if (filas.Count > 1)
+        {
+            sheet.Row(filaInicio).InsertRowsBelow(filas.Count - 1);
+        }
+        int row = 18;
+        
+        foreach (var fila in filas)
+        {
+            sheet.Cell(row, 1).Value = fila.Fecha.ToString("dd/MM/yyyy");
+            sheet.Cell(row, 2).Value = fila.Desayuno;
+            sheet.Cell(row, 3).Value = fila.Almuerzo;
+            sheet.Cell(row, 4).Value = fila.Cena;
+            sheet.Cell(row, 5).Value = fila.Hospedaje;
+            sheet.Cell(row, 6).Value = fila.Total;
+            row++;
+        }
+    }
+}
+public class PlanViajeFilaViatico
+{
+    public DateOnly Fecha { get; set; } 
+    public decimal? Desayuno { get; set; }
+    public decimal? Almuerzo { get; set; }
+    public decimal? Cena { get; set; }
+    public decimal? Hospedaje { get; set; }
+    public decimal Total =>
+        (Desayuno ?? 0) +
+        (Almuerzo ?? 0) +
+        (Cena ?? 0) +
+        (Hospedaje ?? 0);
 }

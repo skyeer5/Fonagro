@@ -15,6 +15,7 @@ public class PlanViajeResponse
     public decimal TotalAlmuerzo => Viaticos?.Where(v => v.Tipo_viatico == ViaticosTipos.Almuerzo).Sum(v => v.Monto) ?? 0;
     public decimal TotalCena => Viaticos?.Where(v => v.Tipo_viatico == ViaticosTipos.Cena).Sum(v => v.Monto) ?? 0;
     public decimal TotalHospedaje => Viaticos?.Where(v => v.Tipo_viatico == ViaticosTipos.Hospedaje).Sum(v => v.Monto) ?? 0;
+    public decimal TotalViaticos => TotalDesayuno + TotalAlmuerzo + TotalCena + TotalHospedaje;
     public List<GetComisionDestinosResponse>? Destinos { get; set; }
     public decimal Precio_Galon { get; set;}
     public decimal TotalCombustibleAutorizado { get; set; }

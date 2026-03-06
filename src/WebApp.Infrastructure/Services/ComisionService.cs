@@ -3,6 +3,8 @@ using Bogus;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
+using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
@@ -56,4 +58,33 @@ public class ComisionService : IComisionService
        return await _context.Comisiones.Where(x=>x.ComisionId == comisionId).Include(x=>x.Vehiculo).FirstOrDefaultAsync();
     }
 
+    public async Task<PlanViajeResponse> GetPlanViajeResponseAsync(int idUsuario, int idComision)
+    {
+                var planViaje = await _context.Comisiones
+            .Where(p => p.ComisionId == idComision)
+            .Select(p => new PlanViajeResponse
+            {
+                Departamento = p.Departamento,
+                Fecha_Salida = p.Fecha_Salida,
+                Fecha_Regreso = p.Fecha_Regreso,
+                Descripcion = p.ComisionUsuarios!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
+                TotalCombustibleAutorizado = p.Presupuesto_Combustible_Aprobado,
+                Viaticos = p.ComisionUsuarios!
+                    .Where(cu => cu.UsuarioId == idUsuario)
+                    .SelectMany(cu => cu.ComisionViaticosList!)
+                    .Select(v => new GetComisionViaticoResponse
+                    {
+                        Tipo_viatico = v.Viatico!.Nombre,
+                        Monto = v.Viatico.Monto,
+                        Fecha = DateOnly.FromDateTime(v.Fecha)
+                    })
+                    .ToList(),
+                })
+            .FirstOrDefaultAsync();
+        if(planViaje is null)
+        {
+            throw new Exception("Plan de viaje no encontrado");
+        }
+        return planViaje;
+    }
 }
