@@ -1,15 +1,9 @@
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
-using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
-using WebApp.Infrastructure.Identity;
-using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -32,6 +26,8 @@ public class ReportService : IReportService
         planViaje.Nombre = await _usuarioService.GetNombreUsuarioAsync(idUsuario);
 
         var filasViaticos = ConstruirFilasViaticos(planViaje);
+        var filaDestinos = ConstruirFilasDestinos(planViaje);
+        planViaje.TotalCombustible = filaDestinos.Sum(d => d.Total);
 
         var path = Path.Combine(_env.ContentRootPath, "Templates", "PlanViajeTemplate.xlsx");
 
@@ -39,7 +35,8 @@ public class ReportService : IReportService
         var sheet = workbook.Worksheet(1);
 
         InsertarDatosSimples(sheet, planViaje);
-        InsertarTablaViaticos(sheet, filasViaticos);
+        var filaViaticos = InsertarTablaViaticos(sheet, filasViaticos);
+        InsertarTablaDestinos(sheet, filaDestinos, filaViaticos);
 
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
@@ -105,6 +102,26 @@ public class ReportService : IReportService
 
         return resultado;
     }
+    private List<PlanViajeFilaDestinos> ConstruirFilasDestinos(PlanViajeResponse planViaje)
+    {
+        var resultado = new List<PlanViajeFilaDestinos>();
+
+        if (planViaje.Destinos == null)
+            return resultado;
+
+        foreach (var destino in planViaje.Destinos)
+        {
+            resultado.Add(new PlanViajeFilaDestinos
+            {
+                Descripcion = destino.Descripcion,
+                Kms = destino.Kilometros,
+                Galones = destino.Galones,
+                PrecioGalon = planViaje.Precio_Galon
+            });
+        }
+
+        return resultado;
+    }
     private void InsertarDatosSimples(IXLWorksheet sheet, PlanViajeResponse planViaje)
     {
         sheet.Cell("B7").Value = planViaje.Departamento;
@@ -120,8 +137,22 @@ public class ReportService : IReportService
         sheet.Cell("D19").Value = planViaje.TotalCena;
         sheet.Cell("E19").Value = planViaje.TotalHospedaje;
         sheet.Cell("F19").Value = planViaje.TotalViaticos;
+
+        sheet.Cell("B24").Value = planViaje.TotalKms;
+        sheet.Cell("C24").Value = planViaje.TotalGalones;
+        sheet.Cell("D24").Value = planViaje.Precio_Galon;
+        sheet.Cell("E24").Value = planViaje.TotalCombustible;
+
+        if(planViaje.Es_Gasolina)
+        {
+            sheet.Cell("D21").Value = "X";
+        }
+        else
+        {
+            sheet.Cell("F21").Value = "X";
+        }
     }
-    private void InsertarTablaViaticos(IXLWorksheet sheet, List<PlanViajeFilaViatico> filas)
+    private int InsertarTablaViaticos(IXLWorksheet sheet, List<PlanViajeFilaViatico> filas)
     {
         int filaInicio = 18;
 
@@ -141,6 +172,27 @@ public class ReportService : IReportService
             sheet.Cell(row, 6).Value = fila.Total;
             row++;
         }
+        return row;
+    }
+    private void InsertarTablaDestinos(IXLWorksheet sheet, List<PlanViajeFilaDestinos> filas, int filaInicio)
+    {
+        filaInicio += 4;
+
+        if (filas.Count > 1)
+        {
+            sheet.Row(filaInicio).InsertRowsBelow(filas.Count - 1);
+        }
+        int row = filaInicio;
+        
+        foreach (var fila in filas)
+        {
+            sheet.Cell(row, 1).Value = fila.Descripcion;
+            sheet.Cell(row, 2).Value = fila.Kms;
+            sheet.Cell(row, 3).Value = fila.Galones;
+            sheet.Cell(row, 4).Value = fila.PrecioGalon;
+            sheet.Cell(row, 5).Value = fila.Total;
+            row++;
+        }
     }
 }
 public class PlanViajeFilaViatico
@@ -155,4 +207,13 @@ public class PlanViajeFilaViatico
         (Almuerzo ?? 0) +
         (Cena ?? 0) +
         (Hospedaje ?? 0);
+}
+public class PlanViajeFilaDestinos
+{
+    public string? Descripcion { get; set; } 
+    public decimal? Kms { get; set; }
+    public decimal? Galones { get; set; }
+    public decimal? PrecioGalon { get; set; }
+    public decimal Total =>
+        (Galones ?? 1) * (PrecioGalon ?? 1);
 }

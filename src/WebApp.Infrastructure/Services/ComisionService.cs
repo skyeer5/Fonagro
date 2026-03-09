@@ -2,6 +2,7 @@ using System.Reflection;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
+using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
@@ -69,6 +70,11 @@ public class ComisionService : IComisionService
                 Fecha_Regreso = p.Fecha_Regreso,
                 Descripcion = p.ComisionUsuarios!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
                 TotalCombustibleAutorizado = p.Presupuesto_Combustible_Aprobado,
+                Es_Gasolina = p.Vehiculo!.Gasolina!.Nombre != GasolinaTipos.Disel ? true : false,
+                Precio_Galon = p.Vehiculo!.Gasolina!.GasolinaPrecios!
+                    .OrderByDescending(gp => gp.Fecha)
+                    .Select(gp => gp.Precio)
+                    .FirstOrDefault(),
                 Viaticos = p.ComisionUsuarios!
                     .Where(cu => cu.UsuarioId == idUsuario)
                     .SelectMany(cu => cu.ComisionViaticosList!)
@@ -79,8 +85,15 @@ public class ComisionService : IComisionService
                         Fecha = DateOnly.FromDateTime(v.Fecha)
                     })
                     .ToList(),
-                })
-            .FirstOrDefaultAsync();
+                Destinos = p.ComisionDestinos!
+                    .Select(d => new GetComisionDestinosDetailResponse
+                    {
+                        Descripcion = d.Descripcion,
+                        Kilometros = d.Kilometros,
+                        Galones = d.Galones,
+                    })
+                    .ToList()
+            }).FirstOrDefaultAsync();
         if(planViaje is null)
         {
             throw new Exception("Plan de viaje no encontrado");

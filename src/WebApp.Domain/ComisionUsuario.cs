@@ -58,7 +58,7 @@ public class ComisionUsuario : AuditableEntity
                 }
 
             }
-            if (i == dias && i != 1)
+            else if (i == dias && i != 1)
             {
                 if (entrada.TimeOfDay >= TimeSpan.FromHours(6))
                 {
