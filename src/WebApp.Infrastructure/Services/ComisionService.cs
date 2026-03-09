@@ -34,7 +34,8 @@ public class ComisionService : IComisionService
                     Fecha_Salida = c.Fecha_Salida,
                     Fecha_Regreso = c.Fecha_Regreso,
                     Estado = c.Estado,
-
+                    Descripcion = c.ComisionUsuarios!
+                        .First(cu => cu.UsuarioId == usuarioId).Descripcion,
                     Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
                     Nombramiento = c.ComisionUsuarios!
                         .First(cu => cu.UsuarioId == usuarioId).Nombramiento,

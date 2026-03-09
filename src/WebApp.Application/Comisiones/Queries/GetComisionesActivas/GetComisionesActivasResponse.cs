@@ -7,6 +7,7 @@ public class GetComisionActivaResponse
     public int id { get; set; }
     public string? Nombramiento { get; set; }
     public string? Departamento { get; set; }
+    public string? Descripcion { get; set; }
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public string? Estado { get; set; }

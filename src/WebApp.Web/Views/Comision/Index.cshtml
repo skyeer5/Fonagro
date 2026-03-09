@@ -26,6 +26,18 @@ else{
         <p><strong>Salida:</strong> @Model.Comision.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</p>
         <p><strong>Regreso:</strong> @Model.Comision.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</p>
         <p><strong>Estado:</strong> @Model.Comision.Estado</p>
+        <p><strong>Descripción:</strong></p>
+        <form asp-controller="Comision"
+                asp-action="AgregarDescripcion"
+                method="post">
+                <input type="hidden" name="ComisionId" value="@Model.Comision.id" />
+                <textarea name="Descripcion" class="form-control" placeholder="Descripción">@Model.Comision.Descripcion</textarea>
+                <br>
+                <button type="submit" class="btn btn-primary">
+                    Guardar Descripción
+                </button>
+
+            </form>
     </div>
 </div>
 

@@ -27,6 +27,8 @@ builder.Services.AddScoped<IAccesoriosService, AccesoriosService>();
 builder.Services.AddScoped<IViaticosService, ViaticosService>();
 builder.Services.AddScoped<IComisionService, ComisionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IComisionUsuarioService, ComisionUsuarioService>();
+builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>()
     .AddEntityFrameworkStores<WebAppDbContext>()

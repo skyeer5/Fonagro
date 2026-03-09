@@ -2,11 +2,13 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Comisiones.ComisionCreate;
+using WebApp.Application.Comisiones.Command.ComisionAddDescripcion;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Core;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
+using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
 using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
@@ -107,6 +109,16 @@ public class ComisionController : Controller
     )
     {
         var command = new ComisionApprovalGasCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+        return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
+    }
+    [HttpPost("AgregarDescripcion")]
+    public async Task<ActionResult<Result<int>>> AgregarDescripcion(
+        [FromForm] ComisionAddDescripcionRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new ComisionAddDescripcionCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }

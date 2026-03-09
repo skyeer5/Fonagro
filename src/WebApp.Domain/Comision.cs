@@ -80,7 +80,7 @@ public class Comision : AuditableEntity
     }
     public void AgregarPresupuestoGas(decimal prespuestoGas)
     {
-        this.Estado = EstadosTipos.CombustibleAprobado;
+        this.Estado = EstadosTipos.Programada;
         this.Presupuesto_Combustible_Aprobado = prespuestoGas;
     }
 }

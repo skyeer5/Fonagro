@@ -13,7 +13,6 @@ public static class EstadosTipos
 
     public const string Creada = nameof(Creada); // Cuando la crea servicios 
     public const string DestinosDefinidos = nameof(DestinosDefinidos); // cuando se ponen los destinos
-    public const string CombustibleAprobado = nameof(CombustibleAprobado); // cuando aprueban el combustible
     public const string Programada = nameof(Programada); // cuando ya queda aprobada y lista para continuar
     public const string EnCurso = nameof(EnCurso); // cuando empieza la comision
     public const string Completada = nameof(Completada); // cuando termina la comison
