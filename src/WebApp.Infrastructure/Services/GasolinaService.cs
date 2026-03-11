@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebApp.Application.Gasolinas.Queries.GetGasolinas;
 using WebApp.Application.Interfaces;
 using WebApp.Persistence;
 
@@ -15,6 +16,19 @@ public class GasolinaService : IGasolinaService
     {
         return await _context.Gasolinas.AsNoTracking().AnyAsync(g => g.GasolinaId == gasolinaId, cancellationToken);
 
+    }
+
+    public async Task<List<GetGasolinasResponse>?> GetGasolinasListAsync(CancellationToken cancellationToken)
+    {
+        var gasolinas = await _context.Gasolinas
+            .Select(g => new GetGasolinasResponse
+            {
+                Id = g.GasolinaId,
+                Nombre = g.Nombre!
+            })
+            .ToListAsync(cancellationToken);
+
+        return gasolinas;
     }
 
     public async Task<string?> GetNombreByIdAsync(int gasolinaId, CancellationToken cancellationToken)

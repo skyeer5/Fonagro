@@ -7,6 +7,7 @@ using WebApp.Application.Partes.Queries.GetPartes;
 using WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using static WebApp.Application.Accesorios.Queries.GetAccesorios.GetAccesoriosQuery;
+using static WebApp.Application.Gasolinas.Queries.GetGasolinas.GetGasolinasQuery;
 using static WebApp.Application.Partes.Queries.GetPartes.GetPartesQuery;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
@@ -37,6 +38,13 @@ public class VehiculoController : Controller
         }
         ViewBag.Partes = new SelectList(partes.Result.Value, "id", "Nombre");
 
+        var gasolinas = _mediator.Send(new GetGasolinasQueryRequest());
+        if (!gasolinas.Result.IsSuccess)
+        {
+            ModelState.AddModelError(string.Empty, gasolinas.Result.Error!);
+            return View();
+        }
+        ViewBag.Gasolinas = new SelectList(gasolinas.Result.Value, "Id", "Nombre");
         
         var accesorios = _mediator.Send(new GetAccesoriosQueryRequest());
         if (!accesorios.Result.IsSuccess)

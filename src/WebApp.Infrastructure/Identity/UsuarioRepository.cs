@@ -18,18 +18,16 @@ public class UsuarioRepository : IUsuarioRepository
 
     public async Task<Result<int>> CreateUsuarioAsync(UsuarioCreateRequest request, CancellationToken cancellationToken)
     {
-        var usuario = new AppUser
-        {
-            Nombre_Completo = request.Nombre_Completo,
-            NIT = request.NIT,
-            Puesto = request.Puesto,
-            Unidad = request.Unidad,
-            Tipo_Servicios = request.Tipo_Servicios,
-            Numero_Contrato = request.Numero_Contrato,
-            Estado = UsuarioEstados.Activo,
-            Email = request.Email,
-            UserName = request.Email
-        };
+        var usuario = AppUser.Crear(
+            nombreCompleto: request.Nombre_Completo!,
+            nit: request.NIT!,
+            puesto: request.Puesto!,
+            unidad: request.Unidad!,
+            tipoServicios: request.Tipo_Servicios!,
+            numeroContrato: request.Numero_Contrato!,
+            email: request.Email!
+            );
+
         var result = await _userManager.CreateAsync(usuario, request.Password!);
         if (!result.Succeeded)
         {

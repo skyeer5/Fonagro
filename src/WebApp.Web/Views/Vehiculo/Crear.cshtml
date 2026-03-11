@@ -69,9 +69,16 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="GasolinaId" class="form-label"></label>
-        <input asp-for="GasolinaId" type="number" class="form-control" />
-        <span asp-validation-for="GasolinaId" class="text-danger"></span>
+        <label>Gasolina</label>
+        <select class="form-select mt-2"
+        asp-for="GasolinaId"
+        required>
+        <option value="">Seleccionar Gasolina</option>
+        @foreach (var gasolina in (ViewBag.Gasolinas as SelectList)!)
+        {
+            <option value="@gasolina.Value">@gasolina.Text</option>
+        }
+        </select>
     </div>
 
     <div class="mb-3">
