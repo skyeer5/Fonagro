@@ -13,7 +13,7 @@ public class ComisionCreateValidator : AbstractValidator<ComisionCreateRequest>
             .GreaterThan(x => x.Fecha_Salida).WithMessage("La fecha de regreso debe ser posterior a la fecha de salida.");
 
         RuleFor(x => x.Fecha_Salida)
-            .GreaterThan(DateTime.Today).WithMessage("La fecha de salida debe ser posterior a la fecha actual.");
+            .GreaterThan(DateTime.Now).WithMessage("La fecha de salida debe ser posterior a la fecha actual.");
 
         RuleFor(x => x.UsuarioId)
             .GreaterThan(0).WithMessage("El ID del usuario debe ser un número positivo.");
