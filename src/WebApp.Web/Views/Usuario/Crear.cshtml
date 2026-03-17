@@ -8,54 +8,80 @@
 
 <form asp-action="Crear" method="post" class="space-y-4 max-w-xl">
 
-    <div>
+    <div class="mb-3">
         <label asp-for="Nombre_Completo" class="block text-sm font-medium">Nombre completo</label>
-        <input asp-for="Nombre_Completo" class="mt-1 block w-full border rounded p-2" />
+        <input asp-for="Nombre_Completo" class="form-control" />
         <span asp-validation-for="Nombre_Completo" class="text-red-600 text-sm"></span>
     </div>
 
-    <div>
+    <div class="mb-3">
         <label asp-for="NIT" class="block text-sm font-medium">NIT</label>
-        <input asp-for="NIT" class="mt-1 block w-full border rounded p-2" />
+        <input asp-for="NIT" class="form-control" />
         <span asp-validation-for="NIT" class="text-red-600 text-sm"></span>
     </div>
 
     <div>
-        <label asp-for="Puesto" class="block text-sm font-medium">Puesto</label>
-        <input asp-for="Puesto" class="mt-1 block w-full border rounded p-2" />
-        <span asp-validation-for="Puesto" class="text-red-600 text-sm"></span>
+        <label class="block text-sm font-medium">Puesto</label>
+        <select id="puestoSelect" class="form-control">
+            <option value="">Seleccionar puesto</option>
+            @foreach (var puesto in ViewBag.Puestos)
+            {
+                <option value="@puesto">@puesto</option>
+            }
+        </select>
     </div>
 
-    <div>
+    <div id="personaDiv" class="mt-3" style="display:none;">
+        <label for="personaSelect" class="block text-sm font-medium">Seleccionar persona</label>
+        <select id="personaSelect" class="form-control">
+            <option value="">Seleccione una persona</option>
+        </select>
+    </div>
+
+    <input type="hidden" asp-for="Puesto" id="valorFinal" />
+
+    <div class="mb-3">
         <label asp-for="Unidad" class="block text-sm font-medium">Unidad</label>
-        <input asp-for="Unidad" class="mt-1 block w-full border rounded p-2" />
+        <select asp-for="Unidad" id="unidadSelect" class="form-control">
+            <option value="">Seleccionar unidad</option>
+            @foreach (var unidad in ViewBag.Unidades)
+            {
+                <option value="@unidad">@unidad</option>
+            }
+        </select>
         <span asp-validation-for="Unidad" class="text-red-600 text-sm"></span>
     </div>
 
-    <div>
+    <div class="mb-3">
         <label asp-for="Tipo_Servicios" class="block text-sm font-medium">Tipo de servicios</label>
-        <input asp-for="Tipo_Servicios" class="mt-1 block w-full border rounded p-2" />
+        <select asp-for="Tipo_Servicios" id="tipoServiciosSelect" class="form-control">
+            <option value="">Seleccionar tipo de servicio</option>
+            @foreach (var tipo in ViewBag.TipoServicios)
+            {
+                <option value="@tipo">@tipo</option>
+            }
+        </select>
         <span asp-validation-for="Tipo_Servicios" class="text-red-600 text-sm"></span>
     </div>
 
-    <div>
+    <div class="mb-3">
         <label asp-for="Numero_Contrato" class="block text-sm font-medium">Número de contrato</label>
-        <input asp-for="Numero_Contrato" class="mt-1 block w-full border rounded p-2" />
+        <input asp-for="Numero_Contrato" class="form-control" />
         <span asp-validation-for="Numero_Contrato" class="text-red-600 text-sm"></span>
     </div>
 
-    <div>
+    <div class="mb-3">
         <label asp-for="Email" class="block text-sm font-medium">Correo electrónico</label>
-        <input asp-for="Email" type="email" class="mt-1 block w-full border rounded p-2" />
+        <input asp-for="Email" type="email" class="form-control" />
         <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
     </div>
 
-    <div>
+    <div class="mb-3">
         <label asp-for="Password" class="block text-sm font-medium">Contraseña</label>
-        <input asp-for="Password" type="password" class="mt-1 block w-full border rounded p-2" />
+        <input asp-for="Password" type="password" class="form-control" />
         <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
     </div>
-
+    
     <div class="pt-4">
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
             Crear usuario
@@ -66,4 +92,58 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+<script>
+    var puestoSelect = document.getElementById("puestoSelect");
+    var personaDiv = document.getElementById("personaDiv");
+    var personaSelect = document.getElementById("personaSelect");
+    var valorFinal = document.getElementById("valorFinal");
+
+    puestoSelect.addEventListener("change", function () {
+        var valor = this.value.toLowerCase();
+        personaSelect.innerHTML = ""; // limpiar opciones previas
+
+        if (valor === "encargado") {
+            personaDiv.style.display = "block";
+            var encargados = [
+                @foreach (var e in ViewBag.Encargados)
+                {
+                    @: "@e",
+                }
+            ];
+            encargados.forEach(function (nombre) {
+                var opt = document.createElement("option");
+                opt.value = nombre;
+                opt.text = nombre;
+                personaSelect.appendChild(opt);
+            });
+
+            personaSelect.addEventListener("change", function () {
+                valorFinal.value = this.value; // se envía la persona
+            });
+
+        } else if (valor === "auxiliar") {
+            personaDiv.style.display = "block";
+            var auxiliares = [
+                @foreach (var a in ViewBag.Auxiliares)
+                {
+                    @: "@a",
+                }
+            ];
+            auxiliares.forEach(function (nombre) {
+                var opt = document.createElement("option");
+                opt.value = nombre;
+                opt.text = nombre;
+                personaSelect.appendChild(opt);
+            });
+
+            personaSelect.addEventListener("change", function () {
+                valorFinal.value = this.value; // se envía la persona
+            });
+
+        } else {
+            personaDiv.style.display = "none";
+            valorFinal.value = this.value; // si es Asistente, se envía directamente
+        }
+    });
+</script>
 }

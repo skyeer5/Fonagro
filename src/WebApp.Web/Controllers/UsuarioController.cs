@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Application.Core;
 using WebApp.Application.Usuarios.Commands.UsuarioCreate;
+using WebApp.Domain;
 using static WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateCommand;
 
 namespace WebApp.Web.Controllers;
@@ -18,6 +19,11 @@ public class UsuarioController : Controller
     [HttpGet("crear")]
     public IActionResult Crear()
     {
+        ViewBag.Puestos = UsuariosTipos.GetPuestos();
+        ViewBag.Encargados = UsuariosTipos.GetEncargados();
+        ViewBag.Unidades = UsuariosTipos.GetUnidades();
+        ViewBag.Auxiliares = UsuariosTipos.GetAuxiliares();
+        ViewBag.TipoServicios = UsuariosTipos.GetTipoServicios();
         return View();
     }
     [HttpPost("crear")]

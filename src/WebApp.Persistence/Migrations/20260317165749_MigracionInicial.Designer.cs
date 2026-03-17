@@ -12,7 +12,7 @@ using WebApp.Persistence;
 namespace WebApp.Persistence.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    [Migration("20260219184011_MigracionInicial")]
+    [Migration("20260317165749_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace WebApp.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.23")
+                .HasAnnotation("ProductVersion", "8.0.24")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -78,6 +78,18 @@ namespace WebApp.Persistence.Migrations
                             Id = 4,
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Aprobador_Gasolina",
+                            NormalizedName = "APROBADOR_GASOLINA"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Usuario",
+                            NormalizedName = "USUARIO"
                         });
                 });
 

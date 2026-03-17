@@ -17,7 +17,7 @@ namespace WebApp.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.23")
+                .HasAnnotation("ProductVersion", "8.0.24")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -75,6 +75,18 @@ namespace WebApp.Persistence.Migrations
                             Id = 4,
                             Name = "Gestor",
                             NormalizedName = "GESTOR"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Aprobador_Gasolina",
+                            NormalizedName = "APROBADOR_GASOLINA"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Usuario",
+                            NormalizedName = "USUARIO"
                         });
                 });
 

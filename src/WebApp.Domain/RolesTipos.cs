@@ -10,4 +10,8 @@ public static class RolesTipos
     public const int ConsultorId = 3;
     public const string Gestor = nameof(Gestor);
     public const int GestorId = 4;
+    public const string Aprobador_Gasolina = nameof(Aprobador_Gasolina);
+    public const int Aprobador_GasolinaId = 5;
+    public const string Usuario = nameof(Usuario);
+    public const int UsuarioId = 6;
 }

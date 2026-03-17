@@ -487,7 +487,9 @@ namespace WebApp.Persistence.Migrations
                     { 1, null, "Administrador", "ADMINISTRADOR" },
                     { 2, null, "Comisionista", "COMISIONISTA" },
                     { 3, null, "Consultor", "CONSULTOR" },
-                    { 4, null, "Gestor", "GESTOR" }
+                    { 4, null, "Gestor", "GESTOR" },
+                    { 5, null, "Aprobador_Gasolina", "APROBADOR_GASOLINA" },
+                    { 6, null, "Usuario", "USUARIO" }
                 });
 
             migrationBuilder.InsertData(

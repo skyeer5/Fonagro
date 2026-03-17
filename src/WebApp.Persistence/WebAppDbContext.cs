@@ -194,11 +194,15 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         var comisionista = new IdentityRole<int> { Id = RolesTipos.ComisionistaId, Name = RolesTipos.Comisionista, NormalizedName = RolesTipos.Comisionista.ToUpper() };
         var consultor = new IdentityRole<int> { Id = RolesTipos.ConsultorId, Name = RolesTipos.Consultor, NormalizedName = RolesTipos.Consultor.ToUpper() };
         var gestor = new IdentityRole<int> { Id = RolesTipos.GestorId, Name = RolesTipos.Gestor, NormalizedName = RolesTipos.Gestor.ToUpper() };
+        var aprobador_gasolina = new IdentityRole<int> { Id = RolesTipos.Aprobador_GasolinaId, Name = RolesTipos.Aprobador_Gasolina, NormalizedName = RolesTipos.Aprobador_Gasolina.ToUpper() };
+        var usuario = new IdentityRole<int> { Id = RolesTipos.UsuarioId, Name = RolesTipos.Usuario, NormalizedName = RolesTipos.Usuario.ToUpper() };
         modelBuilder.Entity<IdentityRole<int>>().HasData(
             admin,
             comisionista,
             consultor,
-            gestor
+            gestor,
+            aprobador_gasolina,
+            usuario
         );
         modelBuilder.Entity<IdentityRoleClaim<int>>().HasData(
             //Administrador 
