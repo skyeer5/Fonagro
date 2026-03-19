@@ -36,6 +36,7 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IComisionUsuarioService, ComisionUsuarioService>();
 builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IGasolinaPrecioRepository, GasolinaPrecioRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
