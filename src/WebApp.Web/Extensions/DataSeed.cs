@@ -28,7 +28,8 @@ public static class DataSeed
                 {
                     Nombre_Completo = "Encargado de Sistemas",
                     UserName = RolesTipos.Administrador,
-                    Email = "soporte.ti@fonagro.gob.gt"
+                    Email = "soporte.ti@fonagro.gob.gt",
+                    NIT = "117752649"
                 };
                 var result = await userManager.CreateAsync(userAdmin, "F0n@gr02026");
                 if (!result.Succeeded)

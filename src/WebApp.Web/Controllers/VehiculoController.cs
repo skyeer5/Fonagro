@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Core;
@@ -13,7 +14,7 @@ using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreate
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
 
 namespace WebApp.Web.Controllers;
-
+[Authorize]
 [Route("vehiculo")]
 public class VehiculoController : Controller
 {

@@ -1,9 +1,12 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Web.Models;
 
 namespace WebApp.Web.Controllers;
 
+[Authorize]
+[Route("home")]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -12,7 +15,7 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
-
+    [HttpGet("index")]
     public IActionResult Index()
     {
         return View();

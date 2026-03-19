@@ -1,5 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Web.Application.Interfaces;
 using WebApp.Application;
 using WebApp.Application.Interfaces;
 using WebApp.Infrastructure.Identity;
@@ -29,19 +33,30 @@ builder.Services.AddScoped<IComisionService, ComisionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IComisionUsuarioService, ComisionUsuarioService>();
 builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddIdentity<AppUser, IdentityRole<int>>()
-    .AddEntityFrameworkStores<WebAppDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
+{
+    options.Password.RequireNonAlphanumeric = false;
+    options.User.RequireUniqueEmail = true;
+
+    options.Lockout.MaxFailedAccessAttempts = 5;
+})
+.AddEntityFrameworkStores<WebAppDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/Login";
+
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddIdentityCore<AppUser>( opt=>
-{
-    opt.Password.RequireNonAlphanumeric = false;
-    opt.User.RequireUniqueEmail = true;
-}).AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<WebAppDbContext>();
 
 var app = builder.Build();
 
@@ -57,12 +72,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 await app.SeedDataAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=home}/{action=index}/{id?}");
 
 app.Run();
