@@ -15,9 +15,6 @@ public class ComisionCreateValidator : AbstractValidator<ComisionCreateRequest>
         RuleFor(x => x.Fecha_Salida)
             .GreaterThan(DateTime.Now).WithMessage("La fecha de salida debe ser posterior a la fecha actual.");
 
-        RuleFor(x => x.UsuarioId)
-            .GreaterThan(0).WithMessage("El ID del usuario debe ser un número positivo.");
-
         RuleFor(x => x.VehiculoId)
             .GreaterThan(0).WithMessage("El ID del vehículo debe ser un número positivo.");
         

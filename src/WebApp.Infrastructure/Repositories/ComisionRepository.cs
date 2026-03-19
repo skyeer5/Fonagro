@@ -8,14 +8,19 @@ namespace WebApp.Infrastructure.Repositories;
 public class ComisionRepository : IComisionRepository
 {
     private readonly WebAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public ComisionRepository(WebAppDbContext context)
+    public ComisionRepository(WebAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<int>> AddAsync(Domain.Comision comision, CancellationToken cancellationToken)
     {
+        var userId = _currentUser.userId;
+        comision.AgregarCreadoPor(userId);
+        
         await _context.Comisiones.AddAsync(comision, cancellationToken);
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al agregar la comisión");

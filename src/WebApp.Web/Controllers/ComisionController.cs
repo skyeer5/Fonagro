@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Comisiones.ComisionCreate;
@@ -18,6 +19,7 @@ using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVeh
 
 namespace WebApp.Web.Controllers;
 
+[Authorize]
 [Route("comision")]
 public class ComisionController : Controller
 {

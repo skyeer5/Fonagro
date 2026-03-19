@@ -23,22 +23,23 @@ public class Comision : AuditableEntity
                                  DateTime fecha_Salida,
                                  DateTime fecha_Regreso,
                                  int vehiculoId,
-                                 decimal gasolinaPrecio,
-                                 int usuarioId
-                                 )
-    {
+                                 decimal gasolinaPrecio
+                                )
+{
         return new Comision
         {
             Departamento = departamento,
             Fecha_Salida = fecha_Salida,
             Fecha_Regreso = fecha_Regreso,
             Precio_Galon_Usado = gasolinaPrecio,
-            UsuarioId = usuarioId,
             VehiculoId = vehiculoId,
             Estado = EstadosTipos.Creada
         };
     }
-
+    public void AgregarCreadoPor(int usuarioId)
+    {
+        this.UsuarioId = usuarioId;
+    }
     public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
         this.ComisionUsuarios ??= new List<ComisionUsuario>();
