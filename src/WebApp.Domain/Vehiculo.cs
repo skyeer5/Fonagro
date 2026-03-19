@@ -21,7 +21,7 @@ public class Vehiculo : AuditableEntity
     public ICollection<VehiculoParte>? VehiculoPartes { get; set; }
     public ICollection<Comision>? Comisiones { get; set; }
 
-    public static Vehiculo Crear(string placa, string marca, string modelo, int anio, string tipo_Vehiculo, string color, string cilindraje, double kilometraje, int? gasolinaId, string tipo_gasolina, int creado_Por)
+    public static Vehiculo Crear(string placa, string marca, string modelo, int anio, string tipo_Vehiculo, string color, string cilindraje, double kilometraje, int? gasolinaId, string tipo_gasolina)
     {
         int consumo = 0;
         if(tipo_gasolina == GasolinaTipos.Disel)
@@ -73,10 +73,13 @@ public class Vehiculo : AuditableEntity
             Kilometraje = kilometraje,
             GasolinaId = gasolinaId,
             Estado = EstadosTipos.Disponible,
-            Fecha_Creacion = DateTime.Now,
-            Creado_Por = creado_Por
-        };
+            Fecha_Creacion = DateTime.Now
+    };
     }
+    public void AgregarCreadoPor(int usuarioId)
+    {
+        Creado_Por = usuarioId;
+    }   
     public void AgregarListaAccesorios(List<int> accesorios)
     {
         VehiculoAccesorios ??= new List<VehiculoAccesorio>();

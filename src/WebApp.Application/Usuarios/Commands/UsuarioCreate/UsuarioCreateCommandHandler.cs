@@ -1,10 +1,6 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
-using WebApp.Persistence;
-using WebApp.Persistence.Models;
 
 namespace WebApp.Application.Usuarios.Commands.UsuarioCreate;
 

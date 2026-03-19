@@ -10,5 +10,4 @@ namespace WebApp.Application.Usuarios.Commands.UsuarioCreate;
         public string? Numero_Contrato { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
-        public int Creado_Por { get; set; }          
     }
