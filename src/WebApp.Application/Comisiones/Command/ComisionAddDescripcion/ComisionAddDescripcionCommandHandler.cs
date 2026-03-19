@@ -17,8 +17,8 @@ public class ComisionAddDescripcionCommandHandler : IRequestHandler<ComisionAddD
 
     public async Task<Result<int>> Handle(ComisionAddDescripcionQuery.ComisionAddDescripcionCommandRequest request, CancellationToken cancellationToken)
     {
-        var comision = await _comisionService.GetCUByIdComisionAndUsuarioIdAsync(request.request.IdComision, request.request.IdUsuario, cancellationToken);
-        if (comision == null) return Result<int>.Failure("Comisión no encontrada");
+        var comision = await _comisionService.GetCUByIdComisionAndUsuarioIdAsync(request.request.IdComision, cancellationToken);
+        if (comision is null) return Result<int>.Failure("Comisión no encontrada");
 
         comision.Descripcion = request.request.Descripcion;
         await _comisionRepository.UpdateAsync(comision, cancellationToken);

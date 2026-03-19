@@ -8,15 +8,18 @@ namespace WebApp.Infrastructure.Services;
 public class ComisionUsuarioService : IComisionUsuarioService
 {
     private readonly WebAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public ComisionUsuarioService(WebAppDbContext context)
+    public ComisionUsuarioService(WebAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
+        _currentUser = currentUser;
     }
 
-    public async Task<ComisionUsuario?> GetCUByIdComisionAndUsuarioIdAsync(int comisionId, int usuarioId, CancellationToken cancellationToken)
+    public async Task<ComisionUsuario?> GetCUByIdComisionAndUsuarioIdAsync(int comisionId, CancellationToken cancellationToken)
     {
-        return await _context.ComisionUsuarios!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioId == usuarioId)
+        var userId = _currentUser.userId;
+        return await _context.ComisionUsuarios!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioId == userId)
                                         .FirstOrDefaultAsync(cancellationToken);
     }
 

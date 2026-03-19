@@ -30,7 +30,7 @@ else{
         <form asp-controller="Comision"
                 asp-action="AgregarDescripcion"
                 method="post">
-                <input type="hidden" name="ComisionId" value="@Model.Comision.id" />
+                <input type="hidden" name="IdComision" value="@Model.Comision.id" />
                 <textarea name="Descripcion" class="form-control" placeholder="Descripción">@Model.Comision.Descripcion</textarea>
                 <br>
                 <button type="submit" class="btn btn-primary">
