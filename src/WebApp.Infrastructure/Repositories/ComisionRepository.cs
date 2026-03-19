@@ -25,6 +25,18 @@ public class ComisionRepository : IComisionRepository
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al agregar la comisión");
     }
+    
+    public async Task<Result<int>> AddApprovalGas(Comision comision, CancellationToken cancellationToken)
+    {
+        var userId = _currentUser.userId;
+        comision.AgregarAprobadoPor(userId);
+
+        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+        var resultado = await _context.SaveChangesAsync(cancellationToken);
+
+        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al aprobar el presupuesto de gasolina para la comisión");
+    }
 
     public async Task<Result<int>> UpdateComisionAsync(Comision comision, CancellationToken cancellationToken)
     {

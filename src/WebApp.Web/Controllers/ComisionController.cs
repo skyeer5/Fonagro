@@ -28,10 +28,10 @@ public class ComisionController : Controller
     {
         _mediator = mediator;
     }
-    [HttpGet("{usuarioid}")]
-    public async Task<ActionResult<ComisionViewModel>> Index(int usuarioid)
+    [HttpGet("")]
+    public async Task<ActionResult<ComisionViewModel>> Index()
     {
-        var resultado = await _mediator.Send(new GetComisionActivaQueryRequest{UsuarioId = usuarioid});
+        var resultado = await _mediator.Send(new GetComisionActivaQueryRequest());
 
         var vm = new ComisionViewModel
         {

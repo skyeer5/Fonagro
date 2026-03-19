@@ -10,6 +10,7 @@ public class Comision : AuditableEntity
     public decimal Precio_Galon_Usado { get; set; }
     public decimal Galon_Estimado { get; set; }
     public decimal Presupuesto_Combustible_Estimado { get; set; }
+    public int UsuarioId_Aprobador_Combustible { get; set; }
     public decimal Presupuesto_Combustible_Aprobado { get; set; }
     public string? Estado { get; set; }
     public int UsuarioId { get; set; }
@@ -83,5 +84,9 @@ public class Comision : AuditableEntity
     {
         this.Estado = EstadosTipos.Programada;
         this.Presupuesto_Combustible_Aprobado = prespuestoGas;
+    }
+    public void AgregarAprobadoPor(int usuarioId)
+    {
+        this.UsuarioId_Aprobador_Combustible = usuarioId;
     }
 }

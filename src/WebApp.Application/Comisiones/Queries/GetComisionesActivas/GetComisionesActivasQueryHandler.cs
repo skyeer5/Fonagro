@@ -16,7 +16,7 @@ public class GetComisionActivaQueryHandler
 
     public async Task<Result<GetComisionActivaResponse>> Handle(GetComisionesActivasQuery.GetComisionActivaQueryRequest request, CancellationToken cancellationToken)
     {
-        var comisiones = await _comisionService.GetComisionActivaAsync(request.UsuarioId);
+        var comisiones = await _comisionService.GetComisionActivaAsync();
         if (comisiones is null)
         {
              return Result<GetComisionActivaResponse>.Failure("No se encontró comisión activa para el usuario.");

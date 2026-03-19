@@ -15,18 +15,21 @@ namespace WebApp.Infrastructure.Services;
 public class ComisionService : IComisionService
 {
     private readonly WebAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public ComisionService(WebAppDbContext context)
+    public ComisionService(WebAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
+        _currentUser = currentUser;
     }
 
-    public async Task<GetComisionActivaResponse?> GetComisionActivaAsync(int usuarioId)
+    public async Task<GetComisionActivaResponse?> GetComisionActivaAsync()
     {
+        var userId = _currentUser.userId;
         return await _context.Comisiones
                 .AsNoTracking()
                 .Where(c => c.ComisionUsuarios!
-                    .Any(cu => cu.UsuarioId == usuarioId))
+                    .Any(cu => cu.UsuarioId == userId))
                 .Select(c => new GetComisionActivaResponse
                 {
                     id = c.ComisionId,
@@ -35,13 +38,13 @@ public class ComisionService : IComisionService
                     Fecha_Regreso = c.Fecha_Regreso,
                     Estado = c.Estado,
                     Descripcion = c.ComisionUsuarios!
-                        .First(cu => cu.UsuarioId == usuarioId).Descripcion,
+                        .First(cu => cu.UsuarioId == userId).Descripcion,
                     Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
                     Nombramiento = c.ComisionUsuarios!
-                        .First(cu => cu.UsuarioId == usuarioId).Nombramiento,
+                        .First(cu => cu.UsuarioId == userId).Nombramiento,
 
                     Piloto = c.ComisionUsuarios!
-                        .First(cu => cu.UsuarioId == usuarioId).Es_Piloto,
+                        .First(cu => cu.UsuarioId == userId).Es_Piloto,
                     destinos = c.ComisionDestinos!
                                     .Select( x=> new GetComisionDestinosResponse
                                     {

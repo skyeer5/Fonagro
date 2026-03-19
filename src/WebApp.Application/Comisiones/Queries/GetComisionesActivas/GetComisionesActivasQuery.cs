@@ -5,8 +5,5 @@ namespace WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 
 public class GetComisionesActivasQuery
 {
-    public record GetComisionActivaQueryRequest : IRequest<Result<GetComisionActivaResponse>>
-    {
-        public int UsuarioId { get; set; }
-    };
+    public record GetComisionActivaQueryRequest : IRequest<Result<GetComisionActivaResponse>>;
 }
