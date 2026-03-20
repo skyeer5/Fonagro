@@ -1,4 +1,5 @@
 using WebApp.Application.Gasolinas.Queries.GetGasolinas;
+using WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha;
 using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 
 namespace WebApp.Application.Interfaces;
@@ -9,4 +10,5 @@ public interface IGasolinaService
     Task<string?> GetNombreByIdAsync(int gasolinaId, CancellationToken cancellationToken);
     Task<List<GetGasolinasResponse>?> GetGasolinasListAsync(CancellationToken cancellationToken);
     Task<List<GetGasolinasWithPrecioResponse>?> GetGasolinasWithPrecioListAsync(CancellationToken cancellationToken);
+    Task<List<GetGasolinasWithFechaResponse>?> GetGasolinasWithFechaListAsync(CancellationToken cancellationToken);
 }

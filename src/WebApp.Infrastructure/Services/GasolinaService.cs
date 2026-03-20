@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Gasolinas.Queries.GetGasolinas;
+using WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha;
 using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 using WebApp.Application.Interfaces;
 using WebApp.Persistence;
@@ -40,6 +41,19 @@ public class GasolinaService : IGasolinaService
                 Nombre = g.Nombre!,
                 Precio = g.GasolinaPrecios!.OrderByDescending(p => p.Fecha).Select(p => p.Precio).FirstOrDefault()
             })
+            .ToListAsync(cancellationToken);
+
+        return gasolinas;
+    }
+    public async Task<List<GetGasolinasWithFechaResponse>?> GetGasolinasWithFechaListAsync(CancellationToken cancellationToken)
+    {
+        var gasolinas = await _context.Gasolinas
+            .Select(g =>GetGasolinasWithFechaResponse.Crear
+            (
+                g.Nombre!,
+                g.GasolinaPrecios!.OrderByDescending(p => p.Fecha).Select(p => p.Precio).FirstOrDefault(),
+                g.GasolinaPrecios!.OrderByDescending(p => p.Fecha).Select(p => p.Fecha).FirstOrDefault()
+            ))
             .ToListAsync(cancellationToken);
 
         return gasolinas;

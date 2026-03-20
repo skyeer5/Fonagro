@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "Mi Comisión";
+    var gasolinas = ViewBag.Gasolinas as IEnumerable<WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaResponse>;
 }
 
 <h2>Mi Comisión</h2>
@@ -15,6 +16,10 @@
 
 }
 else{
+    <div class="row">
+
+    <!-- IZQUIERDA (contenido principal) -->
+    <div class="col-md-9">
 <!-- RESUMEN -->
 <div class="card mb-4">
     <div class="card-header">
@@ -75,6 +80,30 @@ else{
             Comisión en curso
         </span>
     }
+
+</div>
+    </div>
+
+    <!-- DERECHA (cuadro de nombres) -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                Precio de Gasolina
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+
+                    @foreach (var usuario in gasolinas!)
+                    {
+                        <li class="list-group-item">
+                            @usuario.Descripcion
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
 
 </div>
 

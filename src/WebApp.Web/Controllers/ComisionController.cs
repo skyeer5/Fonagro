@@ -7,6 +7,7 @@ using WebApp.Application.Comisiones.Command.ComisionAddDescripcion;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Core;
+using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
@@ -14,6 +15,8 @@ using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionA
 using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
+using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
+using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio.GetGasolinasWithPrecioQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -31,6 +34,12 @@ public class ComisionController : Controller
     [HttpGet("")]
     public async Task<ActionResult<ComisionViewModel>> Index()
     {
+        var gasolinas = await _mediator.Send(new GetGasolinasWithFechaQueryRequest());
+        ViewBag.Gasolinas = gasolinas.Value;
+        foreach(var gasolina in gasolinas.Value!)
+        {
+            Console.WriteLine($"\n\n\n\n hola we soy {gasolina.Descripcion}");
+        }
         var resultado = await _mediator.Send(new GetComisionActivaQueryRequest());
 
         var vm = new ComisionViewModel
