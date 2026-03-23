@@ -6,7 +6,7 @@
 }
 
     <h2>Comisiones Pendientes</h2>
-    @if(TempData["msg"] is not null)
+    @if(TempData["msg"] != null)
     {
         <div class="alert mb-1">
             @TempData["msg"]
