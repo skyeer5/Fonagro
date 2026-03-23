@@ -44,7 +44,7 @@ public class UsuarioService : IUsuarioService
     public async Task<List<GetUsuariosSinComisionResponse>> getUsuariosSinComisionAsync()
     { 
         return await _userManager.Users
-            .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != EstadosTipos.Finalizado))
+            .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != EstadosTipos.Finalizado && cu.Comision.Estado != EstadosTipos.Cancelada))
             .Select(u => new GetUsuariosSinComisionResponse
             {
                 Id = u.Id,

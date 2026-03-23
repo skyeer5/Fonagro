@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
+using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Interfaces;
@@ -28,8 +29,11 @@ public class ComisionService : IComisionService
         var userId = _currentUser.userId;
         return await _context.Comisiones
                 .AsNoTracking()
-                .Where(c => c.ComisionUsuarios!
-                    .Any(cu => cu.UsuarioId == userId))
+                .Where(c => 
+                    c.Estado!= EstadosTipos.Cancelada 
+                    && c.Estado != EstadosTipos.Completada 
+                    && c.ComisionUsuarios! 
+                    .Any(cu => cu.UsuarioId == userId && cu.Estado != EstadosTipos.Cancelada && cu.Estado !=EstadosTipos.Completada))
                 .Select(c => new GetComisionActivaResponse
                 {
                     id = c.ComisionId,
@@ -61,6 +65,21 @@ public class ComisionService : IComisionService
     public async Task<Comision?> GetComisionByIdAsync(int comisionId)
     {
        return await _context.Comisiones.Where(x=>x.ComisionId == comisionId).Include(x=>x.Vehiculo).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<GetComisionesPendApprovResponse>?> GetComisionPendApprovAsync()
+    {
+         return await _context.Comisiones
+                .Where(c => c.Estado == EstadosTipos.DestinosDefinidos)
+                .Select(c => new GetComisionesPendApprovResponse
+                {
+                    id = c.ComisionId,
+                    Departamento = c.Departamento,
+                    Fecha_Salida = c.Fecha_Salida,
+                    Fecha_Regreso = c.Fecha_Regreso,
+                    Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado
+                })
+                .ToListAsync();
     }
 
     public async Task<PlanViajeResponse> GetPlanViajeResponseAsync(int idUsuario, int idComision)

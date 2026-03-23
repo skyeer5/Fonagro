@@ -2,21 +2,91 @@
 
 @{
     ViewBag.Title = "Agregar Gasolina";
+    var comisiones = ViewBag.Comisiones as IEnumerable<WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovResponse>;
 }
 
-<h2>Agregar Gasolina</h2>
+    <h2>Comisiones Pendientes</h2>
+    @if(TempData["msg"] is not null)
+    {
+        <div class="alert mb-1">
+            @TempData["msg"]
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Departamento</th>
+                <th>Fecha Salida</th>
+                <th>Fecha Regreso</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in comisiones!)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.Departamento</td>
+                    <td>@item.Fecha_Salida.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <!-- Botón que abre el modal y pasa el ID -->
+                        <button type="button" class="btn btn-primary" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#precioModal"
+                                data-id="@item.id"
+                                data-presupuesto="@item.Prespuesto_Estimado">>
+                            Seleccionar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-@using (Html.BeginForm("AgregarGasolina", "Comision", FormMethod.Post))
-{
-    <div class="form-group">
-        @Html.LabelFor(m => m.ComisionId, "Comisión Id")
-        @Html.TextBoxFor(m => m.ComisionId, new { @class = "form-control" })
+    <!-- Modal -->
+    <div class="modal fade" id="precioModal" tabindex="-1" aria-labelledby="precioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="precioModalLabel">Enviar Precio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario que apunta al action AgregarGasolina -->
+                    <form asp-action="AgregarGasolina" method="post">
+                        <input type="hidden" id="ComisionId" name="ComisionId" />
+
+                        <div class="mb-3">
+                            <label for="presupuestoInput" class="form-label">Presupuesto Estimado</label>
+                            <input type="text" class="form-control" id="presupuestoInput" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="PrespuestoAprobado" class="form-label">Precio (decimal)</label>
+                            <input type="number" step="0.01" class="form-control" id="PrespuestoAprobado" name="PrespuestoAprobado" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.PrespuestoAprobado, "Presupuesto Aprobado")
-        @Html.TextBoxFor(m => m.PrespuestoAprobado, new { @class = "form-control" })
-    </div>
+    }
+    <script>
+        // Captura ID y Presupuesto al abrir el modal
+        var precioModal = document.getElementById('precioModal');
+        precioModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var comisionId = button.getAttribute('data-id');
+            var presupuesto = button.getAttribute('data-presupuesto');
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-}
+            document.getElementById('ComisionId').value = comisionId;
+            document.getElementById('presupuestoInput').value = presupuesto;
+        });
+    </script>
