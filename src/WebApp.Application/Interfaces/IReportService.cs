@@ -4,5 +4,5 @@ namespace WebApp.Application.Interfaces;
 
 public interface IReportService
 {
-    Task<byte[]> GetExcelPlanViajeAsync(int idUsuario, int idComision);
+    Task<byte[]> GetExcelPlanViajeAsync( int idComision);
 }

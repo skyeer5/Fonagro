@@ -12,17 +12,21 @@ public class ReportService : IReportService
     private readonly IWebHostEnvironment _env;
     private readonly IUsuarioService _usuarioService;
     private readonly IComisionService _comisionService;
+    private readonly ICurrentUser _currentUser;
 
-    public ReportService(IWebHostEnvironment env, IUsuarioService usuarioService, IComisionService comisionService )
+    public ReportService(IWebHostEnvironment env, IUsuarioService usuarioService, IComisionService comisionService, ICurrentUser currentUser )
     {
         _env = env;
         _usuarioService = usuarioService;
         _comisionService = comisionService;
+        _currentUser = currentUser;
     }
 
-    public async Task<byte[]> GetExcelPlanViajeAsync(int idUsuario, int idComision)
+    public async Task<byte[]> GetExcelPlanViajeAsync( int idComision)
     {
-        var planViaje = await _comisionService.GetPlanViajeResponseAsync(idUsuario, idComision);
+        var idUsuario = _currentUser.userId;
+        var planviajeresult = await _comisionService.GetPlanViajeResponseAsync(idUsuario, idComision);
+        var planViaje = planviajeresult.Value!;
         planViaje.Nombre = await _usuarioService.GetNombreUsuarioAsync(idUsuario);
 
         var filasViaticos = ConstruirFilasViaticos(planViaje);

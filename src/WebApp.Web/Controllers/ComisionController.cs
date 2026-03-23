@@ -143,10 +143,10 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("Index") : BadRequest(result.Error);
     }
-    [HttpGet("ImprimirPlanViaje/{idUsuario}/{idComision}")]
-    public async Task<IActionResult> ImprimirPlanViaje(int idUsuario, int idComision)
+    [HttpGet("ImprimirPlanViaje/{idComision}")]
+    public async Task<IActionResult> ImprimirPlanViaje(int idComision)
     {
-        var query = new PlanViajeQueryRequest(idUsuario, idComision);
+        var query = new PlanViajeQueryRequest(idComision);
         var result = await _mediator.Send(query);
         if (!result.Any())
         {

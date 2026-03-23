@@ -7,6 +7,7 @@ using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
+using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
@@ -82,9 +83,9 @@ public class ComisionService : IComisionService
                 .ToListAsync();
     }
 
-    public async Task<PlanViajeResponse> GetPlanViajeResponseAsync(int idUsuario, int idComision)
+    public async Task<Result<PlanViajeResponse>> GetPlanViajeResponseAsync(int idUsuario, int idComision)
     {
-                var planViaje = await _context.Comisiones
+            var planViaje = await _context.Comisiones
             .Where(p => p.ComisionId == idComision)
             .Select(p => new PlanViajeResponse
             {
@@ -119,8 +120,10 @@ public class ComisionService : IComisionService
             }).FirstOrDefaultAsync();
         if(planViaje is null)
         {
-            throw new Exception("Plan de viaje no encontrado");
+            Console.WriteLine("\n\n\n Es nuloooo\n\n\n");
+            return Result<PlanViajeResponse>.Failure("Error al encontrar el plan de viaje");
         }
-        return planViaje;
+            Console.WriteLine("\n\n\n Si paasaaaa\n\n\n");
+        return Result<PlanViajeResponse>.Success(planViaje);
     }
 }
