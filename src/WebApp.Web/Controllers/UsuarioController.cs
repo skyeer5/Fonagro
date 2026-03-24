@@ -7,7 +7,6 @@ using static WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateCom
 
 namespace WebApp.Web.Controllers;
 
-[Route("usuario")]
 public class UsuarioController : Controller
 {
     private readonly IMediator _mediator;
@@ -16,7 +15,7 @@ public class UsuarioController : Controller
     {
         _mediator = mediator;
     }
-    [HttpGet("crear")]
+    [HttpGet]
     public IActionResult Crear()
     {
         ViewBag.Puestos = UsuariosTipos.GetPuestos();
@@ -26,7 +25,7 @@ public class UsuarioController : Controller
         ViewBag.TipoServicios = UsuariosTipos.GetTipoServicios();
         return View();
     }
-    [HttpPost("crear")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> Crear(
         [FromForm] UsuarioCreateRequest request,
         CancellationToken cancellationToken

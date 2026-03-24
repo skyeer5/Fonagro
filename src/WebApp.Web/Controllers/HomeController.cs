@@ -6,16 +6,8 @@ using WebApp.Web.Models;
 namespace WebApp.Web.Controllers;
 
 [Authorize]
-[Route("home")]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-    [HttpGet("index")]
     public IActionResult Index()
     {
         return View();

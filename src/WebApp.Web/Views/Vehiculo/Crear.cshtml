@@ -9,117 +9,153 @@
 <h2>Crear Vehículo</h2>
 
 <form asp-action="Crear" method="post" class="mt-3">
+    
+    <div class="row">
 
-    <div class="mb-3">
-        <label asp-for="Placa" class="form-label"></label>
-        <input asp-for="Placa" class="form-control" />
-        <span asp-validation-for="Placa" class="text-danger"></span>
-    </div>
+        <!-- ================= LEFT COLUMN ================= -->
+<div class="card mb-3">
+    <div class="card-header">Datos Básicos</div>
+    <div class="card-body">
+        <div class="row">
 
-    <div class="mb-3">
-        <label asp-for="Marca" class="form-label"></label>
-        <input asp-for="Marca" class="form-control" />
-        <span asp-validation-for="Marca" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Modelo" class="form-label"></label>
-        <input asp-for="Modelo" class="form-control" />
-        <span asp-validation-for="Modelo" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Anio" class="form-label"></label>
-        <input asp-for="Anio" type="number" class="form-control" />
-        <span asp-validation-for="Anio" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Tipo_Vehiculo" class="form-label"></label>
-        <select asp-for="Tipo_Vehiculo" class="form-control">
-            <option value="">Seleccionar Tipo de Vehiculo</option>
-            <option value="@WebApp.Domain.VehiculosTipos.Automovil">@WebApp.Domain.VehiculosTipos.Automovil</option>
-            <option value="@WebApp.Domain.VehiculosTipos.Pickup">@WebApp.Domain.VehiculosTipos.Pickup</option>
-            <option value="@WebApp.Domain.VehiculosTipos.Jeep">@WebApp.Domain.VehiculosTipos.Jeep</option>
-            <option value="@WebApp.Domain.VehiculosTipos.Panel">@WebApp.Domain.VehiculosTipos.Panel</option>
-            <option value="@WebApp.Domain.VehiculosTipos.Camionetilla">@WebApp.Domain.VehiculosTipos.Camionetilla</option>
-        </select>
-        <span asp-validation-for="Cilindraje" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Color" class="form-label"></label>
-        <input asp-for="Color" class="form-control" />
-        <span asp-validation-for="Color" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Cilindraje" class="form-label"></label>
-        <select asp-for="Cilindraje" class="form-control">
-            <option value="">Seleccionar cilindraje</option>
-            <option value="@WebApp.Domain.VehiculoCilindraje.Cilindraje_4">@WebApp.Domain.VehiculoCilindraje.Cilindraje_4</option>
-            <option value="@WebApp.Domain.VehiculoCilindraje.Cilindraje_6">@WebApp.Domain.VehiculoCilindraje.Cilindraje_6</option>
-            <option value="@WebApp.Domain.VehiculoCilindraje.Cilindraje_8">@WebApp.Domain.VehiculoCilindraje.Cilindraje_8</option>
-            <option value="@WebApp.Domain.VehiculoCilindraje.Cilindraje_8_Lujo">@WebApp.Domain.VehiculoCilindraje.Cilindraje_8_Lujo</option>
-        </select>
-        <span asp-validation-for="Cilindraje" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Kilometraje" class="form-label"></label>
-        <input asp-for="Kilometraje" type="number" class="form-control" />
-        <span asp-validation-for="Kilometraje" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Gasolina</label>
-        <select class="form-select mt-2"
-        asp-for="GasolinaId"
-        required>
-        <option value="">Seleccionar Gasolina</option>
-        @foreach (var gasolina in (ViewBag.Gasolinas as SelectList)!)
-        {
-            <option value="@gasolina.Value">@gasolina.Text</option>
-        }
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label>Accesorios</label>
-        @foreach (var accesorio in (ViewBag.Accesorios as SelectList)!)
-        {
-            <div class="form-check">
-                <input class="form-check-input" 
-                    type="checkbox" 
-                    name="Accesorios" 
-                    value="@accesorio.Value" 
-                    id="acc_@accesorio.Value" />
-                <label class="form-check-label" for="acc_@accesorio.Value">
-                    @accesorio.Text
-                </label>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Placa" class="form-label"></label>
+                <input asp-for="Placa" class="form-control" />
+                <span asp-validation-for="Placa" class="text-danger"></span>
             </div>
-        }
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Marca" class="form-label"></label>
+                <input asp-for="Marca" class="form-control" />
+                <span asp-validation-for="Marca" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Modelo" class="form-label"></label>
+                <input asp-for="Modelo" class="form-control" />
+                <span asp-validation-for="Modelo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Anio" class="form-label"></label>
+                <input asp-for="Anio" type="number" class="form-control" />
+                <span asp-validation-for="Anio" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Tipo_Vehiculo" class="form-label"></label>
+                <select asp-for="Tipo_Vehiculo" class="form-control">
+                    <option value="">Seleccionar Tipo</option>
+                    <option value="@VehiculosTipos.Automovil">@VehiculosTipos.Automovil</option>
+                    <option value="@VehiculosTipos.Pickup">@VehiculosTipos.Pickup</option>
+                    <option value="@VehiculosTipos.Jeep">@VehiculosTipos.Jeep</option>
+                    <option value="@VehiculosTipos.Panel">@VehiculosTipos.Panel</option>
+                    <option value="@VehiculosTipos.Camionetilla">@VehiculosTipos.Camionetilla</option>
+                </select>
+                <span asp-validation-for="Tipo_Vehiculo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Color" class="form-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cilindraje" class="form-label"></label>
+                <select asp-for="Cilindraje" class="form-control">
+                    <option value="">Seleccionar</option>
+                    <option value="@VehiculoCilindraje.Cilindraje_4">@VehiculoCilindraje.Cilindraje_4</option>
+                    <option value="@VehiculoCilindraje.Cilindraje_6">@VehiculoCilindraje.Cilindraje_6</option>
+                    <option value="@VehiculoCilindraje.Cilindraje_8">@VehiculoCilindraje.Cilindraje_8</option>
+                    <option value="@VehiculoCilindraje.Cilindraje_8_Lujo">@VehiculoCilindraje.Cilindraje_8_Lujo</option>
+                </select>
+                <span asp-validation-for="Cilindraje" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Kilometraje" class="form-label"></label>
+                <input asp-for="Kilometraje" type="number" class="form-control" />
+                <span asp-validation-for="Kilometraje" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label>Gasolina</label>
+                <select class="form-select mt-2" asp-for="GasolinaId">
+                    <option value="">Seleccionar</option>
+                    @foreach (var gasolina in (ViewBag.Gasolinas as SelectList)!)
+                    {
+                        <option value="@gasolina.Value">@gasolina.Text</option>
+                    }
+                </select>
+            </div>
+
+        </div>
     </div>
+</div>
+        <!-- ================= RIGHT COLUMN ================= -->
+<div class="card mb-3">
+    <div class="card-header">Accesorios</div>
+    <div class="card-body">
+        <div class="row">
 
-   @foreach (var parte in ViewBag.Partes!)
-{
-    <div class="border rounded p-2 mb-2">
-        <strong>@parte.Text</strong>
+            @foreach (var accesorio in (ViewBag.Accesorios as SelectList)!)
+            {
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="Accesorios"
+                               value="@accesorio.Value"
+                               id="acc_@accesorio.Value" 
+                               checked
+                               />
 
-        <input type="hidden"
-               name="Partes[@index].Id"
-               value="@parte.Value" />
+                        <label class="form-check-label" for="acc_@accesorio.Value">
+                            @accesorio.Text
+                        </label>
+                    </div>
+                </div>
+            }
 
-        <select class="form-select mt-2"
-                name="Partes[@index].Descripcion"
-                required>
-            <option value="@EstadosTipos.Buen_Estado">@EstadosTipos.Buen_Estado</option>
-            <option value="@EstadosTipos.Rayon">@EstadosTipos.Rayon</option>
-            <option value="@EstadosTipos.Hundimiento">@EstadosTipos.Hundimiento</option>
-            <option value="@EstadosTipos.Golpe">@EstadosTipos.Golpe</option>
-            <option value="@EstadosTipos.Otro">@EstadosTipos.Otro</option>
-        </select>
+        </div>
     </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header">Partes</div>
+    <div class="card-body">
+        <div class="row">
 
-    index++;
-}
+            @foreach (var parte in ViewBag.Partes!)
+            {
+                <div class="col-md-6 mb-2">
+                    <div class="border rounded p-2">
+                        <strong>@parte.Text</strong>
+
+                        <input type="hidden"
+                               name="Partes[@index].Id"
+                               value="@parte.Value" />
+
+                        <select class="form-select mt-2"
+                                name="Partes[@index].Descripcion"
+                                required>
+                            <option value="@EstadosTipos.Buen_Estado">@EstadosTipos.Buen_Estado</option>
+                            <option value="@EstadosTipos.Rayon">@EstadosTipos.Rayon</option>
+                            <option value="@EstadosTipos.Hundimiento">@EstadosTipos.Hundimiento</option>
+                            <option value="@EstadosTipos.Golpe">@EstadosTipos.Golpe</option>
+                            <option value="@EstadosTipos.Otro">@EstadosTipos.Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                index++;
+            }
+
+        </div>
+    </div>
+</div>
+
+    <!-- BOTÓN -->
     <button type="submit" class="btn btn-primary">
         Guardar
     </button>

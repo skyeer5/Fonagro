@@ -25,7 +25,6 @@ using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVeh
 namespace WebApp.Web.Controllers;
 
 [Authorize]
-[Route("comision")]
 public class ComisionController : Controller
 {
     private readonly IMediator _mediator;
@@ -33,7 +32,7 @@ public class ComisionController : Controller
     {
         _mediator = mediator;
     }
-    [HttpGet("")]
+    [HttpGet]
     public async Task<ActionResult<ComisionViewModel>> Index()
     {
         var gasolinas = await _mediator.Send(new GetGasolinasWithFechaQueryRequest());
@@ -69,7 +68,7 @@ public class ComisionController : Controller
         }
         return View(vm);
     }
-    [HttpGet("Crear")]
+    [HttpGet]
     public IActionResult Crear()
     {
         var usuarios = _mediator.Send(new GetUsuariosSinComisionQueryRequest());
@@ -90,7 +89,7 @@ public class ComisionController : Controller
 
         return View();
     }
-    [HttpPost("Crear")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> Crear(
         [FromForm] ComisionCreateRequest request,
         CancellationToken cancellationToken
@@ -100,7 +99,7 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }
-    [HttpPost("AgregarDestinos")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDestinos(
         [FromForm] ComisionAddDestinosRequest request,
         CancellationToken cancellationToken
@@ -110,7 +109,7 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
     }
-    [HttpGet("AgregarGasolina")]
+    [HttpGet]
     public async Task<IActionResult> AgregarGasolina()
     {
         var query = new GetComisionesPendApprovQueryRequest();
@@ -123,7 +122,7 @@ public class ComisionController : Controller
         ViewBag.Comisiones = comisiones.Value;
         return View();
     }
-    [HttpPost("AgregarGasolina")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarGasolina(
         [FromForm] ComisionApprovalGasRequest request,
         CancellationToken cancellationToken
@@ -133,7 +132,7 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("Index") : BadRequest(result.Error);
     }
-    [HttpPost("AgregarDescripcion")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDescripcion(
         [FromForm] ComisionAddDescripcionRequest request,
         CancellationToken cancellationToken
@@ -143,7 +142,7 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction("Index") : BadRequest(result.Error);
     }
-    [HttpGet("ImprimirPlanViaje/{idComision}")]
+    [HttpGet]
     public async Task<IActionResult> ImprimirPlanViaje(int idComision)
     {
         var query = new PlanViajeQueryRequest(idComision);

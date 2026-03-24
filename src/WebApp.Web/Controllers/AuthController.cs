@@ -7,7 +7,6 @@ using static WebApp.Application.Authentication.Command.Login.LoginCommand;
 
 namespace WebApp.Web.Controllers;
 
-[Route("auth")]
 public class AuthController : Controller
 {
     private readonly IMediator _mediator;
@@ -20,12 +19,12 @@ public class AuthController : Controller
 
     }
 
-    [HttpGet("login")]
+    [HttpGet]
     public IActionResult Login()
     {
         return View();
     }
-    [HttpPost("login")]
+    [HttpPost]
     public async Task<IActionResult> Login(
         [FromForm] LoginRequest request,
         CancellationToken cancellationToken

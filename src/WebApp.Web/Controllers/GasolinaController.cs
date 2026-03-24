@@ -6,7 +6,6 @@ using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 
 namespace WebApp.Web.Controllers;
 [Authorize]
-[Route("gasolina")]
 public class GasolinaController : Controller
 {
     private readonly IMediator _mediator;
@@ -15,7 +14,7 @@ public class GasolinaController : Controller
     {
         _mediator = mediator;
     }
-    [HttpGet("UpdatePrecio")]
+    [HttpGet]
     public async Task<IActionResult> UpdatePrecio()
     {
         var command = new GetGasolinasWithPrecioQuery.GetGasolinasWithPrecioQueryRequest();
@@ -27,7 +26,7 @@ public class GasolinaController : Controller
         ViewBag.Gasolinas = result.Value;
         return View();
     }
-    [HttpPost("UpdatePrecio")]
+    [HttpPost]
     public async Task<IActionResult> UpdatePrecio(
         [FromForm] GasolinaPrecioCreateRequest request, 
         CancellationToken cancellationToken)

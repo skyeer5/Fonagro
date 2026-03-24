@@ -1,10 +1,8 @@
-using System.Diagnostics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Core;
-using WebApp.Application.Partes.Queries.GetPartes;
 using WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using static WebApp.Application.Accesorios.Queries.GetAccesorios.GetAccesoriosQuery;
@@ -15,7 +13,6 @@ using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
 
 namespace WebApp.Web.Controllers;
 [Authorize]
-[Route("vehiculo")]
 public class VehiculoController : Controller
 {
     private readonly IMediator _mediator;
@@ -28,7 +25,7 @@ public class VehiculoController : Controller
     {
         return View();
     }
-    [HttpGet("Crear")]
+    [HttpGet]
     public IActionResult Crear()
     {
         var partes = _mediator.Send(new GetPartesQueryRequest());
@@ -56,7 +53,7 @@ public class VehiculoController : Controller
         ViewBag.Accesorios = new SelectList(accesorios.Result.Value, "id", "Nombre");
         return View();
     }
-    [HttpPost("Crear")]
+    [HttpPost]
     public async Task<ActionResult<Result<int>>> Crear(
         [FromForm] VehiculoCreateRequest request,
         CancellationToken cancellationToken
@@ -67,7 +64,7 @@ public class VehiculoController : Controller
         return result.IsSuccess ? RedirectToAction("ObtenerVehiculo", new { id = result.Value }) : BadRequest(result.Error);
     }
 
-    [HttpGet("Detalle/{id}")]
+    [HttpGet]
     public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(
         int id,
         CancellationToken cancellationToken
