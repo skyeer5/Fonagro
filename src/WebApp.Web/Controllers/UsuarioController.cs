@@ -35,7 +35,7 @@ public class UsuarioController : Controller
     {
         var command = new UsuarioCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("Home/Index") : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
     }
     [HttpGet]
     public async Task<IActionResult> List(string? nombre = "", int currentPage = 1, string orderBy = "")

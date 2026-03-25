@@ -7,5 +7,16 @@ public class GasolinaPrecio : AuditableEntity
     public int GasolinaId { get; set; }
     public decimal Precio { get; set; }
     public DateTime? Fecha { get; set; }
+
+    public static GasolinaPrecio Crear(int gasolinaId, decimal precio, int userId)
+    {
+        return new GasolinaPrecio
+        {
+            GasolinaId = gasolinaId,
+            Precio = precio,
+            Fecha = DateTime.Now,
+            Creado_Por = userId
+        };
+    }
     
 }

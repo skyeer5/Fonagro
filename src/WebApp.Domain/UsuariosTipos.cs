@@ -26,18 +26,41 @@ public static class UsuariosTipos
     public const string Auxiliar_Archivo = "AUXILIAR DE ARCHIVO";
     public const string Auxiliar_Info_Publica = "AUXILIAR DE COMUNICACION E INFORMACION PUBLICA";
     public const string Piloto_Mensajero = "PILOTO MENSAJERO";
+    
+    //Asesores
+    public const string ASESOR_ADMON = "ASESOR DE LA UNIDAD ADMINISTRATIVA";
+    public const string ASESOR_UAJ = "ASESOR JURIDICO";
+    public const string ASESOR_UTSE = "ASESOR DE EVALUACION, SEGUIMIENTO Y LIQUIDACION DE PROYECTOS";
+    public const string ASESOR_UDAI = "ASESOR DE LA UNIDAD DE AUDITORIA INTERNA";
+
+    //Asistentes
+    public const string ASISTENTE_ADMON = "ASISTENTE DE LA UNIDAD ADMINISTRATIVA";
+    public const string ASISTENTE_UAJ = "ASISTENTE DE ASESORIA JURIDICA";
+    public const string ASISTENTE_UTSE = "ASISTENTE DE LA UNIDAD TECNICA DE SEGUIMIENTO Y EVALUACION";
+    public const string ASISTENTE_UDAI = "ASISTENTE DE LA UNIDAD DE AUDITORIA INTERNA";
+
+    //Coordinadores
+    public const string COORDINADOR_ADMON = "COORDINADOR DE LA UNIDAD ADMINISTRATIVA";
+    public const string COORDINADOR_UAJ = "COORDINADOR DE LA UNIDAD DE ASESORIA JURIDICA";
+    public const string COORDINADOR_UTSE = "COORDINADOR DE LA UNIDAD TECNICA DE SEGUIMIENTO Y EVALUACION";
+    public const string COORDINADOR_UDAI = "COORDINADOR DE LA UNIDAD DE AUDITORIA INTERNA";
+    //Subcoordinadores
+    public const string SUBCOORDINADOR_ADMON = "SUBCOORDINADOR DE LA UNIDAD ADMINISTRATIVA";
+    public const string SUBCOORDINADOR_UAJ = "SUBCOORDINADOR DE LA UNIDAD DE ASESORIA JURIDICA";
+    public const string SUBCOORDINADOR_UTSE = "SUBCOORDINADOR DE LA UNIDAD TECNICA DE SEGUIMIENTO Y EVALUACION";
+    public const string SUBCOORDINADOR_UDAI = "SUBCOORDINADOR DE LA UNIDAD DE AUDITORIA INTERNA";
 
 
     //Unidades
     public const string Gerencia = nameof(Gerencia);
-    public const string UA = "Unidad Administrativa";
-    public const string UAJ = "Unidad de Asesoria Juridica";
-    public const string UTSE = "Unidad Tecnica de Seguimiento y Evaluacion";
-    public const string UDAI = "Unidad de Auditoria Interna";
+    public const string UA = "UNIDAD ADMINISTRATIVA";
+    public const string UAJ = "UNIDAD DE ASESORIA JURIDICA";
+    public const string UTSE = "UNIDAD TECNICA DE SEGUIMIENTO Y EVALUACION";
+    public const string UDAI = "UNIDAD DE AUDITORIA INTERNA";
 
     //Tipo de servicios
-    public const string Tecnicos = " Servicios Tecnicos";
-    public const string Profesionales = "Servicios Profesionales";
+    public const string Tecnicos = "SERVICIOS TECNICOS";
+    public const string Profesionales = "SERICIOS PROFESIONALES";
     public static List<string> GetPuestos()
     {
         return new List<string>

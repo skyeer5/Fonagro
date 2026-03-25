@@ -44,6 +44,10 @@ public class UsuarioRepository : IUsuarioRepository
         {
             rol = roles.FirstOrDefault(r => r == RolesTipos.Comisionista);
         }
+        else
+        {
+            rol = roles.FirstOrDefault(r=>r == RolesTipos.Usuario);
+        }
         var result_create = await _userManager.CreateAsync(usuario, request.Password!);
         var resultat_add_role = await _userManager.AddToRoleAsync(usuario, rol!);
         if (!result_create.Succeeded)

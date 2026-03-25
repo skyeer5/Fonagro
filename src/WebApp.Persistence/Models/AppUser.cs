@@ -22,7 +22,7 @@ public class AppUser : IdentityUser<int>
         {
             Nombre_Completo = nombreCompleto.ToUpper(),
             NIT = nit.ToUpper().Replace("-", "").Replace(" ", ""),
-            Puesto = puesto.ToUpper(),
+            Puesto = DefinirPuesto(puesto, unidad),
             Unidad = unidad.ToUpper(),
             Tipo_Servicios = tipoServicios.ToUpper(),
             Numero_Contrato = numeroContrato,
@@ -30,6 +30,78 @@ public class AppUser : IdentityUser<int>
             Email = email,
             UserName = nit.ToUpper().Replace("-", "").Replace(" ", "")
         };
+
+    }
+    public static string DefinirPuesto(string puesto, string unidad)
+    {
+        if(puesto.Contains(UsuariosTipos.AUXILIAR) || puesto.Contains(UsuariosTipos.ENCARGADO))
+        {
+            return puesto;
+        }
+        switch(unidad)
+        {
+            case UsuariosTipos.UA:
+                switch(puesto)
+                {
+                    case UsuariosTipos.ASESOR:
+                        return UsuariosTipos.ASESOR_ADMON;
+                    case UsuariosTipos.ASISTENTE:
+                        return UsuariosTipos.ASISTENTE_ADMON;
+                    case UsuariosTipos.COORDINADOR:
+                        return UsuariosTipos.COORDINADOR_ADMON;
+                    case UsuariosTipos.SUBCOORDINADOR:
+                        return UsuariosTipos.SUBCOORDINADOR_ADMON;
+                    default:
+                        return puesto;
+                }
+            case UsuariosTipos.UAJ:
+                switch(puesto)
+                {
+                    case UsuariosTipos.ASESOR:
+                        return UsuariosTipos.ASESOR_UAJ;
+                    case UsuariosTipos.ASISTENTE:
+                        return UsuariosTipos.ASISTENTE_UAJ;
+                    case UsuariosTipos.COORDINADOR:
+                        return UsuariosTipos.COORDINADOR_UAJ;
+                    case UsuariosTipos.SUBCOORDINADOR:
+                        return UsuariosTipos.SUBCOORDINADOR_UAJ;
+                    default:
+                        return puesto;
+                }
+            case UsuariosTipos.UTSE:
+                switch(puesto)
+                {
+                    case UsuariosTipos.ASESOR:
+                        return UsuariosTipos.ASESOR_UTSE;
+                    case UsuariosTipos.ASISTENTE:
+                        return UsuariosTipos.ASISTENTE_UTSE;
+                    case UsuariosTipos.COORDINADOR:
+                        return UsuariosTipos.COORDINADOR_UTSE;
+                    case UsuariosTipos.SUBCOORDINADOR:
+                        return UsuariosTipos.SUBCOORDINADOR_UTSE;
+                    default:
+                        return puesto;
+                }
+            case UsuariosTipos.UDAI:
+                switch(puesto)
+                {
+                    case UsuariosTipos.ASESOR:
+                        return UsuariosTipos.ASESOR_UDAI;
+                    case UsuariosTipos.ASISTENTE:
+                        return UsuariosTipos.ASISTENTE_UDAI;
+                    case UsuariosTipos.COORDINADOR:
+                        return UsuariosTipos.COORDINADOR_UDAI;
+                    case UsuariosTipos.SUBCOORDINADOR:
+                        return UsuariosTipos.SUBCOORDINADOR_UDAI;
+                    default:
+                        return puesto;
+                }
+
+
+
+            default:
+                return puesto;
+        }
 
     }
 }
