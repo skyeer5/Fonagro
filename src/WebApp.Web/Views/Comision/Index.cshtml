@@ -22,7 +22,7 @@ else{
     <div class="col-md-9">
 <!-- RESUMEN -->
 <div class="card mb-4">
-    <div class="card-header">
+    <div class="card-header bg-dark text-white">
         Información de la Comisión
     </div>
     <div class="card-body">
@@ -45,6 +45,40 @@ else{
             </form>
     </div>
 </div>
+@if (Model.Comision?.Destinos != null && Model.Comision.Destinos.Any())
+{
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-geo-alt-fill"></i> Destinos de la Comisión
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Kilómetros</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var destino in Model.Comision.Destinos)
+                        {
+                            <tr>
+                                <td>@destino.descripcion</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        @destino.kilometros km
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
 
 <!-- ACCIONES SEGÚN ETAPA -->
 
@@ -59,9 +93,10 @@ else{
 
     @if (Model.TieneCombustiblesAprobados)
     {
+        <div class="mt-4">
         <a asp-controller="Comision"
            asp-action="ImprimirPlanViaje"
-           asp-route-idComision="@Model.Comision.id"
+           asp-route-idComision="@Model.Comision!.id"
            class="btn btn-success">
             Imprimir Plan de Viaje
         </a>
@@ -72,6 +107,7 @@ else{
            class="btn btn-success">
             Imprimir Viáticos
         </a>
+        </div>
     }
 
     @if (Model.TieneComisionEnCurso)
@@ -108,7 +144,7 @@ else{
 </div>
 
 <!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
-@if (Model.TieneComisionCreada && Model.Comision.Piloto && !Model.TieneDestinosDefinidos)
+@if (Model.TieneComisionCreada && Model.Comision!.Piloto && !Model.TieneDestinosDefinidos)
 {
     <div class="card">
         <div class="card-header">
@@ -120,7 +156,7 @@ else{
                   asp-action="AgregarDestinos"
                   method="post">
 
-                <input type="hidden" name="ComisionId" value="@Model.Comision.id" />
+                <input type="hidden" name="ComisionId" value="@Model.Comision!.id" />
 
                 <div id="destinos-container">
                     <div class="row mb-2 destino-row">

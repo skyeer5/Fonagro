@@ -37,10 +37,7 @@ public class ComisionController : Controller
     {
         var gasolinas = await _mediator.Send(new GetGasolinasWithFechaQueryRequest());
         ViewBag.Gasolinas = gasolinas.Value;
-        foreach(var gasolina in gasolinas.Value!)
-        {
-            Console.WriteLine($"\n\n\n\n hola we soy {gasolina.Descripcion}");
-        }
+
         var resultado = await _mediator.Send(new GetComisionActivaQueryRequest());
 
         var vm = new ComisionViewModel
@@ -58,7 +55,7 @@ public class ComisionController : Controller
             vm.TieneComisionCreada = false;
             return View(vm);
         }
-        if(resultado.Value!.destinos!.Any())
+        if(resultado.Value!.Destinos!.Any())
         {
             vm.TieneDestinosDefinidos = true;
         }

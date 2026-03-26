@@ -50,7 +50,7 @@ public class ComisionService : IComisionService
 
                     Piloto = c.ComisionUsuarios!
                         .First(cu => cu.UsuarioId == userId).Es_Piloto,
-                    destinos = c.ComisionDestinos!
+                    Destinos = c.ComisionDestinos!
                                     .Select( x=> new GetComisionDestinosResponse
                                     {
                                         id = x.ComisionDestinoId,

@@ -13,5 +13,5 @@ public class GetComisionActivaResponse
     public string? Estado { get; set; }
     public bool Piloto { get; set; }
     public bool Prespuesto_Aprobado { get; set; }
-    public List<GetComisionDestinosResponse>? destinos { get; set;}
+    public List<GetComisionDestinosResponse>? Destinos { get; set;}
 }
