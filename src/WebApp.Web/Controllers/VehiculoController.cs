@@ -61,7 +61,7 @@ public class VehiculoController : Controller
     {
         var command = new VehiculoCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("ObtenerVehiculo", new { id = result.Value }) : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(Detalle), new { id = result.Value }) : BadRequest(result.Error);
     }
 
     [HttpGet]

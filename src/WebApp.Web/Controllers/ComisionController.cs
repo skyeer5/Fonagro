@@ -97,7 +97,7 @@ public class ComisionController : Controller
     {
         var command = new ComisionCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDestinos(
@@ -107,7 +107,7 @@ public class ComisionController : Controller
     {
         var command = new ComisionAddDestinosCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("ObtenerComision", new { id = result.Value }) : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpGet]
     public async Task<IActionResult> AgregarGasolina()
@@ -130,7 +130,7 @@ public class ComisionController : Controller
     {
         var command = new ComisionApprovalGasCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("Index") : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDescripcion(
@@ -140,7 +140,7 @@ public class ComisionController : Controller
     {
         var command = new ComisionAddDescripcionCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction("Index") : BadRequest(result.Error);
+        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpGet]
     public async Task<IActionResult> ImprimirPlanViaje(int idComision)

@@ -37,6 +37,6 @@ public class GasolinaController : Controller
         {
             return BadRequest(result.Error);
         }
-        return RedirectToAction("Index","Home");
+        return RedirectToAction("Index","Comision");
     }
 }
