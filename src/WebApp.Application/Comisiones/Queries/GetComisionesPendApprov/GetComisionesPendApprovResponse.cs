@@ -8,5 +8,7 @@ public class GetComisionesPendApprovResponse
     public string? Departamento { get; set; }
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
+    public decimal Kilometros { get; set; }
+    public decimal precio_Gasolina { get; set; }
     public decimal Prespuesto_Estimado { get; set; }
 }

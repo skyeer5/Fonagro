@@ -78,6 +78,8 @@ public class ComisionService : IComisionService
                     Departamento = c.Departamento,
                     Fecha_Salida = c.Fecha_Salida,
                     Fecha_Regreso = c.Fecha_Regreso,
+                    Kilometros = c.ComisionDestinos!.Sum(x=>x.Kilometros),
+                    precio_Gasolina = c.Precio_Galon_Usado,
                     Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado
                 })
                 .ToListAsync();
