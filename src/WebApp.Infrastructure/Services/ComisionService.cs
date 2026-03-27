@@ -1,9 +1,13 @@
+using System.Linq.Expressions;
 using System.Reflection;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Bogus;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
+using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
@@ -18,11 +22,13 @@ public class ComisionService : IComisionService
 {
     private readonly WebAppDbContext _context;
     private readonly ICurrentUser _currentUser;
+    private readonly IMapper _mapper;
 
-    public ComisionService(WebAppDbContext context, ICurrentUser currentUser)
+    public ComisionService(WebAppDbContext context, ICurrentUser currentUser, IMapper mapper)
     {
         _context = context;
         _currentUser = currentUser;
+        _mapper = mapper;
     }
 
     public async Task<GetComisionActivaResponse?> GetComisionActivaAsync()
@@ -127,5 +133,50 @@ public class ComisionService : IComisionService
         }
             Console.WriteLine("\n\n\n Si paasaaaa\n\n\n");
         return Result<PlanViajeResponse>.Success(planViaje);
+    }
+    public async Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request)
+    {
+        IQueryable<Comision> queryable = _context.Comisiones;
+        
+        var predicate = ExpressionBuilder.New<Comision>();
+        Console.WriteLine("\n\n\n\n tiene que pasar");
+        if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Fecha_Salida <= request.Fecha_Fin && x.Fecha_Regreso>=request.Fecha_Inicio 
+                        );
+                        Console.WriteLine("\n\n\n\n si pasaaaa");
+        }
+        if(!string.IsNullOrEmpty(request.Departamento))
+        {
+            predicate = predicate.And(x=>
+                            x.Departamento!
+                            .Contains(request.Departamento)
+                        );
+        }
+        if(!string.IsNullOrEmpty(request.OrderBy))
+        {
+            Expression<Func<Comision, object>> orderBySelector =
+                        request.OrderBy.ToLower() switch
+                        {
+                            "fecha_inicio" => com => com.Fecha_Salida,
+                            "fecha_fin" => com => com.Fecha_Regreso,
+                            "departamento" => com => com.Departamento!,
+                            _ => com => com.ComisionId
+                        };
+            bool orderBy = request.OrderAsc.HasValue
+                            ? request.OrderAsc.Value
+                            : true;
+            queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
+        }
+        queryable = queryable.Where(predicate);
+
+        var comisionsQuery = queryable.ProjectTo<GetComisionesDetalleResponse>(_mapper.ConfigurationProvider).AsQueryable();
+        var pagination = await PagedList<GetComisionesDetalleResponse>.CreateAsync(
+                                    comisionsQuery,
+                                    request.PageNumber,
+                                    request.PageSize
+        );
+        return Result<PagedList<GetComisionesDetalleResponse>>.Success(pagination);
     }
 }

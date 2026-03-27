@@ -24,17 +24,41 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Comision" asp-action="Index">Comision</a>
+                            <li class="nav-item dropdown">
+                            <!-- Enlace principal: al hacer click en el texto va a Index -->
+                                <a class="nav-link text-dark dropdown-toggle dropdown-toggle-split" 
+                                    href="/Comision/Index" 
+                                    id="comisionDropdown" 
+                                    role="button" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                    Comisiones
+                                </a>
+
+                                <!-- Opciones del dropdown -->
+                                <ul class="dropdown-menu" aria-labelledby="comisionDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Comision" asp-action="Index">
+                                            <i class="bi bi-geo-alt"></i> Mi Comision
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Comision" asp-action="Crear">
+                                            <i class="bi bi-plus-circle"></i> Crear Comisión
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Comision" asp-action="List">
+                                            <i class="bi bi-list-ul"></i> Ver Lista
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="List">Usuarios</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Vehiculo" asp-action="Crear">Crear Vehículo</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Comision" asp-action="Crear">Crear Comisión</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Gasolina" asp-action="UpdatePrecio">Actualizar gasolina</a>

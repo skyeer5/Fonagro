@@ -2,10 +2,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Comisiones.ComisionCreate;
 using WebApp.Application.Comisiones.Command.ComisionAddDescripcion;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
+using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Core;
 using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
@@ -15,6 +17,7 @@ using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.Comisi
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
 using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
+using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComisionesDetalleQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
@@ -151,6 +154,21 @@ public class ComisionController : Controller
         return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PlanViaje_{idComision}.xlsx");
     }
 
+    [HttpGet]
+    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", int currentPage = 1, string orderBy = "")
+    {
+        var request = new GetComisionesDetalleRequest
+        {
+            Departamento = departamento,
+            Fecha_Inicio = !fecha_inicio.IsNullOrEmpty() ? DateTime.Parse(fecha_inicio!) : null,
+            Fecha_Fin = !fecha_fin.IsNullOrEmpty() ? DateTime.Parse(fecha_fin!) : null,
+            PageNumber = currentPage,
+            OrderBy = orderBy
+        };
+        var query = new GetComisionesDetalleQueryRequest(request);
+        var result = await _mediator.Send(query);
+        return View(result.Value);
+    }
 
     // [HttpGet("Detalle/{id}")]
     // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(
