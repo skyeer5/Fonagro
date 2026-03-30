@@ -6,5 +6,5 @@ namespace WebApp.Application.Authentication.Command.Login;
 
 public class LoginCommand
 {
-    public record LoginCommandRequest(LoginRequest loginRequest) : IRequest<Result<bool>>;
+    public record LoginCommandRequest(LoginRequest loginRequest) : IRequest<Result<LoginResponse>>;
 }

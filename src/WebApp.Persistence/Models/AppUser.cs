@@ -26,7 +26,7 @@ public class AppUser : IdentityUser<int>
             Unidad = unidad.ToUpper(),
             Tipo_Servicios = tipoServicios.ToUpper(),
             Numero_Contrato = numeroContrato,
-            Estado = UsuarioEstados.Activo,
+            Estado = UsuarioEstados.PendientePrimerAcceso,
             Email = email,
             UserName = nit.ToUpper().Replace("-", "").Replace(" ", "")
         };

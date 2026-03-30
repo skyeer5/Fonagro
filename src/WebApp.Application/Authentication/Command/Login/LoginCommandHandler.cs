@@ -5,21 +5,16 @@ using WebApp.Application.Core;
 
 namespace Web.Application.Authentication.Command.Login;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand.LoginCommandRequest, Result<bool>>
+public class LoginCommandHandler : IRequestHandler<LoginCommand.LoginCommandRequest, Result<LoginResponse>>
 {
     private readonly IAuthService _authService;
     public LoginCommandHandler(IAuthService authService)
     {
         _authService = authService;
     }
-    public async Task<Result<bool>> Handle(LoginCommand.LoginCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> Handle(LoginCommand.LoginCommandRequest request, CancellationToken cancellationToken)
     {
-        var resultado = await _authService.LoginAsync(request.loginRequest.NIT, request.loginRequest.Password);
-        if(!resultado.IsSuccess)
-        {
-            return Result<bool>.Failure(resultado.Error!);
-        }
+        return await _authService.LoginAsync(request.loginRequest.NIT, request.loginRequest.Password);
 
-        return Result<bool>.Success(resultado.Value!);
     }
 }
