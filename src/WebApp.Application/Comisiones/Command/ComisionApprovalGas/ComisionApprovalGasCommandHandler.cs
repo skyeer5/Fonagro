@@ -24,6 +24,6 @@ public class ComisionApprovalGasCommandHandler : IRequestHandler<ComisionApprova
             return Result<int>.Failure("Comision no encontrada");
         }
         comision.AgregarPresupuestoGas(request.ComisionApprovalGasRequest.PrespuestoAprobado);
-        return await _comisionRepository.AddApprovalGas(comision,cancellationToken);
+        return await _comisionRepository.AddApprovalGasAsync(comision,cancellationToken);
     }
 }

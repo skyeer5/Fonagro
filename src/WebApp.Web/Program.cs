@@ -7,6 +7,7 @@ using Web.Application.Interfaces;
 using WebApp.Application;
 using WebApp.Application.Interfaces;
 using WebApp.Infrastructure.Identity;
+using WebApp.Infrastructure.Jobs;
 using WebApp.Infrastructure.Policies;
 using WebApp.Infrastructure.Repositories;
 using WebApp.Infrastructure.Services;
@@ -38,6 +39,9 @@ builder.Services.AddScoped<IComisionUsuarioService, ComisionUsuarioService>();
 builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGasolinaPrecioRepository, GasolinaPrecioRepository>();
+builder.Services.AddScoped<IBackgroundJob, ComisionEstadoJob>();
+builder.Services.AddHostedService<SchedulerService>();
+
 
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
