@@ -26,17 +26,6 @@ public class ComisionAddDestinosCommandHandler : IRequestHandler<ComisionAddDest
             return Result<int>.Failure("No se ha encontrado la comision");
         }
 
-        var destinos = new List<ComisionDestino>();
-        foreach(var com in request.request.comisionAddDestinosItemRequests!)
-        {
-            var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro, comision.Vehiculo!.ConsumoKmPorGalon);
-            destinos.Add(destino);
-        }
-        
-        comision.AgregarDestinos(destinos);
-
-         var resultado = await _comisionRepository.UpdateComisionAsync(comision, cancellationToken);
-
-         return resultado.IsSuccess ? Result<int>.Success(resultado.Value) : Result<int>.Failure(resultado.Error!);
+         return await _comisionRepository.AddDestinosAsync(comision, request.request.comisionAddDestinosItemRequests!, cancellationToken);
     }
 }

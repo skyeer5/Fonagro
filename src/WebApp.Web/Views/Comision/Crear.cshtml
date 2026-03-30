@@ -46,7 +46,44 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <tr>
+                <td>
+                    <select name="UsuariosNombrados[0].UsuariosId"
+                            class="form-select"
+                            required>
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var u in (SelectList)ViewBag.Usuarios)
+                        {
+                            <option value="@u.Value">@u.Text</option>
+                        }
+                    </select>
+                </td>
+
+                <td>
+                    <input name="UsuariosNombrados[0].Numero_Nombramiento"
+                        class="form-control" />
+                </td>
+
+                <td class="text-center">
+                <input type="checkbox"
+                    name="UsuariosNombrados[0].Es_Piloto"
+                    value="true" />
+
+                <input type="hidden"
+                    name="UsuariosNombrados[0].Es_Piloto"
+                    value="false" />
+                </td>   
+
+                <td class="text-center">
+                    <button type="button"
+                            class="btn btn-danger btn-sm"
+                            onclick="eliminarFila(this)">
+                        X
+                    </button>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <button type="button" class="btn btn-secondary" onclick="agregarUsuario()">
@@ -106,7 +143,7 @@
 <!-- ================= JAVASCRIPT ================= -->
 
 <script>
-let index = 0;
+let index = 1;
 
 function agregarUsuario() {
     const template = document.getElementById("usuarioTemplate").innerHTML;

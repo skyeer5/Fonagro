@@ -40,6 +40,8 @@ public class Comision : AuditableEntity
     public void AgregarCreadoPor(int usuarioId)
     {
         this.UsuarioId = usuarioId;
+        this.Creado_Por = usuarioId;
+        this.Fecha_Creacion = DateTime.Now;
     }
     public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
@@ -62,7 +64,7 @@ public class Comision : AuditableEntity
         }
         
     }
-    public void AgregarDestinos(List<ComisionDestino> comisionDestinos)
+    public void AgregarDestinos(List<ComisionDestino> comisionDestinos, int userId)
     {
         this.ComisionDestinos ??= new List<ComisionDestino>();
         if(!comisionDestinos.Any())
@@ -72,6 +74,8 @@ public class Comision : AuditableEntity
         Console.WriteLine("\n\n\n\n");
         foreach(var destino in comisionDestinos)
         {
+            destino.Creado_Por = userId;
+            destino.Fecha_Creacion = DateTime.Now;
             this.ComisionDestinos.Add(destino);
             Console.WriteLine(destino.Galones);
         }
