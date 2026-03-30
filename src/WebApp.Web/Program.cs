@@ -13,6 +13,7 @@ using WebApp.Infrastructure.Services;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using WebApp.Web.Extensions;
+using WebApp.Web.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Servicios
@@ -74,6 +75,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

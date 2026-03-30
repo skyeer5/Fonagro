@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using WebApp.Application.Core;
 
 namespace WebApp.Application.Behavior;
 
@@ -20,9 +21,10 @@ public sealed class ValidationBehavior<TRequest, TResponse>
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (_validators.Any())
+         if (_validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
+
             var failures = _validators
                 .Select(v => v.Validate(context))
                 .SelectMany(r => r.Errors)
@@ -30,7 +32,18 @@ public sealed class ValidationBehavior<TRequest, TResponse>
                 .ToList();
 
             if (failures.Any())
-                throw new ValidationException(failures);
+            {
+                var error = string.Join(", ", failures.Select(f => f.ErrorMessage));
+                
+                var type = typeof(TResponse);
+                var valueType = type.GetGenericArguments()[0];
+
+                var failureMethod = typeof(Result<>)
+                    .MakeGenericType(valueType)
+                    .GetMethod(nameof(Result<object>.Failure), new[] { typeof(string) });
+
+                var result = failureMethod!.Invoke(null, new object[] { error });
+                }
         }
 
         return await next();
