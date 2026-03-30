@@ -24,7 +24,7 @@ public static class EstadosTipos
     public const string Finalizado = nameof(Finalizado);
 
     // EStados de Partes
-    public const string Buen_Estado = nameof(Buen_Estado);
+    public const string Buen_Estado = "Buen Estado";
     public const string Rayon = nameof(Rayon);
     public const string Hundimiento = nameof(Hundimiento);
     public const string Golpe = nameof(Golpe);
