@@ -10,9 +10,29 @@
 
 @if (Model?.Comision is null)
 {
-    <div class="alert alert-info">
-        No tienes una comisión activa.
+   <div class="row">
+    <div class="col-md-9">
+        <div class="alert alert-info">
+            No tienes una comisión activa.
+        </div>
     </div>
+    
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                Precio de Gasolina
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach (var usuario in gasolinas!)
+                    {
+                        <li class="list-group-item">@usuario.Descripcion</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 }
 else{

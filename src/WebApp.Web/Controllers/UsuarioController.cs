@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Application.Core;
 using WebApp.Application.Usuarios.Commands.UsuarioCreate;
@@ -8,7 +9,7 @@ using static WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateCom
 using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 
 namespace WebApp.Web.Controllers;
-
+[Authorize]
 public class UsuarioController : Controller
 {
     private readonly IMediator _mediator;
