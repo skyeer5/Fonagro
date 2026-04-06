@@ -95,6 +95,7 @@ public class UsuarioService : IUsuarioService
     { 
         return await _userManager.Users
             .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != EstadosTipos.Finalizado && cu.Comision.Estado != EstadosTipos.Cancelada))
+            .OrderBy(x=> x.Nombre_Completo)
             .Select(u => new GetUsuariosSinComisionResponse
             {
                 Id = u.Id,

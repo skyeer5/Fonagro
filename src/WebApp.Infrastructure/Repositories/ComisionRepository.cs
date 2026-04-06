@@ -48,12 +48,15 @@ public class ComisionRepository : IComisionRepository
     }
     public async Task<Result<int>> CheckComisionStatusAsync(CancellationToken cancellationToken)
     {
-        var comisiones = _context.Comisiones.Where(c => c.Estado == EstadosTipos.Programada || c.Estado == EstadosTipos.EnCurso).ToList();
+        var comisiones = _context.Comisiones.Where(c => c.Estado == EstadosTipos.Programada || c.Estado == EstadosTipos.EnCurso)
+                                            .Include(x=>x.Vehiculo)
+                                            .Include(x=>x.ComisionUsuarios)
+                                            .ToList();
         foreach (var comision in comisiones)
         {
             if (comision.Estado == EstadosTipos.EnCurso && comision.Fecha_Regreso <= DateTime.Now)
             {
-                comision.Estado = EstadosTipos.Completada;
+                comision.CompletarComision();
                 _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
             else if (comision.Estado == EstadosTipos.Programada && comision.Fecha_Salida <= DateTime.Now)

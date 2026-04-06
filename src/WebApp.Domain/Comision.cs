@@ -115,6 +115,21 @@ public class Comision : AuditableEntity
             }
         }
     }
+    public void CompletarComision()
+    {
+        this.Estado = EstadosTipos.Completada;
+        if(this.Vehiculo is not null)
+        {
+            this.Vehiculo.Estado = EstadosTipos.Disponible;
+        }
+        if(this.ComisionUsuarios is not null)
+        {
+            foreach(var comisionUsuario in this.ComisionUsuarios)
+            {
+                comisionUsuario.Estado = EstadosTipos.Completada;
+            }
+        }
+    }
 
 
 
