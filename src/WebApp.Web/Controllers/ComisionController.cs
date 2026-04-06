@@ -7,6 +7,7 @@ using WebApp.Application.Comisiones.ComisionCreate;
 using WebApp.Application.Comisiones.Command.ComisionAddDescripcion;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
+using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Core;
@@ -16,6 +17,7 @@ using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
 using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionApprovalGasCommand;
+using static WebApp.Application.Comisiones.Command.ComisionCancel.ComisionCancelCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComisionesDetalleQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
@@ -170,6 +172,16 @@ public class ComisionController : Controller
         return View(result.Value);
     }
 
+    [HttpPost]
+    public async Task<ActionResult<Result<int>>> Cancelar(
+        [FromForm] ComisionCancelRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new ComisionCancelCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+        return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
+    }
     // [HttpGet("Detalle/{id}")]
     // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(
     //     int id,

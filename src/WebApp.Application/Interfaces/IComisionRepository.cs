@@ -10,4 +10,5 @@ public interface IComisionRepository
     Task<Result<int>> AddDestinosAsync(Domain.Comision comision, List<ComisionAddDestinosItemRequest> destinos, CancellationToken cancellationToken);
     Task<Result<int>> AddApprovalGasAsync(Domain.Comision comision, CancellationToken cancellationToken);
     Task<Result<int>> CheckComisionStatusAsync(CancellationToken cancellationToken);
+    Task<Result<int>> CancelComisionAsync(int comisionId, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
@@ -64,7 +65,6 @@ public class ComisionRepository : IComisionRepository
         }
         return await _context.SaveChangesAsync(cancellationToken) > 0 ? Result<int>.Success(1) : Result<int>.Failure("Error al actualizar el estado de las comisiones");
     }
-
     public async Task<Result<int>> AddDestinosAsync(Domain.Comision comision, List<ComisionAddDestinosItemRequest> items, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
@@ -80,5 +80,33 @@ public class ComisionRepository : IComisionRepository
          var resultado = await _context.SaveChangesAsync(cancellationToken);
 
          return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al agregar los destinos a la comisión");
+    }
+    public async Task<Result<int>> CancelComisionAsync(int comisionId, CancellationToken cancellationToken)
+    {
+        var comision = await _context.Comisiones
+                                .Where(x=>x.ComisionId == comisionId)
+                                .Include(x=>x.Vehiculo)
+                                .Include(x=>x.ComisionDestinos)
+                                .Include(x=>x.ComisionUsuarios!)
+                                    .ThenInclude(cu=>cu.ComisionViaticosList)
+                                .FirstOrDefaultAsync(cancellationToken);
+        if(comision is null)       
+        {
+            return Result<int>.Failure("Comision no encontrada");
+        }
+        if(comision.Estado == EstadosTipos.Cancelada)
+        {
+            return Result<int>.Failure("La comisión ya se encuentra cancelada");
+        }
+        if(comision.Estado == EstadosTipos.Finalizado)
+        {
+            return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
+        }
+        var userid = _currentUser.userId;
+        comision.CancelarComision(userid);
+        
+        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        var resultado = await _context.SaveChangesAsync(cancellationToken);
+        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al cancelar la comisión");
     }
 }
