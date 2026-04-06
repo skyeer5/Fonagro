@@ -30,4 +30,17 @@ public static class EstadosTipos
     public const string Golpe = nameof(Golpe);
     public const string Otro = nameof(Otro);
 
+    public static List<string> GetEstadosComision()
+    {
+        return
+        [
+            Creada,
+            DestinosDefinidos,
+            Programada,
+            EnCurso,
+            Completada,
+            Cancelada
+        ];
+    }
+
 }

@@ -18,7 +18,7 @@
     <form action="/Comision/List" method="get" class="mb-4">
         <div class="row g-3 align-items-end">
             <!-- Buscar por departamento -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="departamento" class="form-label fw-bold">
                     <i class="bi bi-pin-map"></i> Departamento
                 </label>
@@ -50,8 +50,21 @@
                     id="fecha_fin" 
                     name="fecha_fin">
             </div>
-
+            <!-- Estado -->
             <div class="col-md-2">
+                <label for="estado" class="form-label fw-bold">
+                    <i class="bi bi-tag"></i> Estado
+                </label>
+                <select name="Estado" id="estado" class="form-control">
+                    <option value="">Seleccionar estado</option>
+                    @foreach (var estado in ViewBag.Estados)
+                    {
+                        <option value="@estado">@estado</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-1">
             <button type="submit" class="btn btn-outline-primary">
                 <i class="bi bi-search"></i> Buscar
             </button>

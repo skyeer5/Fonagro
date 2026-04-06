@@ -154,6 +154,13 @@ public class ComisionService : IComisionService
                             .Contains(request.Departamento)
                         );
         }
+        if(!string.IsNullOrEmpty(request.Estado))
+        {
+            predicate = predicate.And(x=>
+                            x.Estado!
+                            .Contains(request.Estado)
+                        );
+        }
         if(!string.IsNullOrEmpty(request.OrderBy))
         {
             Expression<Func<Comision, object>> orderBySelector =
@@ -162,6 +169,7 @@ public class ComisionService : IComisionService
                             "fecha_inicio" => com => com.Fecha_Salida,
                             "fecha_fin" => com => com.Fecha_Regreso,
                             "departamento" => com => com.Departamento!,
+                            "estado" => com => com.Estado!,
                             _ => com => com.ComisionId
                         };
             bool orderBy = request.OrderAsc.HasValue

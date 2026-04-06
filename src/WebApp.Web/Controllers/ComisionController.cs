@@ -12,6 +12,7 @@ using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Core;
 using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
+using WebApp.Domain;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
@@ -157,11 +158,13 @@ public class ComisionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
+        ViewBag.Estados = EstadosTipos.GetEstadosComision();
         var request = new GetComisionesDetalleRequest
         {
             Departamento = departamento,
+            Estado = estado,
             Fecha_Inicio = !fecha_inicio.IsNullOrEmpty() ? DateTime.Parse(fecha_inicio!) : null,
             Fecha_Fin = !fecha_fin.IsNullOrEmpty() ? DateTime.Parse(fecha_fin!) : null,
             PageNumber = currentPage,
