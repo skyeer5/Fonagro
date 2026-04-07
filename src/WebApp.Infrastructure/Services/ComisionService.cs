@@ -136,16 +136,14 @@ public class ComisionService : IComisionService
     }
     public async Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request)
     {
-        IQueryable<Comision> queryable = _context.Comisiones;
+        IQueryable<Comision> queryable = _context.Comisiones.AsNoTracking();
         
         var predicate = ExpressionBuilder.New<Comision>();
-        Console.WriteLine("\n\n\n\n tiene que pasar");
         if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
         {
             predicate = predicate.And(x=>
                             x.Fecha_Salida <= request.Fecha_Fin && x.Fecha_Regreso>=request.Fecha_Inicio 
                         );
-                        Console.WriteLine("\n\n\n\n si pasaaaa");
         }
         if(!string.IsNullOrEmpty(request.Departamento))
         {

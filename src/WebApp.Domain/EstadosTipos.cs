@@ -42,5 +42,16 @@ public static class EstadosTipos
             Cancelada
         ];
     }
+    public static List<string> GetEstadosVehiculo()
+    {
+        return
+        [
+            Disponible,
+            Baja,
+            EnMantenimiento,
+            Ocupado,
+            Reservado
+        ];
+    }
 
 }

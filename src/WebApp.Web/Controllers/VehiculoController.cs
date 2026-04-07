@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Application.Core;
 using WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
+using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
+using WebApp.Domain;
 using static WebApp.Application.Accesorios.Queries.GetAccesorios.GetAccesoriosQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinas.GetGasolinasQuery;
 using static WebApp.Application.Partes.Queries.GetPartes.GetPartesQuery;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
+using static WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle.GetVehiculosDetalleQuery;
 
 namespace WebApp.Web.Controllers;
 [Authorize]
@@ -73,5 +76,23 @@ public class VehiculoController : Controller
         var query = new GetVehiculoQueryRequest{Id = id};
         var result = await _mediator.Send(query, cancellationToken);
         return result.IsSuccess ? View(result.Value) : NotFound(result.Error);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(string? marca = "", string? modelo = "", string? placa = "", string? estado = "", int currentPage = 1, string orderBy = "")
+    {
+        ViewBag.Estados = EstadosTipos.GetEstadosVehiculo();
+        var request = new GetVehiculosDetalleRequest
+        {
+            Marca = marca,
+            Modelo = modelo,
+            Placa = placa,
+            Estado = estado,
+            PageNumber = currentPage,
+            OrderBy = orderBy
+        };
+        var query = new GetVehiculosDetalleQueryRequest(request);
+        var result = await _mediator.Send(query);
+        return View(result.Value);
     }
 }
