@@ -4,7 +4,7 @@ public abstract class PagingParameters
 {
     public int PageNumber {get;set;} = 1;
     public const int MaxSize = 50;
-    private int _pageSize = 50;
+    private int _pageSize = 15;
     public int PageSize
     {
         get => _pageSize;

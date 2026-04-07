@@ -15,8 +15,8 @@ public class MapperProfile : Profile
         CreateMap<AppUser, GetUsuariosActivosDetalleResponse>()
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src =>
                 src.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != EstadosTipos.Finalizado && cu.Comision.Estado != EstadosTipos.Cancelada)
-                    ? "En comisión"
-                    : UsuarioEstados.Activo
+                    ? UsuarioEstados.EnComision
+                    : src.Estado
             ));
         CreateMap<Domain.Comision, GetComisionesDetalleResponse>()
             .ForMember(dest => dest.Descripcion_Vehiculo, opt => opt.MapFrom(src =>

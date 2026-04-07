@@ -39,11 +39,15 @@ public class UsuarioController : Controller
         return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
     }
     [HttpGet]
-    public async Task<IActionResult> List(string? nombre = "", int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(string? nombre = "", string? puesto = "", string? unidad = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
+        ViewBag.Estados = UsuarioEstados.GetEstados();
         var request = new GetUsuariosActivosDetalleRequest
         {
             Nombre = nombre,
+            Puesto = puesto,
+            Unidad = unidad,
+            Estado = estado,
             PageNumber = currentPage,
             OrderBy = orderBy
         };

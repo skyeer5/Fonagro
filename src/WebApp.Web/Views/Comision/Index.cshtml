@@ -1,161 +1,219 @@
+@using WebApp.Domain
 @model WebApp.Web.Models.ComisionViewModel
-
 
 @{
     ViewBag.Title = "Mi Comisión";
     var gasolinas = ViewBag.Gasolinas as IEnumerable<WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaResponse>;
 }
 
-<h2>Mi Comisión</h2>
+<h2 class="mb-4">Mi Comisión</h2>
 
-@if (Model?.Comision is null)
-{
-   <div class="row">
+<div class="row">
+
+    <!-- ================= MAIN ================= -->
     <div class="col-md-9">
-        <div class="alert alert-info">
-            No tienes una comisión activa.
-        </div>
-    </div>
-    
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header">
-                Precio de Gasolina
+
+        @* ================= SIN COMISIÓN ================= *@
+        @if (Model?.Comision is null)
+        {
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white">
+                    ¿Cómo realizar una comisión?
+                </div>
+
+                <div class="card-body">
+
+                    <p class="mb-3">
+                        Sigue este flujo para gestionar una comisión dentro del sistema:
+                    </p>
+
+                    <ol class="mb-4">
+                        <li><strong>Nombramientos:</strong> El coordinador asigna participantes.</li>
+                        <li><strong>Coordinación:</strong> Se define logística con Servicios Generales.</li>
+                        <li><strong>Destinos:</strong> El piloto registra los destinos.</li>
+                        <li><strong>Aprobación:</strong> Se autoriza el combustible.</li>
+                        <li><strong>Ejecución:</strong> La comisión se realiza.</li>
+                    </ol>
+
+                    <div class="alert alert-secondary mb-0">
+                        Cuando tengas un nombramiento asignado, podrás gestionarlo aquí.
+                    </div>
+
+                </div>
             </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    @foreach (var usuario in gasolinas!)
-                    {
-                        <li class="list-group-item">@usuario.Descripcion</li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+        }
+        else
+        {
+            @* ================= ESTADO ================= *@
+            <div class="card border-primary mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Estado de la Comisión
+                </div>
 
-}
-else{
-    <div class="row">
+                <div class="card-body">
 
-    <!-- IZQUIERDA (contenido principal) -->
-    <div class="col-md-9">
-<!-- RESUMEN -->
-<div class="card mb-4">
-    <div class="card-header bg-dark text-white">
-        Información de la Comisión
-    </div>
-    <div class="card-body">
-        <p><strong>Nombramiento:</strong> @Model.Comision!.Nombramiento</p>
-        <p><strong>Departamento:</strong> @Model.Comision.Departamento</p>
-        <p><strong>Salida:</strong> @Model.Comision.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</p>
-        <p><strong>Regreso:</strong> @Model.Comision.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</p>
-        <p><strong>Estado:</strong> @Model.Comision.Estado</p>
-        <p><strong>Descripción:</strong></p>
-        <form asp-controller="Comision"
-                asp-action="AgregarDescripcion"
-                method="post">
-                <input type="hidden" name="IdComision" value="@Model.Comision.id" />
-                <textarea name="Descripcion" class="form-control" placeholder="Descripción">@Model.Comision.Descripcion</textarea>
-                <br>
-                <button type="submit" class="btn btn-primary">
-                    Guardar Descripción
-                </button>
+                    <!-- Flujo -->
+                    <div class="d-flex justify-content-between text-center mb-3">
 
-            </form>
-    </div>
-</div>
-@if (Model.Comision?.Destinos != null && Model.Comision.Destinos.Any())
-{
-    <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <i class="bi bi-geo-alt-fill"></i> Destinos de la Comisión
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Kilómetros</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var destino in Model.Comision.Destinos)
+                        <div class="flex-fill">
+                            <small class="text-muted">1</small><br />
+                            Nombramientos
+                        </div>
+
+                        <div class="flex-fill @(Model.Comision.Estado == EstadosTipos.Creada ? "text-primary fw-bold" : "")">
+                            <small>2</small><br />
+                            Coordinación
+                        </div>
+
+                        <div class="flex-fill @(Model.Comision.Estado == EstadosTipos.DestinosDefinidos ? "text-primary fw-bold" : "")">
+                            <small>3</small><br />
+                            Destinos
+                        </div>
+
+                        <div class="flex-fill @(Model.Comision.Estado == EstadosTipos.Programada ? "text-primary fw-bold" : "")">
+                            <small>4</small><br />
+                            Aprobación
+                        </div>
+
+                        <div class="flex-fill @(Model.Comision.Estado == EstadosTipos.EnCurso ? "text-success fw-bold" : "")">
+                            <small>5</small><br />
+                            Ejecución
+                        </div>
+
+                    </div>
+
+                    <!-- Mensaje -->
+                    <div class="alert alert-light mb-0">
+
+                        @switch (Model.Comision.Estado)
                         {
-                            <tr>
-                                <td>@destino.descripcion</td>
-                                <td>
-                                    <span class="badge bg-primary">
-                                        @destino.kilometros km
-                                    </span>
-                                </td>
-                            </tr>
+                            case EstadosTipos.Creada:
+                                <span>Se ha asignado piloto. Pendiente registro de destinos.</span>
+                                break;
+
+                            case EstadosTipos.DestinosDefinidos:
+                                <span>Destinos registrados. Pendiente aprobación de combustible.</span>
+                                break;
+
+                            case EstadosTipos.Programada:
+                                <span>Comisión aprobada y lista para ejecutarse.</span>
+                                break;
+
+                            case EstadosTipos.EnCurso:
+                                <span>La comisión se encuentra en ejecución.</span>
+                                break;
+
+                            default:
+                                <span>Estado actual de la comisión.</span>
+                                break;
                         }
-                    </tbody>
-                </table>
+
+                    </div>
+
+                </div>
             </div>
-        </div>
+
+            @* ================= INFO ================= *@
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    Información de la Comisión
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-2">
+                        <div class="col-md-6"><strong>Nombramiento:</strong> @Model.Comision.Nombramiento</div>
+                        <div class="col-md-6"><strong>Departamento:</strong> @Model.Comision.Departamento</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6"><strong>Salida:</strong> @Model.Comision.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</div>
+                        <div class="col-md-6"><strong>Regreso:</strong> @Model.Comision.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Estado:</strong>
+                        <span class="badge bg-primary">@Model.Comision.Estado</span>
+                    </div>
+
+                    <form asp-controller="Comision" asp-action="AgregarDescripcion" method="post">
+                        <input type="hidden" name="IdComision" value="@Model.Comision.id" />
+
+                        <label class="form-label"><strong>Descripción</strong></label>
+                        <textarea name="Descripcion" class="form-control mb-2">@Model.Comision.Descripcion</textarea>
+
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Guardar
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            @* ================= DESTINOS ================= *@
+            @if (Model.Comision.Destinos?.Any() == true)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        Destinos
+                    </div>
+
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Kilómetros</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in Model.Comision.Destinos)
+                                {
+                                    <tr>
+                                        <td>@d.descripcion</td>
+                                        <td><span class="badge bg-primary">@d.kilometros km</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            @* ================= ACCIONES ================= *@
+            @if (Model.TieneCombustiblesAprobados)
+            {
+                <div class="mb-4">
+                    <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.id"
+                       class="btn btn-success me-2">
+                        Plan de Viaje
+                    </a>
+
+                    <a asp-action="ImprimirViaticos" asp-route-id="@Model.Comision.id"
+                       class="btn btn-success">
+                        Viáticos
+                    </a>
+                </div>
+            }
+        }
+
     </div>
-}
 
-
-<!-- ACCIONES SEGÚN ETAPA -->
-
-<div class="d-flex flex-wrap gap-2 mb-4">
-
-    @if (Model.TieneDestinosDefinidos && !Model.TieneCombustiblesAprobados)
-    {
-        <span class="badge bg-warning text-dark p-2">
-            Pendiente aprobación de combustible
-        </span>
-    }
-
-    @if (Model.TieneCombustiblesAprobados)
-    {
-        <div class="mt-4">
-        <a asp-controller="Comision"
-           asp-action="ImprimirPlanViaje"
-           asp-route-idComision="@Model.Comision!.id"
-           class="btn btn-success">
-            Imprimir Plan de Viaje
-        </a>
-
-        <a asp-controller="Comision"
-           asp-action="ImprimirViaticos"
-           asp-route-id="@Model.Comision.id"
-           class="btn btn-success">
-            Imprimir Viáticos
-        </a>
-        </div>
-    }
-
-    @if (Model.TieneComisionEnCurso)
-    {
-        <span class="badge bg-info p-2">
-            Comisión en curso
-        </span>
-    }
-
-</div>
-    </div>
-
-    <!-- DERECHA (cuadro de nombres) -->
+    <!-- ================= SIDEBAR ================= -->
     <div class="col-md-3">
-        <div class="card">
+        <div class="card shadow-sm">
             <div class="card-header">
                 Precio de Gasolina
             </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
 
-                    @foreach (var usuario in gasolinas!)
+            <div class="card-body p-2">
+                <ul class="list-group list-group-flush">
+                    @foreach (var g in gasolinas!)
                     {
-                        <li class="list-group-item">
-                            @usuario.Descripcion
+                        <li class="list-group-item small">
+                            @g.Descripcion
                         </li>
                     }
-
                 </ul>
             </div>
         </div>
@@ -164,7 +222,7 @@ else{
 </div>
 
 <!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
-@if (Model.TieneComisionCreada && Model.Comision!.Piloto && !Model.TieneDestinosDefinidos)
+@if (Model!.TieneComisionCreada && Model.Comision!.Piloto && !Model.TieneDestinosDefinidos)
 {
     <div class="card">
         <div class="card-header">
@@ -228,5 +286,4 @@ document.getElementById("btnAddDestino")?.addEventListener("click", function () 
     index++;
 });
 </script>
-}
 }

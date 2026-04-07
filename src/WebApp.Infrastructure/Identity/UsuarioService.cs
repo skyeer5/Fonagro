@@ -54,14 +54,33 @@ public class UsuarioService : IUsuarioService
         IQueryable<AppUser> queryable = _userManager.Users;
 
         var predicate = ExpressionBuilder.New<AppUser>();
-
-            predicate = predicate
-                        .And(x=>x.Estado == UsuarioEstados.Activo);
+        predicate = predicate.And(x => x.Estado != null);
         if(!string.IsNullOrEmpty(request.request.Nombre))
         {
             predicate = predicate
                         .And(x=>x.Nombre_Completo!
                         .Contains(request.request.Nombre)
+                        );
+        }
+        if(!string.IsNullOrEmpty(request.request.Puesto))
+        {
+            predicate = predicate
+                        .And(x=>x.Puesto!
+                        .Contains(request.request.Puesto)
+                        );
+        }
+        if(!string.IsNullOrEmpty(request.request.Unidad))
+        {
+            predicate = predicate
+                        .And(x=>x.Unidad!
+                        .Contains(request.request.Unidad)
+                        );
+        }
+        if(!string.IsNullOrEmpty(request.request.Estado))
+        {
+            predicate = predicate
+                        .And(x=>x.Estado!
+                        .Contains(request.request.Estado)
                         );
         }
         if(!string.IsNullOrEmpty(request.request.OrderBy))

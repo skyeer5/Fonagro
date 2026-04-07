@@ -11,20 +11,68 @@
             <i class="bi bi-person-plus"></i> Nuevo Usuario
         </a>
     </div>
-
-    <!-- Barra de búsqueda compacta -->
+    <!-- Barra de búsqueda de usuarios -->
     <form action="/Usuario/List" method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" 
-                   class="form-control shadow-sm" 
-                   id="nombre" 
-                   name="nombre" 
-                   placeholder="Buscar usuario por nombre...">
-            <button type="submit" class="btn btn-outline-primary">
-                <i class="bi bi-search"></i>
-            </button>
+        <div class="row g-3 align-items-end">
+            <!-- Buscar por nombre -->
+            <div class="col-md-3">
+                <label for="nombre" class="form-label fw-bold">
+                    <i class="bi bi-person-circle"></i> Nombre
+                </label>
+                <input type="text" 
+                    class="form-control shadow-sm" 
+                    id="nombre" 
+                    name="nombre" 
+                    placeholder="Ej. Juan Pérez">
+            </div>
+
+            <!-- Buscar por puesto -->
+            <div class="col-md-3">
+                <label for="puesto" class="form-label fw-bold">
+                    <i class="bi bi-briefcase"></i> Puesto
+                </label>
+                <input type="text" 
+                    class="form-control shadow-sm" 
+                    id="puesto" 
+                    name="puesto" 
+                    placeholder="Ej. Encargado">
+            </div>
+
+            <!-- Buscar por unidad -->
+            <div class="col-md-3">
+                <label for="unidad" class="form-label fw-bold">
+                    <i class="bi bi-building"></i> Unidad
+                </label>
+                <input type="text" 
+                    class="form-control shadow-sm" 
+                    id="unidad" 
+                    name="unidad" 
+                    placeholder="Ej. Unidad Administrativa">
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-2">
+                <label for="estado" class="form-label fw-bold">
+                    <i class="bi bi-person-x"></i> Estado
+                </label>
+                <select name="Estado" id="estado" class="form-control">
+                    <option value="">Seleccionar estado</option>
+                    @foreach (var estado in ViewBag.Estados)
+                    {
+                        <option value="@estado">@estado</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Botón de búsqueda -->
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
         </div>
     </form>
+
 
     <!-- Tabla de usuarios -->
     <div class="table-responsive">
@@ -32,6 +80,7 @@
             <thead class="table-dark">
                 <tr>
                     <th><a class=" text-white text-decoration-none" href="/Usuario/List?orderBy=nombre">Nombre Completo</a></th>
+                    <th class=" text-white">NIT</th>
                     <th><a class=" text-white text-decoration-none" href="/Usuario/List?orderBy=puesto">Puesto</a></th>
                     <th><a class=" text-white text-decoration-none" href="/Usuario/List?orderBy=unidad">Unidad</a></th>
                     <th>Estado</th>
@@ -43,6 +92,7 @@
                 {
                     <tr>
                         <td>@item.Nombre_Completo</td>
+                        <td>@item.NIT</td>
                         <td>@item.Puesto</td>
                         <td>@item.Unidad</td>
                         <td>
