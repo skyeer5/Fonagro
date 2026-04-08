@@ -107,8 +107,14 @@ public class ComisionRepository : IComisionRepository
         }
         var userid = _currentUser.userId;
         comision.CancelarComision(userid);
-        
-        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        if(comision.ComisionDestinos is not null)
+        {
+            _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
+        }
+        foreach (var cu in comision.ComisionUsuarios!)
+        {
+            _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
+        }
         var resultado = await _context.SaveChangesAsync(cancellationToken);
         return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al cancelar la comisión");
     }

@@ -102,18 +102,6 @@ public class Comision : AuditableEntity
         {
             this.Vehiculo.Estado = EstadosTipos.Disponible;
         }
-        if(this.ComisionDestinos is not null)
-        {
-            this.ComisionDestinos.ToList().RemoveRange(0, this.ComisionDestinos.Count);
-        }
-        if(this.ComisionUsuarios is not null)
-        {
-            foreach(var comisionUsuario in this.ComisionUsuarios)
-            {
-                comisionUsuario.Estado = EstadosTipos.Cancelada;
-                comisionUsuario.ComisionViaticosList!.ToList().RemoveRange(0, comisionUsuario.ComisionViaticosList!.Count);
-            }
-        }
     }
     public void CompletarComision()
     {
