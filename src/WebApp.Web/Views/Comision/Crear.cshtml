@@ -11,22 +11,22 @@
     <!-- ================= DATOS GENERALES ================= -->
     <div class="mb-3">
         <label>Lugar de visita <em>(Departamento)</em></label>
-        <input asp-for="Departamento" class="form-control" />
+        <input asp-for="Departamento" class="form-control" required />
     </div>
     
     <div class="mb-3">
         <label>Fecha salida</label>
-        <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" />
+        <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" required />
     </div>
 
     <div class="mb-3">
         <label>Fecha regreso</label>
-        <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" />
+        <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" required />
     </div>
 
     <div class="mb-3">
         <label>Vehículo</label>
-        <select asp-for="VehiculoId" asp-items="ViewBag.Vehiculos" class="form-select">
+        <select asp-for="VehiculoId" asp-items="ViewBag.Vehiculos" class="form-select" required>
             <option value="">-- Seleccione --</option>
         </select>
     </div>
@@ -62,13 +62,15 @@
 
                 <td>
                     <input name="UsuariosNombrados[0].Numero_Nombramiento"
-                        class="form-control" />
+                        class="form-control" required />
                 </td>
 
                 <td class="text-center">
                 <input type="checkbox"
                     name="UsuariosNombrados[0].Es_Piloto"
-                    value="true" />
+                    value="true" 
+                    checked
+                    />
 
                 <input type="hidden"
                     name="UsuariosNombrados[0].Es_Piloto"
@@ -76,11 +78,6 @@
                 </td>   
 
                 <td class="text-center">
-                    <button type="button"
-                            class="btn btn-danger btn-sm"
-                            onclick="eliminarFila(this)">
-                        X
-                    </button>
                 </td>
             </tr>
         </tbody>
@@ -90,8 +87,12 @@
         + Agregar usuario
     </button>
 
-    <br /><br />
-
+    @if(TempData["msg"]!=null)
+    {
+        <div class="alert mt-3 alert-danger">
+            @TempData["msg"]
+        </div>
+    }
     <button type="submit" class="btn btn-primary">
         Guardar comisión
     </button>
@@ -116,7 +117,8 @@
 
     <td>
         <input name="UsuariosNombrados[__i__].Numero_Nombramiento"
-               class="form-control" />
+               class="form-control" 
+               required/>
     </td>
 
     <td class="text-center">

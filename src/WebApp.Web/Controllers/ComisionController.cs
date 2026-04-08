@@ -100,7 +100,12 @@ public class ComisionController : Controller
     {
         var command = new ComisionCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+            return RedirectToAction(nameof(Crear));
+        }
+        return RedirectToAction(nameof(Index));
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDestinos(

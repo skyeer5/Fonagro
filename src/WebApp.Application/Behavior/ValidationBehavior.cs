@@ -43,6 +43,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>
                     .GetMethod(nameof(Result<object>.Failure), new[] { typeof(string) });
 
                 var result = failureMethod!.Invoke(null, new object[] { error });
+                return (TResponse)result!;
                 }
         }
 
