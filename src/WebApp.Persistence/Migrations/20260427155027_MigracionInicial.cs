@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -13,137 +14,172 @@ namespace WebApp.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "accesorios",
                 columns: table => new
                 {
                     AccesorioId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_accesorios", x => x.AccesorioId);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre_Completo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NIT = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Puesto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Unidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Tipo_Servicios = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Numero_Contrato = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre_Completo = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NIT = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Puesto = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Unidad = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Tipo_Servicios = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Numero_Contrato = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Estado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "gasolinas",
                 columns: table => new
                 {
                     GasolinaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_gasolinas", x => x.GasolinaId);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "partes",
                 columns: table => new
                 {
                     ParteId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_partes", x => x.ParteId);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "viaticos",
                 columns: table => new
                 {
                     ViaticoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Monto = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Vigente = table.Column<bool>(type: "bit", nullable: true),
+                    Vigente = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_viaticos", x => x.ViaticoId);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -154,17 +190,20 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -175,15 +214,19 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProviderKey = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProviderDisplayName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -195,7 +238,8 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
@@ -219,16 +263,20 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Value = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -239,21 +287,22 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "gasolinaPrecios",
                 columns: table => new
                 {
                     GasolinaPrecioId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     GasolinaId = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -264,29 +313,37 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "gasolinas",
                         principalColumn: "GasolinaId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "vehiculos",
                 columns: table => new
                 {
                     VehiculoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Placa = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Placa = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Marca = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Modelo = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Anio = table.Column<int>(type: "int", nullable: false),
-                    Tipo_Vehiculo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cilindraje = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tipo_Vehiculo = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Color = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cilindraje = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ConsumoKmPorGalon = table.Column<int>(type: "int", nullable: false),
-                    Kilometraje = table.Column<double>(type: "float", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Kilometraje = table.Column<double>(type: "double", nullable: false),
+                    Estado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     GasolinaId = table.Column<int>(type: "int", nullable: false),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -297,28 +354,32 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "gasolinas",
                         principalColumn: "GasolinaId",
                         onDelete: ReferentialAction.Restrict);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "comisiones",
                 columns: table => new
                 {
                     ComisionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Fecha_Salida = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Fecha_Regreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Departamento = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Fecha_Salida = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Fecha_Regreso = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Precio_Galon_Usado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Galon_Estimado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Presupuesto_Combustible_Estimado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    UsuarioId_Aprobador_Combustible = table.Column<int>(type: "int", nullable: false),
                     Presupuesto_Combustible_Aprobado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Estado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     VehiculoId = table.Column<int>(type: "int", nullable: false),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -335,7 +396,8 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "vehiculos",
                         principalColumn: "VehiculoId",
                         onDelete: ReferentialAction.Restrict);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "vehiculoAccesorios",
@@ -343,8 +405,9 @@ namespace WebApp.Persistence.Migrations
                 {
                     VehiculoId = table.Column<int>(type: "int", nullable: false),
                     AccesorioId = table.Column<int>(type: "int", nullable: false),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false)
+                    Comentario = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -361,7 +424,8 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "vehiculos",
                         principalColumn: "VehiculoId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "vehiculoPartes",
@@ -369,8 +433,9 @@ namespace WebApp.Persistence.Migrations
                 {
                     VehiculoId = table.Column<int>(type: "int", nullable: false),
                     ParteId = table.Column<int>(type: "int", nullable: false),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false)
+                    Comentario = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -387,22 +452,24 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "vehiculos",
                         principalColumn: "VehiculoId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "comisionDestinos",
                 columns: table => new
                 {
                     ComisionDestinoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Kilometros = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Galones = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ComisionId = table.Column<int>(type: "int", nullable: false),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -413,7 +480,8 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "comisiones",
                         principalColumn: "ComisionId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "comisionUsuarios",
@@ -421,14 +489,17 @@ namespace WebApp.Persistence.Migrations
                 {
                     ComisionId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    Nombramiento = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Es_Piloto = table.Column<bool>(type: "bit", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombramiento = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Es_Piloto = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Estado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Creado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Creacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Fecha_Creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Modificado_Por = table.Column<int>(type: "int", nullable: true),
-                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Fecha_Modificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -445,19 +516,21 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "comisiones",
                         principalColumn: "ComisionId",
                         onDelete: ReferentialAction.Restrict);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "comisionViaticos",
                 columns: table => new
                 {
                     ComisionViaticosId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Estado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Monto_Unitario_Usado = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Monto_Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ComisionId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     ViaticoId = table.Column<int>(type: "int", nullable: false)
@@ -477,7 +550,8 @@ namespace WebApp.Persistence.Migrations
                         principalTable: "viaticos",
                         principalColumn: "ViaticoId",
                         onDelete: ReferentialAction.Restrict);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
@@ -523,8 +597,7 @@ namespace WebApp.Persistence.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -550,8 +623,7 @@ namespace WebApp.Persistence.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_comisionDestinos_ComisionId",

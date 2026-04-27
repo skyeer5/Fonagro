@@ -15,7 +15,7 @@ public static class DependencyInjection
                 {DbLoggerCategory.Database.Command.Name},
                 LogLevel.Information
                 ).EnableSensitiveDataLogging();
-            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
+            opt.UseMySql(configuration.GetConnectionString("MySql"), new MySqlServerVersion(new Version(11, 8, 6)));
         });
         return services;
     }
