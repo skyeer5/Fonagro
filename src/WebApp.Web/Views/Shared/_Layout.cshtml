@@ -1,93 +1,173 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
-    <link rel="icon" type="image/png" href="~/img/hoja.ico">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApp.Web.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"]</title>
+        <link rel="icon" type="image/png" href="~/img/hoja.ico">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/WebApp.Web.styles.css" asp-append-version="true" />
+    </head>
+    <body>
+        <div class="app-layout">
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo-fonagro.ico" height="40" alt="Logo"  class="d-inline-block align-text-top"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                @if(User.Identity!.IsAuthenticated)
-                {
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                            <!-- Enlace principal: al hacer click en el texto va a Index -->
-                                <a class="nav-link text-dark dropdown-toggle dropdown-toggle-split" 
-                                    href="/Comision/Index" 
-                                    id="comisionDropdown" 
-                                    role="button" 
-                                    data-bs-toggle="dropdown" 
-                                    aria-expanded="false">
-                                    Comisiones
-                                </a>
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <aside class="sidebar">
 
-                                <!-- Opciones del dropdown -->
-                                <ul class="dropdown-menu" aria-labelledby="comisionDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Comision" asp-action="Index">
-                                            <i class="bi bi-geo-alt"></i> Mi Comision
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Comision" asp-action="List">
-                                            <i class="bi bi-list-ul"></i> Ver Lista
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="List">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Vehiculo" asp-action="List">Vehículos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Gasolina" asp-action="UpdatePrecio">Actualizar gasolina</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Comision" asp-action="AgregarGasolina">Aprobar gasolina</a>
-                            </li>
-                        </ul>
+                    <!-- Header usuario -->
+                    <div class="sidebar-header">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img src="~/img/fonagro.png" class="sidebar-logo" />
+                        </a>
+
+                        <div class="user-info">
+                            <span class="user-label">Usuario autenticado con NIT</span>
+                            <span class="user-name">@User.Identity.Name</span>
+                        </div>
                     </div>
 
-                    <form asp-controller="Auth" asp-action="Logout" method="post">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-dark">Cerrar sesión</button>
-                    </form>
-                }
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+                    <!-- Menú -->
+                    <nav class="sidebar-menu">
+@* 
+                        <a class="menu-item"
+                        asp-controller="Home"
+                        asp-action="Index">
+                            Home
+                        </a> *@
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Fondo Nacional Para La Reactivación y Modernización de la Actividad Agropecuaria -FONAGRO-.
+                        <!-- COMISIONES -->
+                        <div class="menu-section">
+
+                            <button class="menu-section-btn"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#comisionesMenu">
+                                Comisiones
+                            </button>
+
+                            <div class="collapse" id="comisionesMenu">
+
+                                <a class="submenu-item"
+                                asp-controller="Comision"
+                                asp-action="Index">
+                                    Mi Comisión
+                                </a>
+
+                                <a class="submenu-item"
+                                asp-controller="Comision"
+                                asp-action="List">
+                                    Ver Lista
+                                </a>
+
+                                <a class="submenu-item"
+                                asp-controller="Comision"
+                                asp-action="AgregarGasolina">
+                                    Aprobar gasolina
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!-- USUARIOS -->
+                        <div class="menu-section">
+
+                            <button class="menu-section-btn"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#usuariosMenu">
+                                Usuarios
+                            </button>
+
+                            <div class="collapse" id="usuariosMenu">
+
+                                <a class="submenu-item"
+                                asp-controller="Usuario"
+                                asp-action="List">
+                                    Ver Usuarios
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!-- VEHICULOS -->
+                        <div class="menu-section">
+
+                            <button class="menu-section-btn"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#vehiculosMenu">
+                                Vehículos
+                            </button>
+
+                            <div class="collapse" id="vehiculosMenu">
+
+                                <a class="submenu-item"
+                                asp-controller="Vehiculo"
+                                asp-action="List">
+                                    Ver Vehículos
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!-- GASOLINA -->
+                        <div class="menu-section">
+
+                            <button class="menu-section-btn"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#gasolinaMenu">
+                                Gasolina
+                            </button>
+
+                            <div class="collapse" id="gasolinaMenu">
+
+                                <a class="submenu-item"
+                                asp-controller="Gasolina"
+                                asp-action="UpdatePrecio">
+                                    Actualizar Precio
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </nav>
+
+                    <!-- Footer sidebar -->
+                    <div class="sidebar-footer">
+
+                        <form asp-controller="Auth"
+                            asp-action="Logout"
+                            method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger w-100">
+                                Cerrar sesión
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </aside>
+            }
+
+            <!-- CONTENIDO -->
+            <div class="main-content">
+
+                <main role="main" class="content-wrapper">
+                    @RenderBody()
+                </main>
+
+            </div>
+
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+
+    </body>
 </html>

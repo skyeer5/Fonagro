@@ -6,6 +6,11 @@
 # Configuración local
 appsettings.Development.json
 appsettings.json
+appsettings.Production.json
+
+# Migraciones
+Migrations/*
+
 # dotenv files
 .env
 
