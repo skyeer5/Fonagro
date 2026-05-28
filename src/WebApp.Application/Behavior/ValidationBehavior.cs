@@ -33,18 +33,35 @@ public sealed class ValidationBehavior<TRequest, TResponse>
 
             if (failures.Any())
             {
-                var error = string.Join(", ", failures.Select(f => f.ErrorMessage));
-                
-                var type = typeof(TResponse);
-                var valueType = type.GetGenericArguments()[0];
+                var error = string.Join(
+                    Environment.NewLine,
+                    failures.Select(f => f.ErrorMessage)
+                );
 
-                var failureMethod = typeof(Result<>)
-                    .MakeGenericType(valueType)
-                    .GetMethod(nameof(Result<object>.Failure), new[] { typeof(string) });
+                var responseType = typeof(TResponse);
 
-                var result = failureMethod!.Invoke(null, new object[] { error });
-                return (TResponse)result!;
+                if (responseType.IsGenericType &&
+                    responseType.GetGenericTypeDefinition() == typeof(Result<>))
+                {
+                    var valueType = responseType.GetGenericArguments()[0];
+
+                    var resultType = typeof(Result<>)
+                        .MakeGenericType(valueType);
+
+                    var failureMethod = resultType.GetMethod(
+                        "Failure",
+                        new[] { typeof(string) });
+
+                    var failureResult = failureMethod!.Invoke(
+                        null,
+                        new object[] { error });
+
+                    return (TResponse)failureResult!;
                 }
+
+                throw new InvalidOperationException(
+                    $"El tipo {responseType.Name} no es compatible con Result<T>");
+            }
         }
 
         return await next();

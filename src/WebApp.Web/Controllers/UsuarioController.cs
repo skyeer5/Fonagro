@@ -36,7 +36,17 @@ public class UsuarioController : Controller
     {
         var command = new UsuarioCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
+        if(!result.IsSuccess)
+        {
+            ViewBag.Puestos = UsuariosTipos.GetPuestos();
+            ViewBag.Encargados = UsuariosTipos.GetEncargados();
+            ViewBag.Unidades = UsuariosTipos.GetUnidades();
+            ViewBag.Auxiliares = UsuariosTipos.GetAuxiliares();
+            ViewBag.TipoServicios = UsuariosTipos.GetTipoServicios();
+            TempData["msg"] = result.Error;
+            return View(request);
+        }
+        return RedirectToAction(nameof(List));
     }
     [HttpGet]
     public async Task<IActionResult> List(string? nombre = "", string? puesto = "", string? unidad = "", string? estado = "", int currentPage = 1, string orderBy = "")

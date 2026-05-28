@@ -2,7 +2,41 @@ using FluentValidation;
 
 namespace WebApp.Application.Usuarios.Commands.UsuarioCreate;
 
-    public class UsuarioCreateValidator : AbstractValidator<UsuarioCreateRequest>
+public class UsuarioCreateValidator : AbstractValidator<UsuarioCreateRequest>
 {
-    
+    public UsuarioCreateValidator()
+    {
+        RuleFor(x => x.Nombre_Completo)
+            .NotEmpty().WithMessage("El nombre completo es requerido.")
+            .MaximumLength(100).WithMessage("El nombre completo no puede exceder los 100 caracteres.");
+
+        RuleFor(x => x.NIT)
+            .NotEmpty().WithMessage("El NIT es requerido.")
+            .MaximumLength(20).WithMessage("El NIT no puede exceder los 20 caracteres.");
+
+        RuleFor(x => x.Puesto)
+            .NotEmpty().WithMessage("El puesto es requerido.")
+            .MaximumLength(50).WithMessage("El puesto no puede exceder los 50 caracteres.");
+
+        RuleFor(x => x.Unidad)
+            .NotEmpty().WithMessage("La unidad es requerida.")
+            .MaximumLength(50).WithMessage("La unidad no puede exceder los 50 caracteres.");
+
+        RuleFor(x => x.Tipo_Servicios)
+            .NotEmpty().WithMessage("El tipo de servicios es requerido.")
+            .MaximumLength(50).WithMessage("El tipo de servicios no puede exceder los 50 caracteres.");
+
+        RuleFor(x => x.Numero_Contrato)
+            .NotEmpty().WithMessage("El número de contrato es requerido.")
+            .MaximumLength(20).WithMessage("El número de contrato no puede exceder los 20 caracteres.");
+
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("El email es requerido.")
+            .EmailAddress().WithMessage("El email no es válido.")
+            .MaximumLength(100).WithMessage("El email no puede exceder los 100 caracteres.");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("La contraseña es requerida.")
+            .MinimumLength(6).WithMessage("La contraseña debe tener al menos 6 caracteres.");
+    }
 }

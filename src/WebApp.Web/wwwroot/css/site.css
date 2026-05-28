@@ -42,9 +42,9 @@ body {
     box-shadow: none;
 }
 
-.list-group-item:hover {
+/* .list-group-item:hover {
     background-color: #343a40 !important;
-}
+} */
 
 html,
 body {

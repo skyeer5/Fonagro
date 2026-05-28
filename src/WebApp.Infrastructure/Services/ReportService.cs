@@ -33,7 +33,7 @@ public class ReportService : IReportService
         var filaDestinos = ConstruirFilasDestinos(planViaje);
         planViaje.TotalCombustible = filaDestinos.Sum(d => d.Total);
 
-        var path = Path.Combine(_env.ContentRootPath, "Templates", "PlanViajeTemplate.xlsx");
+        var path = Path.Combine(_env.WebRootPath, "Templates", "PlanViajeTemplate.xlsx");
 
         using var workbook = new XLWorkbook(path);
         var sheet = workbook.Worksheet(1);

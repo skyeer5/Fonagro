@@ -10,19 +10,19 @@
     <div class="row row-cols-1 row-cols-md-2 g-3">
         <div class="col">
             <label asp-for="Nombre_Completo" class="form-label">Nombre completo</label>
-            <input asp-for="Nombre_Completo" class="form-control" />
+            <input asp-for="Nombre_Completo" class="form-control" required/>
             <span asp-validation-for="Nombre_Completo" class="text-danger"></span>
         </div>
 
         <div class="col">
             <label asp-for="NIT" class="form-label">NIT</label>
-            <input asp-for="NIT" class="form-control" />
+            <input asp-for="NIT" class="form-control" required/>
             <span asp-validation-for="NIT" class="text-danger"></span>
         </div>
 
         <div class="col">
             <label class="form-label">Puesto</label>
-            <select id="puestoSelect" class="form-control">
+            <select id="puestoSelect" class="form-control" required>
                 <option value="">Seleccionar puesto</option>
                 @foreach (var puesto in ViewBag.Puestos)
                 {
@@ -33,7 +33,7 @@
 
         <div class="col" id="personaDiv" style="display:none;">
             <label for="personaSelect" class="form-label">Seleccionar puesto específico</label>
-            <select id="personaSelect" class="form-control">
+            <select id="personaSelect" class="form-control" >
                 <option value="">Seleccione un puesto específico</option>
             </select>
         </div>
@@ -42,7 +42,7 @@
 
         <div class="col">
             <label asp-for="Unidad" class="form-label">Unidad</label>
-            <select asp-for="Unidad" id="unidadSelect" class="form-control">
+            <select asp-for="Unidad" id="unidadSelect" class="form-control" required>
                 <option value="">Seleccionar unidad</option>
                 @foreach (var unidad in ViewBag.Unidades)
                 {
@@ -54,7 +54,7 @@
 
         <div class="col">
             <label asp-for="Tipo_Servicios" class="form-label">Tipo de servicios</label>
-            <select asp-for="Tipo_Servicios" id="tipoServiciosSelect" class="form-control">
+            <select asp-for="Tipo_Servicios" id="tipoServiciosSelect" class="form-control" required>
                 <option value="">Seleccionar tipo de servicio</option>
                 @foreach (var tipo in ViewBag.TipoServicios)
                 {
@@ -66,23 +66,29 @@
 
         <div class="col">
             <label asp-for="Numero_Contrato" class="form-label">Número de contrato</label>
-            <input asp-for="Numero_Contrato" class="form-control" />
+            <input asp-for="Numero_Contrato" class="form-control" required />
             <span asp-validation-for="Numero_Contrato" class="text-danger"></span>
         </div>
 
         <div class="col">
             <label asp-for="Email" class="form-label">Correo electrónico</label>
-            <input asp-for="Email" type="email" class="form-control" />
+            <input asp-for="Email" type="email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="col">
             <label asp-for="Password" class="form-label">Contraseña <em>(El usuario cambiará esta contraseña)</em></label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <input asp-for="Password" type="password" class="form-control" required />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
-
+    <!-- ERROR -->
+    @if (TempData["msg"] != null)
+    {
+        <div class="alert alert-danger text-center py-2 mt-2 small">
+            @TempData["msg"]
+        </div>
+    }
     <div class="pt-4">
         <button type="submit" class="btn btn-primary">Crear usuario</button>
         <a asp-action="List" class="btn btn-secondary">Cancelar</a>

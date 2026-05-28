@@ -76,8 +76,15 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="PrespuestoAprobado" class="form-label">Precio (decimal)</label>
-                                <input type="number" step="0.01" class="form-control" id="PrespuestoAprobado" name="PrespuestoAprobado" required />
+                                <label for="PrespuestoAprobado" class="form-label">Presupuesto Aprobado 
+                                    <!-- Botón con tooltip -->
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ingrese cantidad en múltiplos de 50 (ej. 100, 150, 200…) debido a que los vales de combustible solo manejan valores de 50 y 100">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+
+                                    
+                                </label>
+                                <input type="number" class="form-control" id="PrespuestoAprobado" name="PrespuestoAprobado" required />
                             </div>
 
                             <div class="d-flex justify-content-end">
