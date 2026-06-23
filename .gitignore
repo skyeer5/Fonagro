@@ -10,7 +10,7 @@ appsettings.Production.json
 
 # Migraciones
 Migrations/*
-
+src/WebApp.Persistence/Migrations/*
 # dotenv files
 .env
 

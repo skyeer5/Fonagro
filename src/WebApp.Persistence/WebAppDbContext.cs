@@ -16,10 +16,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<GasolinaPrecio> GasolinaPrecios { get; set; }
     public DbSet<Vehiculo> Vehiculos { get; set; }
     public DbSet<Viatico> Viaticos { get; set; }
-    public DbSet<Accesorio> Accesorios { get; set; }
-    public DbSet<Parte> Partes { get; set; }
-    public DbSet<VehiculoAccesorio> VehiculoAccesorios { get; set; }
-    public DbSet<VehiculoParte> VehiculoPartes { get; set; }
     public DbSet<Comision> Comisiones { get; set; }
     public DbSet<ComisionDestino> ComisionDestinos { get; set; }
     public DbSet<ComisionUsuario> ComisionUsuarios { get; set; }
@@ -37,10 +33,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<GasolinaPrecio>().ToTable("gasolinaPrecios");
         modelBuilder.Entity<Vehiculo>().ToTable("vehiculos");
         modelBuilder.Entity<Viatico>().ToTable("viaticos");
-        modelBuilder.Entity<Accesorio>().ToTable("accesorios");
-        modelBuilder.Entity<Parte>().ToTable("partes");
-        modelBuilder.Entity<VehiculoAccesorio>().ToTable("vehiculoAccesorios");
-        modelBuilder.Entity<VehiculoParte>().ToTable("vehiculoPartes");
         modelBuilder.Entity<Comision>().ToTable("comisiones");
         modelBuilder.Entity<ComisionDestino>().ToTable("comisionDestinos");
         modelBuilder.Entity<ComisionUsuario>().ToTable("comisionUsuarios");
@@ -96,40 +88,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(p => p.GasolinaId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Vehiculo>()
-            .HasMany(v => v.Accesorios)
-            .WithMany(a=>a.Vehiculos)
-            .UsingEntity<VehiculoAccesorio>(
-                j => j
-                    .HasOne(va => va.Accesorio)
-                    .WithMany(a => a.VehiculoAccesorios)
-                    .HasForeignKey(va => va.AccesorioId),
-                j => j
-                    .HasOne(va => va.Vehiculo)
-                    .WithMany(v => v.VehiculoAccesorios)
-                    .HasForeignKey(va => va.VehiculoId),
-                j =>
-                {
-                    j.HasKey(t => new { t.VehiculoId, t.AccesorioId });
-                });
-
-        modelBuilder.Entity<Vehiculo>()
-            .HasMany(v=>v.Partes)
-            .WithMany(p=>p.Vehiculos)
-            .UsingEntity<VehiculoParte>(
-                j => j
-                    .HasOne(vp => vp.Parte)
-                    .WithMany(p => p.VehiculoPartes)
-                    .HasForeignKey(vp => vp.ParteId),
-                j => j
-                    .HasOne(vp => vp.Vehiculo)
-                    .WithMany(v => v.VehiculoPartes)
-                    .HasForeignKey(vp => vp.VehiculoId),
-                j =>
-                {
-                    j.HasKey(t => new { t.VehiculoId, t.ParteId });
-                });
         
         modelBuilder.Entity<Comision>()
             .HasOne(c => c.Vehiculo)

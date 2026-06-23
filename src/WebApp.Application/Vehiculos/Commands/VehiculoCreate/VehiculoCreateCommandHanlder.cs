@@ -39,14 +39,6 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
                                 request.VehiculoCreateRequest.Kilometraje,
                                 request.VehiculoCreateRequest.GasolinaId,
                                 gasoNombre!);
-
-            vehiculo.AgregarListaAccesorios(request.VehiculoCreateRequest.Accesorios);
-            
-            var partes = request.VehiculoCreateRequest.Partes
-                .Select(p => Parte.CrearParteDeRequest(p.Id, p.Descripcion!))
-                .ToList();
-
-            vehiculo.AgregarListaPartes(partes);
             
             var resultado = await _vehiculoRepository.CreateVehiculoAsync(vehiculo, cancellationToken);
 

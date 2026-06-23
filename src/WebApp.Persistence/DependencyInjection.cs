@@ -12,11 +12,11 @@ public static class DependencyInjection
         services.AddDbContext<WebAppDbContext>(opt =>
         {
             
-            // opt.LogTo(Console.WriteLine, new[]
-            //     {DbLoggerCategory.Database.Command.Name},
-            //     LogLevel.Information
-            //     ).EnableSensitiveDataLogging();
-            opt.UseMySql(configuration.GetConnectionString("MySql"), new MySqlServerVersion(new Version(11, 8, 6)));
+            opt.LogTo(Console.WriteLine, new[]
+                {DbLoggerCategory.Database.Command.Name},
+                LogLevel.Information
+                ).EnableSensitiveDataLogging();
+            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
         });
         return services;
     }

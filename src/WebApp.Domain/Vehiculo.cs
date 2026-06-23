@@ -15,10 +15,6 @@ public class Vehiculo : AuditableEntity
     public string? Estado { get; set; }
     public Gasolina? Gasolina { get; set; }
     public int? GasolinaId { get; set; }
-    public ICollection<Accesorio>? Accesorios { get; set; }
-    public ICollection<VehiculoAccesorio>? VehiculoAccesorios { get; set; }
-    public ICollection<Parte>? Partes { get; set; }
-    public ICollection<VehiculoParte>? VehiculoPartes { get; set; }
     public ICollection<Comision>? Comisiones { get; set; }
 
     public static Vehiculo Crear(string placa, string marca, string modelo, int anio, string tipo_Vehiculo, string color, string cilindraje, double kilometraje, int? gasolinaId, string tipo_gasolina)
@@ -80,24 +76,6 @@ public class Vehiculo : AuditableEntity
     {
         Creado_Por = usuarioId;
     }   
-    public void AgregarListaAccesorios(List<int> accesorios)
-    {
-        VehiculoAccesorios ??= new List<VehiculoAccesorio>();
-        foreach (var accesorio in accesorios)
-        {
-            var vehiculoAccesorio = VehiculoAccesorio.AsignarAVehiculo(accesorio);
-            VehiculoAccesorios.Add(vehiculoAccesorio);
-        }
-    }
-    public void AgregarListaPartes(List<Parte> partes)
-    {
-        VehiculoPartes ??= new List<VehiculoParte>();
-        foreach (var parte in partes)
-        {
-            var vehiculoParte = VehiculoParte.AsignarAVehiculo(parte.ParteId, parte.Descripcion);
-            VehiculoPartes.Add(vehiculoParte);
-        }
-    }
     public void ModificarEstadoEnComision()
     {
         Estado = EstadosTipos.Ocupado;
