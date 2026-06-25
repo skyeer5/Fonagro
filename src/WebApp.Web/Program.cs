@@ -34,6 +34,7 @@ builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGasolinaPrecioRepository, GasolinaPrecioRepository>();
 builder.Services.AddScoped<IBackgroundJob, ComisionEstadoJob>();
+builder.Services.AddScoped<ILocacionesService, LocacionesService>();
 builder.Services.AddHostedService<SchedulerService>();
 
 

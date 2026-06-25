@@ -17,9 +17,9 @@ public class GetVehiculosDisponiblesQueryHandler : IRequestHandler<GetVehiculosD
     public async Task<Result<List<GetVehiculosDisponiblesResponse>>> Handle(GetVehiculosDisponiblesQueryRequest request, CancellationToken cancellationToken)
     {
         var vehiculos = await _vehiculoService.GetVehiculosDisponiblesAsync(cancellationToken);
-        if(vehiculos.IsNullOrEmpty())
+        if(vehiculos is null)
         {
-            return Result<List<GetVehiculosDisponiblesResponse>>.Failure("No hay vehículos disponibles");
+            return Result<List<GetVehiculosDisponiblesResponse>>.Failure("Error al obtener los vehículos disponibles.");
         }
         var response = vehiculos.Select(v => new GetVehiculosDisponiblesResponse
         {

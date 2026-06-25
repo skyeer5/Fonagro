@@ -17,9 +17,9 @@ public class GetUsuariosSinComisionQueryHandler : IRequestHandler<GetUsuariosSin
     public async Task<Result<List<GetUsuariosSinComisionResponse>>> Handle(GetUsuariosSinComisionQuery.GetUsuariosSinComisionQueryRequest request, CancellationToken cancellationToken)
     {
         var usuarios = await _usuarioService.GetUsuariosSinComisionAsync();
-        if(usuarios.IsNullOrEmpty())
+        if(usuarios is null)
         {
-            return Result<List<GetUsuariosSinComisionResponse>>.Failure("No se encontraron usuarios sin comisión.");
+            return Result<List<GetUsuariosSinComisionResponse>>.Failure("Error al obtener los usuarios sin comisión.");
         }
         return Result<List<GetUsuariosSinComisionResponse>>.Success(usuarios);
     }

@@ -10,8 +10,12 @@
 
     <!-- ================= DATOS GENERALES ================= -->
     <div class="mb-3">
-        <label>Lugar de visita <em>(Departamento)</em></label>
-        <input asp-for="Departamento" class="form-control" required />
+        <label>Departamento de visita</label>
+        <select asp-for="Departamento" 
+            asp-items="ViewBag.Departamentos" 
+            multiple="multiple" 
+            class="form-select">
+        </select>
     </div>
     
     <div class="mb-3">
@@ -52,10 +56,18 @@
                     <select name="UsuariosNombrados[0].UsuariosId"
                             class="form-select"
                             required>
-                        <option value="">-- Seleccione --</option>
-                        @foreach (var u in (SelectList)ViewBag.Usuarios)
+                        
+                        @if(ViewBag.Usuarios != null)
                         {
-                            <option value="@u.Value">@u.Text</option>
+                            <option value="">-- Seleccione --</option>
+                            @foreach (var u in (SelectList)ViewBag.Usuarios)
+                            {
+                                <option value="@u.Value">@u.Text</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No hay usuarios disponibles</option>
                         }
                     </select>
                 </td>
@@ -107,10 +119,17 @@
         <select name="UsuariosNombrados[__i__].UsuariosId"
                 class="form-select"
                 required>
-            <option value="">-- Seleccione --</option>
-            @foreach (var u in (SelectList)ViewBag.Usuarios)
+            @if(ViewBag.Usuarios != null)
+                    {
+                <option value="">-- Seleccione --</option>
+                @foreach (var u in (SelectList)ViewBag.Usuarios)
+                {
+                    <option value="@u.Value">@u.Text</option>
+                }
+            }
+            else
             {
-                <option value="@u.Value">@u.Text</option>
+                <option value="">No hay usuarios disponibles</option>
             }
         </select>
     </td>

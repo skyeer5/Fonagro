@@ -9,9 +9,7 @@ using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
-using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Core;
-using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 using WebApp.Domain;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
@@ -24,7 +22,7 @@ using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComis
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
-using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio.GetGasolinasWithPrecioQuery;
+using static WebApp.Application.Locaciones.Queries.GetDepartamentos.GetDepartamentosQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -72,24 +70,33 @@ public class ComisionController : Controller
         return View(vm);
     }
     [HttpGet]
-    public IActionResult Crear()
+    public async Task<IActionResult> Crear()
     {
-        var usuarios = _mediator.Send(new GetUsuariosSinComisionQueryRequest());
-        if(!usuarios.Result.IsSuccess)
+        var usuarios = await _mediator.Send(new GetUsuariosSinComisionQueryRequest());
+        if(!usuarios.IsSuccess)
         {
-            ModelState.AddModelError(string.Empty, usuarios.Result.Error!);
+            TempData["msg"] = usuarios.Error;
             return View();
         }
-        ViewBag.Usuarios = new SelectList(usuarios.Result.Value, "Id", "Nombre_Completo");
+        ViewBag.Usuarios = new SelectList(usuarios.Value, "Id", "Nombre_Completo");
 
-        var vehiculos = _mediator.Send(new GetVehiculosDisponiblesQueryRequest());
-        if(!vehiculos.Result.IsSuccess)
+        var vehiculos = await _mediator.Send(new GetVehiculosDisponiblesQueryRequest());
+        if(!vehiculos.IsSuccess)
         {
-            ModelState.AddModelError(string.Empty, vehiculos.Result.Error!);
+            TempData["msg"] = vehiculos.Error;
             return View();
         }
-        ViewBag.Vehiculos = new SelectList(vehiculos.Result.Value, "id", "Descripcion");
+        ViewBag.Vehiculos = new SelectList(vehiculos.Value, "id", "Descripcion");
 
+        var departamentos = await _mediator.Send(new GetDepartamentosQueryRequest());
+
+        if(!departamentos.IsSuccess)
+        {
+            TempData["msg"] = departamentos.Error;
+            return View();
+        }
+        ViewBag.Departamentos = new SelectList(departamentos.Value!.Departamentos, "title", "title");
+        
         return View();
     }
     [HttpPost]

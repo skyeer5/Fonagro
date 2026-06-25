@@ -52,7 +52,7 @@ public static class UsuariosTipos
 
 
     //Unidades
-    public const string Gerencia = nameof(Gerencia);
+    public const string Gerencia = "GERENCIA";
     public const string UA = "UNIDAD ADMINISTRATIVA";
     public const string UAJ = "UNIDAD DE ASESORIA JURIDICA";
     public const string UTSE = "UNIDAD TECNICA DE SEGUIMIENTO Y EVALUACION";
