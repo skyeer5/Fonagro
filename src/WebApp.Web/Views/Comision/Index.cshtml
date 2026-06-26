@@ -30,7 +30,7 @@
                     <ol class="mb-4">
                         <li><strong>Nombramientos:</strong> El coordinador asigna participantes.</li>
                         <li><strong>Coordinación:</strong> Se define logística con Servicios Generales.</li>
-                        <li><strong>Destinos:</strong> El piloto registra los destinos.</li>
+                        <li><strong>Destinos:</strong> El resp. del vehículo registra los destinos.</li>
                         <li><strong>Aprobación:</strong> Se autoriza el combustible.</li>
                         <li><strong>Ejecución:</strong> La comisión se realiza.</li>
                     </ol>
@@ -88,7 +88,7 @@
                         @switch (Model.Comision.Estado)
                         {
                             case EstadosTipos.Creada:
-                                <span>Se ha asignado piloto. Pendiente registro de destinos.</span>
+                                <span>Se ha asignado resp. del vehiculo. Pendiente registro de destinos.</span>
                                 break;
 
                             case EstadosTipos.DestinosDefinidos:
@@ -201,7 +201,7 @@
     {
         <div class="card">
             <div class="card-header">
-                Agregar Destinos *Eres el piloto asignado, registra los destinos de tu comisión para avanzar al siguiente paso.
+                Agregar Destinos *Eres el responsable del vehículo asignado, registra los destinos de tu comisión para avanzar al siguiente paso.
             </div>
 
             <div class="card-body">
@@ -272,7 +272,7 @@
                     <ol class="mb-4">
                         <li><strong>Nombramientos:</strong> El coordinador asigna participantes.</li>
                         <li><strong>Coordinación:</strong> Se define logística con Servicios Generales.</li>
-                        <li><strong>Destinos:</strong> El piloto registra los destinos.</li>
+                        <li><strong>Destinos:</strong> El responsable del vehículo registra los destinos.</li>
                         <li><strong>Aprobación:</strong> Se autoriza el combustible.</li>
                         <li><strong>Ejecución:</strong> La comisión se realiza.</li>
                     </ol>

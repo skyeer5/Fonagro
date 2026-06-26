@@ -46,12 +46,11 @@
             <tr>
                 <th>Usuario</th>
                 <th>No. Nombramiento</th>
-                <th>Piloto</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr class="table-success">
                 <td>
                     <select name="UsuariosNombrados[0].UsuariosId"
                             class="form-select"
@@ -76,20 +75,11 @@
                     <input name="UsuariosNombrados[0].Numero_Nombramiento"
                         class="form-control" required />
                 </td>
-
                 <td class="text-center">
-                <input type="checkbox"
-                    name="UsuariosNombrados[0].Es_Piloto"
-                    value="true" 
-                    checked
-                    />
-
-                <input type="hidden"
-                    name="UsuariosNombrados[0].Es_Piloto"
-                    value="false" />
-                </td>   
-
-                <td class="text-center">
+                    Responsable del vehículo
+                    <input type="hidden"
+                        name="UsuariosNombrados[0].Es_Piloto"
+                        value="true" />
                 </td>
             </tr>
         </tbody>
@@ -138,17 +128,7 @@
         <input name="UsuariosNombrados[__i__].Numero_Nombramiento"
                class="form-control" 
                required/>
-    </td>
-
-    <td class="text-center">
-    <input type="checkbox"
-           name="UsuariosNombrados[__i__].Es_Piloto"
-           value="true" />
-
-    <input type="hidden"
-           name="UsuariosNombrados[__i__].Es_Piloto"
-           value="false" />
-    </td>   
+    </td> 
 
     <td class="text-center">
         <button type="button"

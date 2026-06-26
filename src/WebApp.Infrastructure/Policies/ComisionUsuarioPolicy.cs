@@ -21,7 +21,6 @@ public class ComisionUsuarioPolicy : IComisionUsuarioPolicy
         return await _context.ComisionUsuarios.AnyAsync(u=>
                 usuarioIds.Contains(u.UsuarioId) 
                 && u.Estado == WebApp.Domain.EstadosTipos.Asignado 
-                && u.Comision!.Estado != EstadosTipos.Finalizado
                 , cancellationToken);
     }
 }

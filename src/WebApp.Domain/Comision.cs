@@ -20,7 +20,7 @@ public class Comision : AuditableEntity
     public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; } 
 
     public static Comision Crear(
-                                 string departamento,
+                                 List<string> departamento,
                                  DateTime fecha_Salida,
                                  DateTime fecha_Regreso,
                                  int vehiculoId,
@@ -29,7 +29,7 @@ public class Comision : AuditableEntity
 {
         return new Comision
         {
-            Departamento = departamento,
+            Departamento = departamento.Any() ? string.Join(", ", departamento.OrderBy(x => x)) : null,
             Fecha_Salida = fecha_Salida,
             Fecha_Regreso = fecha_Regreso,
             Precio_Galon_Usado = gasolinaPrecio,
@@ -93,6 +93,22 @@ public class Comision : AuditableEntity
     {
         this.UsuarioId_Aprobador_Combustible = usuarioId;
     }
+    public void CancelarComision()
+    {
+        this.Estado = EstadosTipos.Cancelada;
+        this.Fecha_Modificacion = DateTime.Now;
+        if(this.Vehiculo is not null)
+        {
+            this.Vehiculo.Estado = EstadosTipos.Disponible;
+        }
+        if(this.ComisionUsuarios is not null)
+        {
+            foreach(var comisionUsuario in this.ComisionUsuarios)
+            {
+                comisionUsuario.Estado = EstadosTipos.Cancelada;
+            }
+        }
+    }
     public void CancelarComision(int userId)
     {
         this.Estado = EstadosTipos.Cancelada;
@@ -102,6 +118,8 @@ public class Comision : AuditableEntity
         {
             this.Vehiculo.Estado = EstadosTipos.Disponible;
         }
+
+        
     }
     public void CompletarComision()
     {
