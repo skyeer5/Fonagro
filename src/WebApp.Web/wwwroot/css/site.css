@@ -1,6 +1,61 @@
 html {
   font-size: 14px;
 }
+.select2-container .select2-search--inline .select2-search__field {
+    margin-top: 0 !important; /* elimina el espacio extra */
+    line-height: normal !important; /* asegura que el texto esté centrado verticalmente */
+    vertical-align: sub !important;
+}
+
+/* Ajustar el placeholder para que no se desplace */
+.select2-container .select2-selection__placeholder {
+    margin-top: 0 !important;
+    line-height: normal !important;
+}
+
+/* Ajustar los chips (tags) dentro del select2 */
+.select2-container .select2-selection__choice {
+    margin-top: 0 !important;   /* elimina el espacio extra */
+    margin-bottom: 0 !important;
+}
+
+/* Ajustar el botón de limpiar (la X) */
+.select2-container .select2-selection__clear {
+    margin-top: 0 !important;
+}
+
+/* Asegurar que todo se centre verticalmente */
+.select2-container .select2-selection {
+    display: flex;
+    align-items: center;
+}
+
+/* Ajustar alineación y margen superior */
+.select2-container {
+    margin-top: 0 !important;   /* elimina espacio extra arriba */
+    width: 100% !important;     /* ocupa todo el ancho del col */
+}
+
+/* Ajustar la selección para que se vea como Bootstrap */
+.select2-container .select2-selection {
+    border: 1px solid #ced4da !important;
+    border-radius: 0.375rem; /* igual que form-select */
+    min-height: calc(2.25rem + 2px); /* altura estándar */
+    padding: 0.375rem 0.75rem; /* espacio interno */
+    display: flex;
+    align-items: center; /* centra verticalmente el texto */
+}
+
+
+.bg-azul
+{
+    background-color: #133e5e;
+    color:#ffffff;
+}
+.border-azul
+{
+    border-color: #133e5e;
+}
 .bg-negro 
 {
   background-color: #1a2855;

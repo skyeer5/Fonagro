@@ -9,39 +9,46 @@
 <form asp-action="Crear" method="post">
 
     <!-- ================= DATOS GENERALES ================= -->
-    <div class="mb-3">
-        <label>Departamento de visita</label>
-        <select asp-for="Departamento" 
-            asp-items="ViewBag.Departamentos" 
-            multiple="multiple" 
-            class="form-select">
-        </select>
-    </div>
-    
-    <div class="mb-3">
-        <label>Fecha salida</label>
-        <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" required />
-    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        <div class="col">
+            <label>Departamento de visita</label>
+            <select asp-for="Departamento" 
+                asp-items="ViewBag.Departamentos" 
+                multiple="multiple" 
+                class="select2">
+            </select>
 
-    <div class="mb-3">
-        <label>Fecha regreso</label>
-        <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" required />
+        </div>
+
+        <div class="col">
+            <label>Vehículo</label>
+            <select asp-for="VehiculoId" asp-items="ViewBag.Vehiculos" 
+                    class="form-select" id="vehiculoSelect" required>
+                <option value="">-- Seleccione --</option>
+            </select>
+        </div>
+        
+        <div class="col">
+            <label>Fecha salida</label>
+            <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" required />
+        </div>
+
+        <div class="col">
+            <label>Fecha regreso</label>
+            <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" required />
+        </div>
+
     </div>
-
-    <div class="mb-3">
-        <label>Vehículo</label>
-        <select asp-for="VehiculoId" asp-items="ViewBag.Vehiculos" class="form-select" required>
-            <option value="">-- Seleccione --</option>
-        </select>
+    <!-- Panel de vista previa -->
+    <div id="vehiculoPreview" class="alert alert-info mt-3" style="display:none;">
+        <strong>Vehículo seleccionado:</strong>
+        <p id="vehiculoInfo"></p>
     </div>
-
-    <hr />
-
     <!-- ================= USUARIOS NOMBRADOS ================= -->
-
+        <hr />
     <h4>Usuarios nombrados</h4>
 
-    <table class="table table-bordered" id="tablaUsuarios">
+    <table class="table" id="tablaUsuarios">
         <thead>
             <tr>
                 <th>Usuario</th>
@@ -156,4 +163,24 @@ function agregarUsuario() {
 function eliminarFila(btn) {
     btn.closest("tr").remove();
 }
+
+document.getElementById("vehiculoSelect").addEventListener("change", function() {
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption.value) {
+        // Aquí puedes personalizar qué mostrar (ejemplo: texto completo del option)
+        document.getElementById("vehiculoInfo").innerText = selectedOption.text;
+        document.getElementById("vehiculoPreview").style.display = "block";
+    } else {
+        document.getElementById("vehiculoPreview").style.display = "none";
+    }
+});
+
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Seleccione departamentos",
+        allowClear: true,
+        width: '100%' 
+    });
+});
+
 </script>
