@@ -50,7 +50,8 @@ public class ComisionRepository : IComisionRepository
     {
         var comisiones = _context.Comisiones.Where(c => c.Estado != EstadosTipos.Completada && c.Estado != EstadosTipos.Cancelada)
                                             .Include(x=>x.Vehiculo)
-                                            .Include(x=>x.ComisionUsuarios)
+                                            .Include(x=>x.ComisionUsuarios!)
+                                                .ThenInclude(cu=>cu.ComisionViaticosList)
                                             .ToList();
         if(comisiones.Count == 0)
         {
@@ -71,6 +72,15 @@ public class ComisionRepository : IComisionRepository
                 else if((comision.Estado == EstadosTipos.Creada || comision.Estado == EstadosTipos.DestinosDefinidos) && comision.Fecha_Salida <= DateTime.Now)
                 {
                     comision.CancelarComision();
+                    if(comision.ComisionDestinos is not null)
+                    {
+                        _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
+                    }
+                    foreach (var cu in comision.ComisionUsuarios!)
+                    {
+                        _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
+                        cu.Estado = EstadosTipos.Cancelada;
+                    }
                 }
                 
             }
@@ -114,8 +124,7 @@ public class ComisionRepository : IComisionRepository
         {
             return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
         }
-        var userid = _currentUser.userId;
-        comision.CancelarComision(userid);
+        comision.CancelarComision();
         if(comision.ComisionDestinos is not null)
         {
             _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);

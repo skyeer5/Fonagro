@@ -93,27 +93,11 @@ public class Comision : AuditableEntity
     {
         this.UsuarioId_Aprobador_Combustible = usuarioId;
     }
+
     public void CancelarComision()
     {
         this.Estado = EstadosTipos.Cancelada;
-        this.Fecha_Modificacion = DateTime.Now;
-        if(this.Vehiculo is not null)
-        {
-            this.Vehiculo.Estado = EstadosTipos.Disponible;
-        }
-        if(this.ComisionUsuarios is not null)
-        {
-            foreach(var comisionUsuario in this.ComisionUsuarios)
-            {
-                comisionUsuario.Estado = EstadosTipos.Cancelada;
-            }
-        }
-    }
-    public void CancelarComision(int userId)
-    {
-        this.Estado = EstadosTipos.Cancelada;
-        this.Modificado_Por = userId;
-        this.Fecha_Modificacion = DateTime.Now;
+
         if(this.Vehiculo is not null)
         {
             this.Vehiculo.Estado = EstadosTipos.Disponible;
