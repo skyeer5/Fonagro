@@ -57,7 +57,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             viaticos.Add(new Domain.Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
         }
 
-        var comision = Domain.Comision.Crear(
+        var comision = Domain.Comisiones.Comision.Crear(
             request.ComisionCreateRequest.Departamento!,
             request.ComisionCreateRequest.Fecha_Salida,
             request.ComisionCreateRequest.Fecha_Regreso,

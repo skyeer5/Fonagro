@@ -1,4 +1,5 @@
 namespace WebApp.Domain;
+using WebApp.Domain.Comisiones;
 
 public class ComisionDestino : AuditableEntity
 {

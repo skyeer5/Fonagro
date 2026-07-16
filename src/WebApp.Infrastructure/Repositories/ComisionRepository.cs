@@ -4,6 +4,8 @@ using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
+using WebApp.Domain.Comisiones;
+
 
 namespace WebApp.Infrastructure.Repositories;
 
@@ -18,7 +20,7 @@ public class ComisionRepository : IComisionRepository
         _currentUser = currentUser;
     }
 
-    public async Task<Result<int>> AddAsync(Domain.Comision comision, CancellationToken cancellationToken)
+    public async Task<Result<int>> AddAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
         comision.AgregarCreadoPor(userId);
@@ -27,7 +29,7 @@ public class ComisionRepository : IComisionRepository
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al agregar la comisión");
     } 
-    public async Task<Result<int>> AddApprovalGasAsync(Comision comision, CancellationToken cancellationToken)
+    public async Task<Result<int>> AddApprovalGasAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
         comision.AgregarAprobadoPor(userId);
@@ -38,7 +40,7 @@ public class ComisionRepository : IComisionRepository
 
         return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al aprobar el presupuesto de gasolina para la comisión");
     }
-    public async Task<Result<int>> UpdateComisionAsync(Comision comision, CancellationToken cancellationToken)
+    public async Task<Result<int>> UpdateComisionAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
     {
         _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
 
@@ -48,7 +50,7 @@ public class ComisionRepository : IComisionRepository
     }
     public async Task<Result<int>> CheckComisionStatusAsync(CancellationToken cancellationToken)
     {
-        var comisiones = _context.Comisiones.Where(c => c.Estado != EstadosTipos.Completada && c.Estado != EstadosTipos.Cancelada)
+        var comisiones = _context.Comisiones.Where(c => c.Estado != ComisionEstados.Completada && c.Estado != ComisionEstados.Cancelada)
                                             .Include(x=>x.Vehiculo)
                                             .Include(x=>x.ComisionUsuarios!)
                                                 .ThenInclude(cu=>cu.ComisionViaticosList)
@@ -61,15 +63,15 @@ public class ComisionRepository : IComisionRepository
         {
             foreach (var comision in comisiones)
             {
-                if (comision.Estado == EstadosTipos.EnCurso && comision.Fecha_Regreso <= DateTime.Now)
+                if (comision.Estado == ComisionEstados.EnCurso && comision.Fecha_Regreso <= DateTime.Now)
                 {
                     comision.CompletarComision();
                 }
-                else if (comision.Estado == EstadosTipos.Programada && comision.Fecha_Salida <= DateTime.Now)
+                else if (comision.Estado == ComisionEstados.Programada && comision.Fecha_Salida <= DateTime.Now)
                 {
-                    comision.Estado = EstadosTipos.EnCurso;
+                    comision.Estado = ComisionEstados.EnCurso;
                 }
-                else if((comision.Estado == EstadosTipos.Creada || comision.Estado == EstadosTipos.DestinosDefinidos) && comision.Fecha_Salida <= DateTime.Now)
+                else if((comision.Estado == ComisionEstados.Creada || comision.Estado == ComisionEstados.DestinosDefinidos) && comision.Fecha_Salida <= DateTime.Now)
                 {
                     comision.CancelarComision();
                     if(comision.ComisionDestinos is not null)
@@ -87,7 +89,7 @@ public class ComisionRepository : IComisionRepository
             return await _context.SaveChangesAsync(cancellationToken) > 0 ? Result<int>.Success(1) : Result<int>.Failure("Error al actualizar el estado de las comisiones");
         }
     }
-    public async Task<Result<int>> AddDestinosAsync(Domain.Comision comision, List<ComisionAddDestinosItemRequest> items, CancellationToken cancellationToken)
+    public async Task<Result<int>> AddDestinosAsync(Domain.Comisiones.Comision comision, List<ComisionAddDestinosItemRequest> items, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
         var destinos = new List<ComisionDestino>();
@@ -116,11 +118,11 @@ public class ComisionRepository : IComisionRepository
         {
             return Result<int>.Failure("Comision no encontrada");
         }
-        if(comision.Estado == EstadosTipos.Cancelada)
+        if(comision.Estado == ComisionEstados.Cancelada)
         {
             return Result<int>.Failure("La comisión ya se encuentra cancelada");
         }
-        if(comision.Estado == EstadosTipos.Finalizado)
+        if(comision.Estado == ComisionEstados.Completada)
         {
             return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
         }

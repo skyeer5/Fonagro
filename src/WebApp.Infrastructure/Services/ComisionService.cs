@@ -1,8 +1,6 @@
 using System.Linq.Expressions;
-using System.Reflection;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Bogus;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
@@ -15,6 +13,8 @@ using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
+using WebApp.Domain.Comisiones;
+
 
 namespace WebApp.Infrastructure.Services;
 
@@ -37,8 +37,8 @@ public class ComisionService : IComisionService
         return await _context.Comisiones
                 .AsNoTracking()
                 .Where(c => 
-                    c.Estado!= EstadosTipos.Cancelada 
-                    && c.Estado != EstadosTipos.Completada 
+                    c.Estado!= ComisionEstados.Cancelada 
+                    && c.Estado != ComisionEstados.Completada 
                     && c.ComisionUsuarios! 
                     .Any(cu => cu.UsuarioId == userId && cu.Estado != EstadosTipos.Cancelada && cu.Estado !=EstadosTipos.Completada))
                 .Select(c => new GetComisionActivaResponse
@@ -77,7 +77,7 @@ public class ComisionService : IComisionService
     public async Task<List<GetComisionesPendApprovResponse>?> GetComisionPendApprovAsync()
     {
          return await _context.Comisiones
-                .Where(c => c.Estado == EstadosTipos.DestinosDefinidos)
+                .Where(c => c.Estado == ComisionEstados.DestinosDefinidos)
                 .Select(c => new GetComisionesPendApprovResponse
                 {
                     id = c.ComisionId,

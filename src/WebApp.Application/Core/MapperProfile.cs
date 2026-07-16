@@ -6,6 +6,7 @@ using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
 using WebApp.Domain;
 using WebApp.Persistence.Models;
 
+
 namespace WebApp.Application.Core;
 
 public class MapperProfile : Profile
@@ -20,7 +21,7 @@ public class MapperProfile : Profile
                     ? UsuarioEstados.EnComision
                     : src.Estado
             ));
-        CreateMap<Domain.Comision, GetComisionesDetalleResponse>()
+        CreateMap<Domain.Comisiones.Comision, GetComisionesDetalleResponse>()
             .ForMember(dest => dest.Descripcion_Vehiculo, opt => opt.MapFrom(src =>
             $"{src.Vehiculo!.Placa} - {src.Vehiculo.Modelo}"
             ));

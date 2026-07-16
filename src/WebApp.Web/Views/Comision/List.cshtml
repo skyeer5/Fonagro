@@ -1,5 +1,5 @@
 @using WebApp.Application.Comisiones.Queries.GetComisionesDetalle
-@using WebApp.Domain
+@using WebApp.Domain.Comisiones
 @model WebApp.Application.Core.PagedList<GetComisionesDetalleResponse>;
 
 @{
@@ -98,7 +98,7 @@
                         <td>@item.Descripcion_Vehiculo</td>
                         <td>@item.Estado</td>
                         <td class="text-center">
-                            @if(item.Estado != EstadosTipos.Cancelada && item.Estado != EstadosTipos.Completada)
+                            @if(item.Estado != ComisionEstados.Cancelada && item.Estado != ComisionEstados.Completada)
                             {
                                 <a href="/Comision/Edit?id=@item.ComisionId" 
                                 class="btn btn-sm btn-outline-primary">

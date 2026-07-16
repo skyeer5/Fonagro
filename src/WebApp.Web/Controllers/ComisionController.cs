@@ -10,7 +10,7 @@ using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Core;
-using WebApp.Domain;
+using WebApp.Domain.Comisiones;
 using WebApp.Web.Models;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
@@ -172,7 +172,7 @@ public class ComisionController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = EstadosTipos.GetEstadosComision();
+        ViewBag.Estados = ComisionEstados.GetEstadosComision();
         var request = new GetComisionesDetalleRequest
         {
             Departamento = departamento,

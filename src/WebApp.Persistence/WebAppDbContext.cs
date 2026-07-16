@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Domain;
 using WebApp.Persistence.Models;
+using WebApp.Domain.Comisiones;
+
 
 namespace WebApp.Persistence;
 

@@ -1,5 +1,5 @@
 
-namespace WebApp.Domain;
+namespace WebApp.Domain.Comisiones;
 
 public class Comision : AuditableEntity
 {
@@ -34,7 +34,7 @@ public class Comision : AuditableEntity
             Fecha_Regreso = fecha_Regreso,
             Precio_Galon_Usado = gasolinaPrecio,
             VehiculoId = vehiculoId,
-            Estado = EstadosTipos.Creada
+            Estado = ComisionEstados.Creada
         };
     }
     public void AgregarCreadoPor(int usuarioId)
@@ -71,22 +71,20 @@ public class Comision : AuditableEntity
         {
             throw new Exception("Debe asignar al menos un destino");
         }
-        Console.WriteLine("\n\n\n\n");
         foreach(var destino in comisionDestinos)
         {
             destino.Creado_Por = userId;
             destino.Fecha_Creacion = DateTime.Now;
             this.ComisionDestinos.Add(destino);
-            Console.WriteLine(destino.Galones);
         }
         this.Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
         this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Galon_Usado, Galon_Estimado);
-        this.Estado = EstadosTipos.DestinosDefinidos;
+        this.Estado = ComisionEstados.DestinosDefinidos;
 
     }
     public void AgregarPresupuestoGas(decimal prespuestoGas)
     {
-        this.Estado = EstadosTipos.Programada;
+        this.Estado = ComisionEstados.Programada;
         this.Presupuesto_Combustible_Aprobado = prespuestoGas;
     }
     public void AgregarAprobadoPor(int usuarioId)
@@ -96,7 +94,7 @@ public class Comision : AuditableEntity
 
     public void CancelarComision()
     {
-        this.Estado = EstadosTipos.Cancelada;
+        this.Estado = ComisionEstados.Cancelada;
 
         if(this.Vehiculo is not null)
         {
@@ -107,7 +105,7 @@ public class Comision : AuditableEntity
     }
     public void CompletarComision()
     {
-        this.Estado = EstadosTipos.Completada;
+        this.Estado = ComisionEstados.Completada;
         if(this.Vehiculo is not null)
         {
             this.Vehiculo.Estado = EstadosTipos.Disponible;
