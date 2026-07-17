@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Domain;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Comisiones;
-
+using WebApp.Domain.ComisionDestinos;
 
 namespace WebApp.Persistence;
 
