@@ -1,9 +1,8 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.ComisionesViaticos;
 
 public class ComisionViaticos
 {
     public int ComisionViaticosId { get; set; }
-    public string? Estado { get; set; }
     public int Cantidad { get; set; }
     public decimal Monto_Unitario_Usado { get; set; }
     public decimal Monto_Total { get; set; }
@@ -22,13 +21,9 @@ public class ComisionViaticos
             Monto_Unitario_Usado = precio_usado,
             Monto_Total = precio_usado * cantidad,
             Fecha = fecha,
-            Estado = ViaticosTipos.Asignado,
             ComisionId = comisionId,
             ViaticoId = viaticoId
         };
     }
-    public void AsignarUsuario(int usuarioId)
-    {
-        this.UsuarioId = usuarioId;
-    }
+
 }

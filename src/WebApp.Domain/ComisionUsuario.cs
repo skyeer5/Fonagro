@@ -1,5 +1,6 @@
 namespace WebApp.Domain;
 using WebApp.Domain.Comisiones;
+using WebApp.Domain.ComisionesViaticos;
 
 public class ComisionUsuario : AuditableEntity
 {
