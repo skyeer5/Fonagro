@@ -1,5 +1,6 @@
 namespace WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
+using WebApp.Domain.Vehiculos;
 
 public class Comision : AuditableEntity
 {
@@ -98,7 +99,7 @@ public class Comision : AuditableEntity
 
         if(this.Vehiculo is not null)
         {
-            this.Vehiculo.Estado = EstadosTipos.Disponible;
+            this.Vehiculo.ModificarEstadoDisponible();
         }
 
         
@@ -108,7 +109,7 @@ public class Comision : AuditableEntity
         this.Estado = ComisionEstados.Completada;
         if(this.Vehiculo is not null)
         {
-            this.Vehiculo.Estado = EstadosTipos.Disponible;
+            this.Vehiculo.ModificarEstadoDisponible();
         }
         if(this.ComisionUsuarios is not null)
         {

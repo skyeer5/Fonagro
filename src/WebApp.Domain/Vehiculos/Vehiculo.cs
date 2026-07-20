@@ -1,7 +1,6 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Vehiculos;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.Gasolinas;
-
 
 public class Vehiculo : AuditableEntity
 {
@@ -82,5 +81,9 @@ public class Vehiculo : AuditableEntity
     public void ModificarEstadoEnComision()
     {
         Estado = EstadosTipos.Ocupado;
+    }
+    public void ModificarEstadoDisponible()
+    {
+        Estado = EstadosTipos.Disponible;
     }
 }

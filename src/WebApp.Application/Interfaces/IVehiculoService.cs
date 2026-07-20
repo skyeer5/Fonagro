@@ -1,6 +1,6 @@
 using WebApp.Application.Core;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
-using WebApp.Domain;
+using WebApp.Domain.Vehiculos;
 
 namespace WebApp.Application.Interfaces;
 

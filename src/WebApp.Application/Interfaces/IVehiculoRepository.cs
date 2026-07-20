@@ -1,5 +1,5 @@
 using WebApp.Application.Core;
-using WebApp.Domain;
+using WebApp.Domain.Vehiculos;
 
 namespace WebApp.Application.Interfaces;
 

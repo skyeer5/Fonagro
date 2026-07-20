@@ -1,8 +1,7 @@
 using MediatR;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
-using WebApp.Persistence;
+using WebApp.Domain.Vehiculos;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
 
 namespace WebApp.Application.Vehiculos.Commands.VehiculoCreate;
@@ -11,13 +10,11 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
     {
     private readonly IVehiculoRepository _vehiculoRepository;
     private readonly IGasolinaService _gasolinaService;
-    private readonly IUsuarioService _usuarioService;
 
     public VehiculoCreateCommandHandler(IVehiculoRepository vehiculoRepository, IGasolinaService gasolinaService, IUsuarioService usuarioService)
     {
         _vehiculoRepository = vehiculoRepository;
         _gasolinaService = gasolinaService;
-        _usuarioService = usuarioService;
     }
 
     public async Task<Result<int>> Handle(VehiculoCreateCommandRequest request, CancellationToken cancellationToken)

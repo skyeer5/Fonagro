@@ -4,6 +4,7 @@ using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
 using WebApp.Domain;
+using WebApp.Domain.Vehiculos;
 using WebApp.Persistence.Models;
 
 
