@@ -25,7 +25,7 @@ public class VehiculoService : IVehiculoService
     public Task<List<Vehiculo>> GetVehiculosDisponiblesAsync(CancellationToken cancellationToken)
     {
         return _context.Vehiculos
-            .Where(v => v.Estado == EstadosTipos.Disponible) 
+            .Where(v => v.Estado == VehiculoEstados.Disponible) 
             .ToListAsync(cancellationToken);
     }
 

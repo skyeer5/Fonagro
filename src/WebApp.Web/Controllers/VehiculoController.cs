@@ -6,7 +6,7 @@ using WebApp.Application.Core;
 using WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
-using WebApp.Domain;
+using WebApp.Domain.Vehiculos;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinas.GetGasolinasQuery;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
@@ -63,7 +63,7 @@ public class VehiculoController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? marca = "", string? modelo = "", string? placa = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = EstadosTipos.GetEstadosVehiculo();
+        ViewBag.Estados = VehiculoEstados.GetEstadosVehiculo();
         var request = new GetVehiculosDetalleRequest
         {
             Marca = marca,

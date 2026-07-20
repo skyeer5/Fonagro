@@ -1,4 +1,4 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Vehiculos;
 
 public static class VehiculosTipos
 {

@@ -1,5 +1,5 @@
 @using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle
-@using WebApp.Domain
+@using WebApp.Domain.Vehiculos
 @model WebApp.Application.Core.PagedList<GetVehiculosDetalleResponse>;
 @{
     ViewData["Title"] = "Listado de Vehículos";
@@ -95,7 +95,7 @@
                         <td>@item.Modelo</td>
                         <td>@item.Placa</td>
                         <td>
-                            <span class="badge @(item.Estado == EstadosTipos.Disponible ? "bg-success" : "bg-secondary")">
+                            <span class="badge @(item.Estado == VehiculoEstados.Disponible ? "bg-success" : "bg-secondary")">
                                 @item.Estado
                             </span>
                         </td>

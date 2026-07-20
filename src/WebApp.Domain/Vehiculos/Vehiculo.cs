@@ -70,7 +70,7 @@ public class Vehiculo : AuditableEntity
             ConsumoKmPorGalon = consumo,
             Kilometraje = kilometraje,
             GasolinaId = gasolinaId,
-            Estado = EstadosTipos.Disponible,
+            Estado = VehiculoEstados.Disponible,
             Fecha_Creacion = DateTime.Now
     };
     }
@@ -80,10 +80,10 @@ public class Vehiculo : AuditableEntity
     }   
     public void ModificarEstadoEnComision()
     {
-        Estado = EstadosTipos.Ocupado;
+        Estado = VehiculoEstados.Ocupado;
     }
     public void ModificarEstadoDisponible()
     {
-        Estado = EstadosTipos.Disponible;
+        Estado = VehiculoEstados.Disponible;
     }
 }
