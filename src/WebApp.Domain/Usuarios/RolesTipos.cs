@@ -1,4 +1,4 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Usuarios;
 
 public static class RolesTipos
 {

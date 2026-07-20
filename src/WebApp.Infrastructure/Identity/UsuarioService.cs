@@ -1,16 +1,15 @@
 using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Application.Usuarios.Commands.UsuarioCreate;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivos;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
-using WebApp.Domain;
+using WebApp.Domain.Comisiones;
+using WebApp.Domain.Usuarios;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
@@ -113,7 +112,7 @@ public class UsuarioService : IUsuarioService
     public async Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync()
     { 
         return await _userManager.Users
-            .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != EstadosTipos.Finalizado && cu.Comision.Estado != EstadosTipos.Cancelada))
+            .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))
             .OrderBy(x=> x.Nombre_Completo)
             .Select(u => new GetUsuariosSinComisionResponse
             {

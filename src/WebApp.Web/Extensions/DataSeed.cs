@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Gasolinas;

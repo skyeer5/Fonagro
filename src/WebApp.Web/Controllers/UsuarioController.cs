@@ -5,6 +5,7 @@ using WebApp.Application.Core;
 using WebApp.Application.Usuarios.Commands.UsuarioCreate;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using static WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateCommand;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 

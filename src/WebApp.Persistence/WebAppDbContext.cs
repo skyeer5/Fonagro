@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;

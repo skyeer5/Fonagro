@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using WebApp.Domain.Comisiones;
 
 namespace WebApp.Persistence.Models;

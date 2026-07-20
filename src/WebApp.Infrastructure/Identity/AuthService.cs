@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Identity;
-using Web.Application.Authentication.Command.Login;
 using Web.Application.Interfaces;
 using WebApp.Application.Authentication.Command.Login;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using WebApp.Persistence.Models;
 
 namespace WebApp.Infrastructure.Identity;

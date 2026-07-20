@@ -4,6 +4,7 @@ using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Usuarios.Commands.UsuarioCreate;
 using WebApp.Domain;
+using WebApp.Domain.Usuarios;
 using WebApp.Persistence.Models;
 
 namespace WebApp.Infrastructure.Identity;
