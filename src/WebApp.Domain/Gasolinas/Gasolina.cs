@@ -1,4 +1,4 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Gasolinas;
 
 public class Gasolina : AuditableEntity
 {

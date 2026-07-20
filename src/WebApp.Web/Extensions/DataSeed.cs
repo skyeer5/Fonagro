@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Domain;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
+using WebApp.Domain.Gasolinas;
+
 
 namespace WebApp.Web.Extensions;
 

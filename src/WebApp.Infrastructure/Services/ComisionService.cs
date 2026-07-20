@@ -12,6 +12,7 @@ using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
+using WebApp.Domain.Gasolinas;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 
