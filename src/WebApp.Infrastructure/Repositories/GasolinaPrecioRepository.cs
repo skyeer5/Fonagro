@@ -1,6 +1,6 @@
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
+using WebApp.Domain.GasolinaPrecios;
 using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Repositories;

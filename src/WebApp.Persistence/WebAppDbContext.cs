@@ -7,6 +7,7 @@ using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
 using WebApp.Domain.ComisionesViaticos;
 using WebApp.Domain.Gasolinas;
+using WebApp.Domain.GasolinaPrecios;
 
 namespace WebApp.Persistence;
 
