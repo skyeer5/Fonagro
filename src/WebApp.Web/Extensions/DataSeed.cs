@@ -5,6 +5,7 @@ using WebApp.Domain.Usuarios;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Gasolinas;
+using WebApp.Domain.Viaticos;
 
 
 namespace WebApp.Web.Extensions;

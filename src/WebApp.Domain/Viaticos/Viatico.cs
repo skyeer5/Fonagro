@@ -1,4 +1,4 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Viaticos;
 using WebApp.Domain.ComisionesViaticos;
 
 public class Viatico : AuditableEntity

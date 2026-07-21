@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Domain.Viaticos;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 
 namespace WebApp.Application.Comision.ComisionCreate;
@@ -51,10 +52,10 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
         {
             return Result<int>.Failure("No hay viáticos vigentes para asignar a la comisión");
         }
-        var viaticos = new List<Domain.Viatico>();
+        var viaticos = new List<Viatico>();
         foreach(var viatico in viaticosVigentes)
         {
-            viaticos.Add(new Domain.Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
+            viaticos.Add(new Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
         }
 
         var comision = Domain.Comisiones.Comision.Crear(

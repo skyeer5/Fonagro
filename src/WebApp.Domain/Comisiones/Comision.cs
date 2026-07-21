@@ -1,6 +1,7 @@
 namespace WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
 using WebApp.Domain.Vehiculos;
+using WebApp.Domain.Viaticos;
 
 public class Comision : AuditableEntity
 {

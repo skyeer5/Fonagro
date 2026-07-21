@@ -1,4 +1,5 @@
 namespace WebApp.Domain.ComisionesViaticos;
+using WebApp.Domain.Viaticos;
 
 public class ComisionViaticos
 {
