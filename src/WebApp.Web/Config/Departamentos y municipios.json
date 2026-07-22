@@ -72,7 +72,8 @@
             "San Agustín Acasaguastlán",
             "San Antonio La Paz",
             "San Cristóbal Acasaguastlán",
-            "Sanarate"
+            "Sanarate",
+	    "Sansare"
         ]},{
         "title" : "Escuintla",
         "mun" : [
@@ -88,7 +89,8 @@
             "San Vicente Pacaya",
             "Santa Lucía Cotzumalguapa",
             "Siquinalá",
-            "Tiquisate"
+            "Tiquisate",
+            "Sipacate"
         ]},{
         "title" : "Guatemala",
         "mun" : [
@@ -107,7 +109,8 @@
             "San Pedro Sacatepéquez",
             "San Raymundo",
             "Santa Catarina Pinula",
-            "Villa Canales"
+            "Villa Canales",
+            "Villa Nueva"
         ]},{
         "title" : "Huehuetenango",
         "mun" : [
@@ -141,7 +144,9 @@
             "Santiago Chimaltenango",
             "Soloma",
             "Tectitán",
-            "Todos Santos Cuchumatan"
+            "Todos Santos Cuchumatan",
+            "Unión Cantinil",
+            "Petatán"
         ]},{
         "title" : "Izabal",
         "mun" : [
@@ -195,7 +200,8 @@
             "San Luis",
             "Santa Ana",
             "Sayaxché",
-            "Las Cruces"
+            "Las Cruces",
+            "El Chal"
         ]},{
         "title" : "Quetzaltenango",
         "mun" : [
@@ -309,7 +315,8 @@
             "Sipacapa",
             "Tacaná",
             "Tajumulco",
-            "Tejutla"
+            "Tejutla",
+            "La Blanca"
         ]},{
         "title" : "Santa Rosa",
         "mun" : [
@@ -371,7 +378,8 @@
             "Santa Bárbara",
             "Santo Domingo Suchitepequez",
             "Santo Tomas La Unión",
-            "Zunilito"
+            "Zunilito",
+            "San José La Máquina"
         ]},{
         "title" : "Totonicapán",
         "mun" : [
@@ -395,7 +403,8 @@
             "San Diego",
             "Teculután",
             "Usumatlán",
-            "Zacapa"
+            "Zacapa",
+            "San Jorge"
         ]
     }
 ]

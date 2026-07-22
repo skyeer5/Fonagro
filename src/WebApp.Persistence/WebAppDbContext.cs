@@ -11,6 +11,8 @@ using WebApp.Domain.Gasolinas;
 using WebApp.Domain.GasolinaPrecios;
 using WebApp.Domain.Vehiculos;
 using WebApp.Domain.Viaticos;
+using WebApp.Domain.Departamentos;
+using WebApp.Domain.Municipios;
 
 namespace WebApp.Persistence;
 
@@ -28,6 +30,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<ComisionDestino> ComisionDestinos { get; set; }
     public DbSet<ComisionUsuario> ComisionUsuarios { get; set; }
     public DbSet<ComisionViaticos> ComisionViaticos { get; set; }
+    public DbSet<Departamento> Departamentos { get; set; }
+    public DbSet<Municipio> Municipios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -45,6 +49,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<ComisionDestino>().ToTable("comisionDestinos");
         modelBuilder.Entity<ComisionUsuario>().ToTable("comisionUsuarios");
         modelBuilder.Entity<ComisionViaticos>().ToTable("comisionViaticos");
+        modelBuilder.Entity<Departamento>().ToTable("departamentos");
+        modelBuilder.Entity<Municipio>().ToTable("municipios");
 
         // Definicion de las propiedades
         modelBuilder.Entity<GasolinaPrecio>()
@@ -149,6 +155,12 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .WithMany(v => v.ComisionViaticos)
             .HasForeignKey(cv => cv.ViaticoId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Departamento>()
+            .HasMany(d => d.Municipios)
+            .WithOne(m => m.Departamento)
+            .HasForeignKey(m => m.DepartamentoId)
+            .IsRequired();
 
         // Carga de datos iniciales de seguridad
         CargarDataSeguridad(modelBuilder);

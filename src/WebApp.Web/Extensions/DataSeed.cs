@@ -6,6 +6,7 @@ using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Gasolinas;
 using WebApp.Domain.Viaticos;
+using WebApp.Application.Interfaces;
 
 
 namespace WebApp.Web.Extensions;
@@ -19,6 +20,7 @@ public static class DataSeed
         using var scope = app.ApplicationServices.CreateScope();
         var service = scope.ServiceProvider;
         var loggerFactory = service.GetRequiredService<ILoggerFactory>();
+        var locacionesService = service.GetRequiredService<ILocacionesService>();
 
         try
         {
@@ -65,6 +67,12 @@ public static class DataSeed
                     new Viatico { Nombre = ViaticosTipos.Hospedaje, Monto = 210, Vigente = true}
                 };
                 await context.Viaticos.AddRangeAsync(viaticos);
+            }
+
+            if(!context.Departamentos.Any())
+            {
+                var deptamentos = await locacionesService.GetDepartamentosDataSeedAsync();
+                await context.Departamentos.AddRangeAsync(deptamentos!);
             }
 
             await context.SaveChangesAsync();
