@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
+using WebApp.Domain.Nombramientos;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
@@ -53,7 +53,7 @@ public class ComisionRepository : IComisionRepository
     {
         var comisiones = _context.Comisiones.Where(c => c.Estado != ComisionEstados.Completada && c.Estado != ComisionEstados.Cancelada)
                                             .Include(x=>x.Vehiculo)
-                                            .Include(x=>x.ComisionUsuarios!)
+                                            .Include(x=>x.Nombramientos!)
                                                 .ThenInclude(cu=>cu.ComisionViaticosList)
                                             .ToList();
         if(comisiones.Count == 0)
@@ -79,10 +79,10 @@ public class ComisionRepository : IComisionRepository
                     {
                         _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
                     }
-                    foreach (var cu in comision.ComisionUsuarios!)
+                    foreach (var cu in comision.Nombramientos!)
                     {
                         _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-                        cu.Estado = EstadosTipos.Cancelada;
+                        cu.Estado = NombramientoTipos.Cancelada;
                     }
                 }
                 
@@ -112,7 +112,7 @@ public class ComisionRepository : IComisionRepository
                                 .Where(x=>x.ComisionId == comisionId)
                                 .Include(x=>x.Vehiculo)
                                 .Include(x=>x.ComisionDestinos)
-                                .Include(x=>x.ComisionUsuarios!)
+                                .Include(x=>x.Nombramientos!)
                                     .ThenInclude(cu=>cu.ComisionViaticosList)
                                 .FirstOrDefaultAsync(cancellationToken);
         if(comision is null)       
@@ -132,10 +132,10 @@ public class ComisionRepository : IComisionRepository
         {
             _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
         }
-        foreach (var cu in comision.ComisionUsuarios!)
+        foreach (var cu in comision.Nombramientos!)
         {
             _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-            cu.Estado = EstadosTipos.Cancelada;
+            cu.Estado = NombramientoTipos.Cancelada;
         }
         var resultado = await _context.SaveChangesAsync(cancellationToken);
         return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al cancelar la comisión");

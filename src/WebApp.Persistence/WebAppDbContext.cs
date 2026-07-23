@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Domain;
+using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Usuarios;
 using WebApp.Persistence.Models;
 using WebApp.Domain.Comisiones;
@@ -28,7 +28,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<Viatico> Viaticos { get; set; }
     public DbSet<Comision> Comisiones { get; set; }
     public DbSet<ComisionDestino> ComisionDestinos { get; set; }
-    public DbSet<ComisionUsuario> ComisionUsuarios { get; set; }
+    public DbSet<Nombramiento> Nombramientos { get; set; }
     public DbSet<ComisionViaticos> ComisionViaticos { get; set; }
     public DbSet<Departamento> Departamentos { get; set; }
     public DbSet<Municipio> Municipios { get; set; }
@@ -47,7 +47,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<Viatico>().ToTable("viaticos");
         modelBuilder.Entity<Comision>().ToTable("comisiones");
         modelBuilder.Entity<ComisionDestino>().ToTable("comisionDestinos");
-        modelBuilder.Entity<ComisionUsuario>().ToTable("comisionUsuarios");
+        modelBuilder.Entity<Nombramiento>().ToTable("nombramientos");
         modelBuilder.Entity<ComisionViaticos>().ToTable("comisionViaticos");
         modelBuilder.Entity<Departamento>().ToTable("departamentos");
         modelBuilder.Entity<Municipio>().ToTable("municipios");
@@ -123,19 +123,19 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(d => d.ComisionId)
             .IsRequired();
 
-        modelBuilder.Entity<ComisionUsuario>()
+        modelBuilder.Entity<Nombramiento>()
         .HasKey(x=> new { x.ComisionId, x.UsuarioId });
 
-        modelBuilder.Entity<ComisionUsuario>()
+        modelBuilder.Entity<Nombramiento>()
             .HasOne(cu => cu.Comision)
-            .WithMany(c => c.ComisionUsuarios)
+            .WithMany(c => c.Nombramientos)
             .HasForeignKey(cu => cu.ComisionId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<ComisionUsuario>()
+        modelBuilder.Entity<Nombramiento>()
             .HasOne<AppUser>()
-            .WithMany(v => v.ComisionUsuarios)
+            .WithMany(v => v.Nombramientos)
             .HasForeignKey(cu => cu.UsuarioId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
@@ -144,7 +144,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasKey(x=>x.ComisionViaticosId);
 
         modelBuilder.Entity<ComisionViaticos>()
-            .HasOne(cv => cv.ComisionUsuario)
+            .HasOne(cv => cv.Nombramientos)
             .WithMany(cu => cu.ComisionViaticosList)
             .HasForeignKey(cv => new { cv.ComisionId, cv.UsuarioId })
             .IsRequired()

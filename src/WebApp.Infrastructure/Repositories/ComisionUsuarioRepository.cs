@@ -1,6 +1,6 @@
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
+using WebApp.Domain.Nombramientos;
 using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Repositories;
@@ -14,7 +14,7 @@ public class ComisionUsuarioRepository : IComisionUsuarioRepository
         _context = context;
     }
 
-    public async Task<Result<int>> UpdateAsync(ComisionUsuario comisionUsuario, CancellationToken cancellationToken)
+    public async Task<Result<int>> UpdateAsync(Nombramiento comisionUsuario, CancellationToken cancellationToken)
     {
         _context.Entry(comisionUsuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
 

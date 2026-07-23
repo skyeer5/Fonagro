@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using WebApp.Domain;
 using WebApp.Domain.Usuarios;
 using WebApp.Domain.Comisiones;
+using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Persistence.Models;
 
@@ -16,7 +17,7 @@ public class AppUser : IdentityUser<int>
     public string? Numero_Contrato { get; set; }
     public string? Estado { get; set; }
     public ICollection<Comision>? Comisiones { get; set; }
-    public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; }
+    public ICollection<Nombramiento>? Nombramientos { get; set; }
 
     public static AppUser Crear(string nombreCompleto, string nit, string puesto, string unidad, string tipoServicios, string numeroContrato, string email)
     {

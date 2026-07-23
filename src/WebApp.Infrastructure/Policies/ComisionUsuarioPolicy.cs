@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 using WebApp.Persistence;
+using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Infrastructure.Policies;
 
@@ -18,9 +19,9 @@ public class ComisionUsuarioPolicy : IComisionUsuarioPolicy
     {
         var usuarioIds = usuariosNombrados.Select(u => u.UsuariosId).ToList();
 
-        return await _context.ComisionUsuarios.AnyAsync(u=>
+        return await _context.Nombramientos.AnyAsync(u=>
                 usuarioIds.Contains(u.UsuarioId) 
-                && u.Estado == WebApp.Domain.EstadosTipos.Asignado 
+                && u.Estado == NombramientoTipos.Asignado 
                 , cancellationToken);
     }
 }

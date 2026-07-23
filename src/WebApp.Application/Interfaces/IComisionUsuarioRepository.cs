@@ -1,9 +1,9 @@
 using WebApp.Application.Core;
-using WebApp.Domain;
+using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Application.Interfaces;
 
 public interface IComisionUsuarioRepository
 {
-    Task<Result<int>> UpdateAsync(ComisionUsuario comisionUsuario, CancellationToken cancellationToken);
+    Task<Result<int>> UpdateAsync(Nombramiento comisionUsuario, CancellationToken cancellationToken);
 }

@@ -112,7 +112,7 @@ public class UsuarioService : IUsuarioService
     public async Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync()
     { 
         return await _userManager.Users
-            .Where(u => u.Estado == UsuarioEstados.Activo && !u.ComisionUsuarios!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))
+            .Where(u => u.Estado == UsuarioEstados.Activo && !u.Nombramientos!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))
             .OrderBy(x=> x.Nombre_Completo)
             .Select(u => new GetUsuariosSinComisionResponse
             {

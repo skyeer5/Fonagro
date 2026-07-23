@@ -1,9 +1,9 @@
-using WebApp.Domain;
+using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Application.Interfaces;
 
 public interface IComisionUsuarioService
 {
-    Task<ComisionUsuario?> GetCUByIdComisionAndUsuarioIdAsync(int comisionId, CancellationToken cancellationToken); // ComisionUsuario(CU)
+    Task<Nombramiento?> GetCUByIdComisionAndUsuarioIdAsync(int comisionId, CancellationToken cancellationToken); // ComisionUsuario(CU)
     Task<string?> GetDescripcionAsync(int comisionId, int usuarioId, CancellationToken cancellationToken); // ComisionUsuario(CU)
 }

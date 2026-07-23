@@ -1,5 +1,6 @@
 namespace WebApp.Domain.ComisionesViaticos;
 using WebApp.Domain.Viaticos;
+using WebApp.Domain.Nombramientos;
 
 public class ComisionViaticos
 {
@@ -10,7 +11,7 @@ public class ComisionViaticos
     public DateTime Fecha {get;set;} 
     public int ComisionId { get; set; }
     public int UsuarioId { get; set; }
-    public ComisionUsuario? ComisionUsuario { get; set; }
+    public Nombramiento? Nombramientos { get; set; }
     public int ViaticoId { get; set; }
     public Viatico? Viatico { get; set; }
 

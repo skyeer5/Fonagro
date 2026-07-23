@@ -2,7 +2,7 @@ namespace WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
 using WebApp.Domain.Vehiculos;
 using WebApp.Domain.Viaticos;
-
+using WebApp.Domain.Nombramientos;
 public class Comision : AuditableEntity
 {
     public int ComisionId { get; set; }
@@ -19,7 +19,7 @@ public class Comision : AuditableEntity
     public int VehiculoId { get; set; }
     public Vehiculo? Vehiculo { get; set; }
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
-    public ICollection<ComisionUsuario>? ComisionUsuarios { get; set; } 
+    public ICollection<Nombramiento>? Nombramientos { get; set; } 
 
     public static Comision Crear(
                                  List<string> departamento,
@@ -47,7 +47,7 @@ public class Comision : AuditableEntity
     }
     public void AgregarUsuarios(ICollection<UsuariosNombrados> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
-        this.ComisionUsuarios ??= new List<ComisionUsuario>();
+        this.Nombramientos ??= new List<Nombramiento>();
         if(!usuariosNombrados.Any())
         {
             throw new Exception("Debe asignar al menos un usuario");
@@ -55,13 +55,13 @@ public class Comision : AuditableEntity
         usuariosNombrados = usuariosNombrados.DistinctBy(u => u.UsuariosId).ToList();
         foreach(var usuario in usuariosNombrados)
         {
-            var comisionUsuario = ComisionUsuario.AsignarAComision(
+            var comisionUsuario = Nombramiento.AsignarAComision(
                 usuario.UsuariosId,
                 usuario.Numero_Nombramiento!,
                 usuario.Es_Piloto
             );
             comisionUsuario.AsignarViaticos(viaticos, salida, regreso);
-            ComisionUsuarios.Add(comisionUsuario);
+            Nombramientos.Add(comisionUsuario);
             
         }
         
@@ -112,11 +112,11 @@ public class Comision : AuditableEntity
         {
             this.Vehiculo.ModificarEstadoDisponible();
         }
-        if(this.ComisionUsuarios is not null)
+        if(this.Nombramientos is not null)
         {
-            foreach(var comisionUsuario in this.ComisionUsuarios)
+            foreach(var comisionUsuario in this.Nombramientos)
             {
-                comisionUsuario.Estado = EstadosTipos.Completada;
+                comisionUsuario.Estado = NombramientoTipos.Completada;
             }
         }
     }

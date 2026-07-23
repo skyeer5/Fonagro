@@ -1,26 +1,35 @@
-namespace WebApp.Domain;
+namespace WebApp.Domain.Nombramientos;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionesViaticos;
+using WebApp.Domain.enums;
 using WebApp.Domain.Viaticos;
 
-public class ComisionUsuario : AuditableEntity
+public class Nombramiento : AuditableEntity
 {
+    public int NombramientoId { get; set; }
+    public Unidades Unidad { get; set; }
+    public int UsuarioId { get; set; }
+    public string? Usuario_Unidad { get; set; }
+    public string? Usuario_Puesto { get; set; }
+    public string? Proposito { get; set; }
+    public DateTime Fecha_Salida { get; set; }
+    public DateTime Fecha_Regreso { get; set; }
     public int ComisionId { get; set; }
-    public string? Nombramiento { get; set; }
+    public string? Num_Nombramiento { get; set; }
     public string? Descripcion { get; set; }
     public bool Es_Piloto { get; set; }
     public string? Estado { get; set; }
-    public Comision? Comision { get; set; }
-    public int UsuarioId { get; set; }
+    public Comision? Comision { get; set; } 
+    
     public ICollection<ComisionViaticos>? ComisionViaticosList { get; set; }
 
-    public static ComisionUsuario AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)
+    public static Nombramiento AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)
     {
-        return new ComisionUsuario
+        return new Nombramiento
         {
-            Nombramiento = nombramiento,
+            Num_Nombramiento = nombramiento,
             Es_Piloto = es_Piloto,
-            Estado = EstadosTipos.Asignado,
+            Estado = NombramientoTipos.Asignado,
             UsuarioId = usuarioId
         };
     }
