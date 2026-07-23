@@ -41,7 +41,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             return Result<int>.Failure("No se pudo obtener el precio de gasolina para el vehículo especificado");
         }
 
-        var usuarioAsignados = await _comisionUsuarioPolicy.UsuariosEstanAsignadosAsync(request.ComisionCreateRequest.UsuariosNombrados, cancellationToken);
+        var usuarioAsignados = await _comisionUsuarioPolicy.UsuariosEstanAsignadosAsync(request.ComisionCreateRequest.UsuariosNom, cancellationToken);
         if(usuarioAsignados)
         {
             return Result<int>.Failure("El usuario(s) ya se encuentra en otra comisión");
@@ -65,7 +65,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             request.ComisionCreateRequest.VehiculoId,
             gasolinaPrecio.Value
             );
-        comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNombrados, viaticos, request.ComisionCreateRequest.Fecha_Salida, request.ComisionCreateRequest.Fecha_Regreso);
+        comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNom, viaticos, request.ComisionCreateRequest.Fecha_Salida, request.ComisionCreateRequest.Fecha_Regreso);
 
         
 

@@ -8,5 +8,5 @@ public class ComisionCreateRequest
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public int VehiculoId { get; set; }
-    public List<Nombramiento> UsuariosNombrados { get; set; } = new();
+    public List<UsuariosNombrados> UsuariosNom { get; set; } = new();
 }

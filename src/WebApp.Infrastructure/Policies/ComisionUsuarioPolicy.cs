@@ -14,7 +14,7 @@ public class ComisionUsuarioPolicy : IComisionUsuarioPolicy
         _context = context;
     }
 
-    public async Task<bool> UsuariosEstanAsignadosAsync(List<Nombramiento> usuariosNombrados, CancellationToken cancellationToken)
+    public async Task<bool> UsuariosEstanAsignadosAsync(List<UsuariosNombrados> usuariosNombrados, CancellationToken cancellationToken)
     {
         var usuarioIds = usuariosNombrados.Select(u => u.UsuariosId).ToList();
 

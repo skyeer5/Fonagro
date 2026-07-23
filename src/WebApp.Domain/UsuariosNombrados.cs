@@ -1,6 +1,6 @@
 namespace WebApp.Domain;
 
-public sealed class Nombramiento
+public sealed class UsuariosNombrados
 {
     public int UsuariosId { get; set; } 
     public string? Numero_Nombramiento { get; set; }

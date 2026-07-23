@@ -45,7 +45,7 @@ public class Comision : AuditableEntity
         this.Creado_Por = usuarioId;
         this.Fecha_Creacion = DateTime.Now;
     }
-    public void AgregarUsuarios(ICollection<Nombramiento> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
+    public void AgregarUsuarios(ICollection<UsuariosNombrados> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
         this.ComisionUsuarios ??= new List<ComisionUsuario>();
         if(!usuariosNombrados.Any())

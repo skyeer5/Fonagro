@@ -22,14 +22,14 @@ public class ComisionCreateValidator : AbstractValidator<ComisionCreateRequest>
         RuleFor(x => x.VehiculoId)
             .NotEmpty().WithMessage("Se debe seleccionar un vehículo para la comisión.");
         
-        RuleFor(x => x.UsuariosNombrados)
+        RuleFor(x => x.UsuariosNom)
             .NotEmpty().WithMessage("La lista de usuarios no debe estar vacía.");
-        RuleFor(x=>x.UsuariosNombrados)
+        RuleFor(x=>x.UsuariosNom)
             .Must(x => x.Count(u => u.Es_Piloto == true) == 1)
             .WithMessage("Debe haber exactamente un piloto en la lista de usuarios nombrados.");
-        RuleFor(x => x.UsuariosNombrados)
+        RuleFor(x => x.UsuariosNom)
             .Must(x=>x.Count<=5 && x.Count>0).WithMessage("La lista de usuarios debe contener entre 1 y 5.");
-        RuleFor(x => x.UsuariosNombrados)
+        RuleFor(x => x.UsuariosNom)
             .Must(x => x.Select(u => u.UsuariosId).Distinct().Count() == x.Count)
             .WithMessage("No puede haber usuarios duplicados en la lista de usuarios nombrados.");
 

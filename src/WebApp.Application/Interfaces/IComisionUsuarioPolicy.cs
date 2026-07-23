@@ -4,5 +4,5 @@ namespace WebApp.Application.Interfaces;
 
 public interface IComisionUsuarioPolicy
 {
-    Task<bool> UsuariosEstanAsignadosAsync(List<Nombramiento> usuariosNombrados, CancellationToken cancellationToken);
+    Task<bool> UsuariosEstanAsignadosAsync(List<UsuariosNombrados> usuariosNombrados, CancellationToken cancellationToken);
 }
