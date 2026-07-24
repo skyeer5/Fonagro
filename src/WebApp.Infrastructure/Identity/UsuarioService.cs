@@ -61,20 +61,6 @@ public class UsuarioService : IUsuarioService
                         .Contains(request.request.Nombre)
                         );
         }
-        if(!string.IsNullOrEmpty(request.request.Puesto))
-        {
-            predicate = predicate
-                        .And(x=>x.Puesto!
-                        .Contains(request.request.Puesto)
-                        );
-        }
-        if(!string.IsNullOrEmpty(request.request.Unidad))
-        {
-            predicate = predicate
-                        .And(x=>x.Unidad!
-                        .Contains(request.request.Unidad)
-                        );
-        }
         if(!string.IsNullOrEmpty(request.request.Estado))
         {
             predicate = predicate
@@ -88,8 +74,6 @@ public class UsuarioService : IUsuarioService
                         request.request.OrderBy.ToLower() switch
                         {
                             "nombre" => user => user.Nombre_Completo!,
-                            "puesto" => user => user.Puesto!,
-                            "unidad" => user => user.Unidad!,
                             _ => user => user.Nombre_Completo!
                         };
             bool orderBy = request.request.OrderAsc.HasValue 
@@ -112,7 +96,7 @@ public class UsuarioService : IUsuarioService
     public async Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync()
     { 
         return await _userManager.Users
-            .Where(u => u.Estado == UsuarioEstados.Activo && !u.Nombramientos!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))
+            .Where(u => u.Estado == UsuarioEstados.Activo /*&& !u.UsuarioPuestos!.Any(up => up.Nombramientos!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))*/)
             .OrderBy(x=> x.Nombre_Completo)
             .Select(u => new GetUsuariosSinComisionResponse
             {

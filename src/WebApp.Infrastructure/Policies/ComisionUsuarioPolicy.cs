@@ -20,8 +20,8 @@ public class ComisionUsuarioPolicy : IComisionUsuarioPolicy
         var usuarioIds = usuariosNombrados.Select(u => u.UsuariosId).ToList();
 
         return await _context.Nombramientos.AnyAsync(u=>
-                usuarioIds.Contains(u.UsuarioId) 
-                && u.Estado == NombramientoTipos.Asignado 
+                /*usuarioIds.Contains(u.UsuarioPuesto!.UsuarioId) 
+                &&*/ u.Estado == NombramientoTipos.Asignado 
                 , cancellationToken);
     }
 }

@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 
