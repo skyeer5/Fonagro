@@ -13,6 +13,10 @@ using WebApp.Domain.Vehiculos;
 using WebApp.Domain.Viaticos;
 using WebApp.Domain.Departamentos;
 using WebApp.Domain.Municipios;
+using WebApp.Domain.Unidades;
+using WebApp.Domain.Puestos;
+using WebApp.Domain.UsuarioPuestos;
+using WebApp.Domain.NomMunicipios;
 
 namespace WebApp.Persistence;
 
@@ -51,6 +55,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<ComisionViaticos>().ToTable("comisionViaticos");
         modelBuilder.Entity<Departamento>().ToTable("departamentos");
         modelBuilder.Entity<Municipio>().ToTable("municipios");
+        modelBuilder.Entity<Unidad>().ToTable("unidadCorrelativos");
 
         // Definicion de las propiedades
         modelBuilder.Entity<GasolinaPrecio>()
@@ -111,20 +116,10 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Comision>()
-            .HasOne<AppUser>()
-            .WithMany(v=>v.Comisiones)
-            .HasForeignKey(c => c.UsuarioId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Comision>()
             .HasMany(c => c.ComisionDestinos)
             .WithOne(d => d.Comision)
             .HasForeignKey(d => d.ComisionId)
             .IsRequired();
-
-        modelBuilder.Entity<Nombramiento>()
-        .HasKey(x=> new { x.ComisionId, x.UsuarioId });
 
         modelBuilder.Entity<Nombramiento>()
             .HasOne(cu => cu.Comision)
@@ -133,20 +128,13 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Nombramiento>()
-            .HasOne<AppUser>()
-            .WithMany(v => v.Nombramientos)
-            .HasForeignKey(cu => cu.UsuarioId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
-
         modelBuilder.Entity<ComisionViaticos>()
             .HasKey(x=>x.ComisionViaticosId);
 
         modelBuilder.Entity<ComisionViaticos>()
-            .HasOne(cv => cv.Nombramientos)
+            .HasOne(cv => cv.Nombramiento)
             .WithMany(cu => cu.ComisionViaticosList)
-            .HasForeignKey(cv => new { cv.ComisionId, cv.UsuarioId })
+            .HasForeignKey(cv => cv.NombramientoId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -162,6 +150,51 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(m => m.DepartamentoId)
             .IsRequired();
 
+        modelBuilder.Entity<Unidad>()
+            .HasKey(x => x.UnidadId);
+        
+        modelBuilder.Entity<Unidad>()
+            .HasMany(u => u.Puestos)
+            .WithOne(p => p.Unidad)
+            .HasForeignKey(p => p.UnidadId)
+            .IsRequired();
+        
+        modelBuilder.Entity<UsuarioPuesto>()
+            .HasOne(up => up.Puesto)
+            .WithMany(p => p.UsuarioPuestos)
+            .HasForeignKey(up => up.PuestoId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<UsuarioPuesto>()
+            .HasOne<AppUser>()
+            .WithMany(u => u.UsuarioPuestos)
+            .HasForeignKey(up => up.UsuarioId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<UsuarioPuesto>()
+            .HasMany(up => up.Nombramientos)
+            .WithOne(n => n.UsuarioPuesto)
+            .HasForeignKey(n => n.UsuarioPuestoId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<NomMunicipio>()
+            .HasOne(nm => nm.Nombramiento)
+            .WithMany(n => n.NomMunicipios)
+            .HasForeignKey(nm => nm.NombramientoId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<NomMunicipio>()
+            .HasOne(nm => nm.Municipio)
+            .WithMany(m => m.NomMunicipios)
+            .HasForeignKey(nm => nm.MunicipioId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        
         // Carga de datos iniciales de seguridad
         CargarDataSeguridad(modelBuilder);
     }

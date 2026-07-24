@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using WebApp.Domain;
+using WebApp.Domain.UsuarioPuestos;
 using WebApp.Domain.Usuarios;
-using WebApp.Domain.Comisiones;
-using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Persistence.Models;
 
@@ -11,13 +10,10 @@ public class AppUser : IdentityUser<int>
 {
     public string? Nombre_Completo { get; set; }
     public string? NIT { get; set; }
-    public string? Puesto { get; set; }
-    public string? Unidad { get; set; }
     public string? Tipo_Servicios{ get; set; }
     public string? Numero_Contrato { get; set; }
     public string? Estado { get; set; }
-    public ICollection<Comision>? Comisiones { get; set; }
-    public ICollection<Nombramiento>? Nombramientos { get; set; }
+    public ICollection<UsuarioPuesto>? UsuarioPuestos { get; set; }
 
     public static AppUser Crear(string nombreCompleto, string nit, string puesto, string unidad, string tipoServicios, string numeroContrato, string email)
     {
@@ -25,8 +21,6 @@ public class AppUser : IdentityUser<int>
         {
             Nombre_Completo = nombreCompleto.ToUpper(),
             NIT = nit.ToUpper().Replace("-", "").Replace(" ", ""),
-            Puesto = DefinirPuesto(puesto, unidad),
-            Unidad = unidad.ToUpper(),
             Tipo_Servicios = tipoServicios.ToUpper(),
             Numero_Contrato = numeroContrato,
             Estado = UsuarioEstados.PendientePrimerAcceso,

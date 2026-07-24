@@ -9,13 +9,12 @@ public class ComisionViaticos
     public decimal Monto_Unitario_Usado { get; set; }
     public decimal Monto_Total { get; set; }
     public DateTime Fecha {get;set;} 
-    public int ComisionId { get; set; }
-    public int UsuarioId { get; set; }
-    public Nombramiento? Nombramientos { get; set; }
+    public int NombramientoId { get; set; }
+    public Nombramiento? Nombramiento { get; set; }
     public int ViaticoId { get; set; }
     public Viatico? Viatico { get; set; }
 
-    public static ComisionViaticos Crear(int cantidad, decimal precio_usado, DateTime fecha, int viaticoId, int comisionId)
+    public static ComisionViaticos Crear(int cantidad, decimal precio_usado, DateTime fecha, int viaticoId, int nombramientoId)
     {
         return new ComisionViaticos
         {
@@ -23,7 +22,7 @@ public class ComisionViaticos
             Monto_Unitario_Usado = precio_usado,
             Monto_Total = precio_usado * cantidad,
             Fecha = fecha,
-            ComisionId = comisionId,
+            NombramientoId = nombramientoId,
             ViaticoId = viaticoId
         };
     }
