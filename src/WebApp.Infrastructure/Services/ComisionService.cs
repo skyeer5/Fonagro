@@ -11,7 +11,8 @@ using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain.Nombramientos;using WebApp.Domain.Gasolinas;
+using WebApp.Domain.Nombramientos;
+using WebApp.Domain.Gasolinas;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 
@@ -39,30 +40,31 @@ public class ComisionService : IComisionService
                 .Where(c => 
                     c.Estado!= ComisionEstados.Cancelada 
                     && c.Estado != ComisionEstados.Completada 
-                    && c.Nombramientos! 
-                    .Any(cu => cu.UsuarioId == userId && cu.Estado != NombramientoTipos.Cancelada && cu.Estado !=NombramientoTipos.Completada))
+                    /*&& c.Nombramientos! 
+                    .Any(cu => cu.UsuarioId == userId && cu.Estado != NombramientoTipos.Cancelada && cu.Estado !=NombramientoTipos.Completada)*/)
                 .Select(c => new GetComisionActivaResponse
                 {
                     id = c.ComisionId,
-                    Departamento = c.Departamento,
+                    // Departamento = c.Departamento,
                     Fecha_Salida = c.Fecha_Salida,
                     Fecha_Regreso = c.Fecha_Regreso,
                     Estado = c.Estado,
-                    Descripcion = c.Nombramientos!
-                        .First(cu => cu.UsuarioId == userId).Descripcion,
-                    Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
-                    Nombramiento = c.Nombramientos!
-                        .First(cu => cu.UsuarioId == userId).Num_Nombramiento,
+                    // Descripcion = c.Comision!
+                    //     .First(cu => cu.UsuarioId == userId).Descripcion,
+                    // Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
+                    // Nombramiento = c.Nombramientos!
+                    //     .First(cu => cu.UsuarioId == userId).Num_Nombramiento,
 
-                    Piloto = c.Nombramientos!
-                        .First(cu => cu.UsuarioId == userId).Es_Piloto,
-                    Destinos = c.ComisionDestinos!
-                                    .Select( x=> new GetComisionDestinosResponse
-                                    {
-                                        id = x.ComisionDestinoId,
-                                        descripcion =x.Descripcion,
-                                        kilometros = x.Kilometros
-                                    }).ToList()
+                    // Piloto = c.Nombramientos!
+                    //     .First(cu => cu.UsuarioId == userId).Es_Piloto,
+                    // Destinos = c.ComisionDestinos!
+                    //                 .Select( x=> new GetComisionDestinosResponse
+                    //                 {
+                    //                     id = x.ComisionDestinoId,
+                    //                     descripcion =x.Descripcion,
+                    //                     kilometros = x.Kilometros
+                    //                 }
+                    
                 })
                 .FirstOrDefaultAsync();
 
@@ -100,23 +102,23 @@ public class ComisionService : IComisionService
                 Departamento = p.Departamento,
                 Fecha_Salida = p.Fecha_Salida,
                 Fecha_Regreso = p.Fecha_Regreso,
-                Descripcion = p.Nombramientos!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
+                // Descripcion = p.Nombramientos!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
                 TotalCombustibleAutorizado = p.Presupuesto_Combustible_Aprobado,
                 Es_Gasolina = p.Vehiculo!.Gasolina!.Nombre != GasolinaTipos.Disel ? true : false,
                 Precio_Galon = p.Vehiculo!.Gasolina!.GasolinaPrecios!
                     .OrderByDescending(gp => gp.Fecha)
                     .Select(gp => gp.Precio)
                     .FirstOrDefault(),
-                Viaticos = p.Nombramientos!
-                    .Where(cu => cu.UsuarioId == idUsuario)
-                    .SelectMany(cu => cu.ComisionViaticosList!)
-                    .Select(v => new GetComisionViaticoResponse
-                    {
-                        Tipo_viatico = v.Viatico!.Nombre,
-                        Monto = v.Viatico.Monto,
-                        Fecha = DateOnly.FromDateTime(v.Fecha)
-                    })
-                    .ToList(),
+                // Viaticos = p.Nombramientos!
+                //     .Where(cu => cu.UsuarioId == idUsuario)
+                //     .SelectMany(cu => cu.ComisionViaticosList!)
+                //     .Select(v => new GetComisionViaticoResponse
+                //     {
+                //         Tipo_viatico = v.Viatico!.Nombre,
+                //         Monto = v.Viatico.Monto,
+                //         Fecha = DateOnly.FromDateTime(v.Fecha)
+                //     })
+                //     .ToList(),
                 Destinos = p.ComisionDestinos!
                     .Select(d => new GetComisionDestinosDetailResponse
                     {

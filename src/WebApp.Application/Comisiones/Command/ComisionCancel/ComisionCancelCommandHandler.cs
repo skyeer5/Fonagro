@@ -6,12 +6,10 @@ using static WebApp.Application.Comisiones.Command.ComisionCancel.ComisionCancel
 namespace WebApp.Application.Comisiones.Command.ComisionCancel;
 public class ComisionCancelCommandHandler : IRequestHandler<ComisionCancelCommandRequest, Result<int>>
 {
-    private readonly IComisionService _comisionService;
     private readonly IComisionRepository _comisionRepository;
 
     public ComisionCancelCommandHandler(IComisionService comisionService, IComisionRepository comisionRepository)
     {
-        _comisionService = comisionService;
         _comisionRepository = comisionRepository;
     }
 

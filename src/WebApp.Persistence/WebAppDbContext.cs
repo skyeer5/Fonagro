@@ -36,7 +36,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<ComisionViaticos> ComisionViaticos { get; set; }
     public DbSet<Departamento> Departamentos { get; set; }
     public DbSet<Municipio> Municipios { get; set; }
-
+    public DbSet<UsuarioPuesto> AsignacionesUsuarios { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
     }
@@ -55,7 +56,10 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<ComisionViaticos>().ToTable("comisionViaticos");
         modelBuilder.Entity<Departamento>().ToTable("departamentos");
         modelBuilder.Entity<Municipio>().ToTable("municipios");
-        modelBuilder.Entity<Unidad>().ToTable("unidadCorrelativos");
+        modelBuilder.Entity<Unidad>().ToTable("unidades");
+        modelBuilder.Entity<Puesto>().ToTable("puestos");
+        modelBuilder.Entity<UsuarioPuesto>().ToTable("asignacionUsuarios");
+        modelBuilder.Entity<NomMunicipio>().ToTable("nombramientoMunicipios");
 
         // Definicion de las propiedades
         modelBuilder.Entity<GasolinaPrecio>()
@@ -193,7 +197,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(nm => nm.MunicipioId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
-
+        modelBuilder.Entity<NomMunicipio>()
+            .HasKey(nm => new { nm.NombramientoId, nm.MunicipioId });
         
         // Carga de datos iniciales de seguridad
         CargarDataSeguridad(modelBuilder);

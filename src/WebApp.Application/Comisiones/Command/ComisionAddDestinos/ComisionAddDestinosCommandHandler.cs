@@ -1,7 +1,6 @@
 using MediatR;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
 
 namespace WebApp.Application.Comisiones.Command.ComisionAddDestinos;

@@ -29,12 +29,13 @@ builder.Services.AddScoped<IComisionUsuarioPolicy, ComisionUsuarioPolicy>();
 builder.Services.AddScoped<IViaticosService, ViaticosService>();
 builder.Services.AddScoped<IComisionService, ComisionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
-builder.Services.AddScoped<IComisionUsuarioService, ComisionUsuarioService>();
+builder.Services.AddScoped<INombramientoService, NombramientoService>();
 builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGasolinaPrecioRepository, GasolinaPrecioRepository>();
 builder.Services.AddScoped<IBackgroundJob, ComisionEstadoJob>();
 builder.Services.AddScoped<ILocacionesService, LocacionesService>();
+builder.Services.AddScoped<IAsignacionUsuarioService, AsignacionUsuarioService>();
 builder.Services.AddHostedService<SchedulerService>();
 
 

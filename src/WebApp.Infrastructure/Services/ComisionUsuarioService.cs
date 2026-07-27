@@ -5,27 +5,32 @@ using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Services;
 
-public class ComisionUsuarioService : IComisionUsuarioService
+public class NombramientoService : INombramientoService
 {
     private readonly WebAppDbContext _context;
     private readonly ICurrentUser _currentUser;
+    private readonly IAsignacionUsuarioService _asignacionUsuarioService;
 
-    public ComisionUsuarioService(WebAppDbContext context, ICurrentUser currentUser)
+    public NombramientoService(WebAppDbContext context, ICurrentUser currentUser, IAsignacionUsuarioService asignacionUsuarioService)
     {
         _context = context;
         _currentUser = currentUser;
+        _asignacionUsuarioService = asignacionUsuarioService;
     }
 
-    public async Task<Nombramiento?> GetCUByIdComisionAndUsuarioIdAsync(int comisionId, CancellationToken cancellationToken)
+    public async Task<Nombramiento?> GetNMByIdComisionAndUsuarioIdAsync(int comisionId, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
-        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioId == userId)
+        var usuarioPuestoId = await _asignacionUsuarioService.GetAsignacionUsuarioIdByUsuarioIdAsync(userId, cancellationToken);
+        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioPuestoId == usuarioPuestoId)
                                         .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<string?> GetDescripcionAsync(int comisionId, int usuarioId, CancellationToken cancellationToken)
     {
-        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioId == usuarioId)
+        var usuarioPuestoId = await _asignacionUsuarioService.GetAsignacionUsuarioIdByUsuarioIdAsync(usuarioId, cancellationToken);
+
+        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioPuestoId == usuarioPuestoId)
                                         .Select(cu => cu.Descripcion)
                                         .FirstOrDefaultAsync(cancellationToken);
     }

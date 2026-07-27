@@ -56,8 +56,6 @@ public class UsuarioController : Controller
         var request = new GetUsuariosActivosDetalleRequest
         {
             Nombre = nombre,
-            Puesto = puesto,
-            Unidad = unidad,
             Estado = estado,
             PageNumber = currentPage,
             OrderBy = orderBy
