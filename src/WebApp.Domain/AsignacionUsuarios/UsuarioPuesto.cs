@@ -1,7 +1,7 @@
 using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Puestos;
 
-namespace WebApp.Domain.UsuarioPuestos;
+namespace WebApp.Domain.AsignacionUsuarios;
 public class AsignacionUsuario : AuditableEntity
 {
     public int AsignacionUsuarioId { get; set; }

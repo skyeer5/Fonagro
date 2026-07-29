@@ -1,5 +1,5 @@
 using WebApp.Domain.Unidades;
-using WebApp.Domain.UsuarioPuestos;
+using WebApp.Domain.AsignacionUsuarios;
 
 namespace WebApp.Domain.Puestos;
 public sealed class Puesto
@@ -8,5 +8,5 @@ public sealed class Puesto
     public string? Nombre { get; set; }
     public int UnidadId { get; set; }
     public Unidad? Unidad { get; set; }
-    public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; }
+    public ICollection<AsignacionUsuario>? AsignacionUsuarios { get; set; }
 }

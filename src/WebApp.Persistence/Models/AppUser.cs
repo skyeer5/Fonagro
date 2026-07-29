@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using WebApp.Domain;
-using WebApp.Domain.UsuarioPuestos;
+using WebApp.Domain.AsignacionUsuarios;
 using WebApp.Domain.Usuarios;
 
 namespace WebApp.Persistence.Models;

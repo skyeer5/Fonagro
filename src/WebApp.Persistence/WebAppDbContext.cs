@@ -15,7 +15,7 @@ using WebApp.Domain.Departamentos;
 using WebApp.Domain.Municipios;
 using WebApp.Domain.Unidades;
 using WebApp.Domain.Puestos;
-using WebApp.Domain.UsuarioPuestos;
+using WebApp.Domain.AsignacionUsuarios;
 using WebApp.Domain.NomMunicipios;
 
 namespace WebApp.Persistence;
@@ -118,7 +118,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasOne(c => c.Vehiculo)
             .WithMany(v => v.Comisiones)
             .HasForeignKey(c => c.VehiculoId)
-            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Comision>()
@@ -167,7 +166,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         
         modelBuilder.Entity<AsignacionUsuario>()
             .HasOne(up => up.Puesto)
-            .WithMany(p => p.UsuarioPuestos)
+            .WithMany(p => p.AsignacionUsuarios)
             .HasForeignKey(up => up.PuestoId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
@@ -199,6 +198,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(nm => nm.MunicipioId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<NomMunicipio>()
             .HasKey(nm => new { nm.NombramientoId, nm.MunicipioId });
         

@@ -2,7 +2,7 @@ namespace WebApp.Domain.Nombramientos;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionesViaticos;
 using WebApp.Domain.NomMunicipios;
-using WebApp.Domain.UsuarioPuestos;
+using WebApp.Domain.AsignacionUsuarios;
 using WebApp.Domain.Viaticos;
 
 public class Nombramiento : AuditableEntity
