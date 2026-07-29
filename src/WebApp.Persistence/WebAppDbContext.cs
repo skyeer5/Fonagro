@@ -36,7 +36,9 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
     public DbSet<ComisionViaticos> ComisionViaticos { get; set; }
     public DbSet<Departamento> Departamentos { get; set; }
     public DbSet<Municipio> Municipios { get; set; }
-    public DbSet<UsuarioPuesto> AsignacionesUsuarios { get; set; }
+    public DbSet<AsignacionUsuario> AsignacionesUsuarios { get; set; }
+    public DbSet<Unidad> Unidades { get; set; }
+    public DbSet<Puesto> Puestos { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -58,7 +60,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<Municipio>().ToTable("municipios");
         modelBuilder.Entity<Unidad>().ToTable("unidades");
         modelBuilder.Entity<Puesto>().ToTable("puestos");
-        modelBuilder.Entity<UsuarioPuesto>().ToTable("asignacionUsuarios");
+        modelBuilder.Entity<AsignacionUsuario>().ToTable("asignacionUsuarios");
         modelBuilder.Entity<NomMunicipio>().ToTable("nombramientoMunicipios");
 
         // Definicion de las propiedades
@@ -163,21 +165,21 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(p => p.UnidadId)
             .IsRequired();
         
-        modelBuilder.Entity<UsuarioPuesto>()
+        modelBuilder.Entity<AsignacionUsuario>()
             .HasOne(up => up.Puesto)
             .WithMany(p => p.UsuarioPuestos)
             .HasForeignKey(up => up.PuestoId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<UsuarioPuesto>()
+        modelBuilder.Entity<AsignacionUsuario>()
             .HasOne<AppUser>()
             .WithMany(u => u.UsuarioPuestos)
             .HasForeignKey(up => up.UsuarioId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<UsuarioPuesto>()
+        modelBuilder.Entity<AsignacionUsuario>()
             .HasMany(up => up.Nombramientos)
             .WithOne(n => n.UsuarioPuesto)
             .HasForeignKey(n => n.UsuarioPuestoId)

@@ -8,5 +8,5 @@ public sealed class Puesto
     public string? Nombre { get; set; }
     public int UnidadId { get; set; }
     public Unidad? Unidad { get; set; }
-    public ICollection<UsuarioPuesto>? UsuarioPuestos { get; set; }
+    public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; }
 }

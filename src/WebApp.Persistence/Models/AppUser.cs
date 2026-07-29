@@ -13,7 +13,7 @@ public class AppUser : IdentityUser<int>
     public string? Tipo_Servicios{ get; set; }
     public string? Numero_Contrato { get; set; }
     public string? Estado { get; set; }
-    public ICollection<UsuarioPuesto>? UsuarioPuestos { get; set; }
+    public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; }
 
     public static AppUser Crear(string nombreCompleto, string nit, string puesto, string unidad, string tipoServicios, string numeroContrato, string email)
     {

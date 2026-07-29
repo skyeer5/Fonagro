@@ -2,9 +2,9 @@ using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Puestos;
 
 namespace WebApp.Domain.UsuarioPuestos;
-public class UsuarioPuesto : AuditableEntity
+public class AsignacionUsuario : AuditableEntity
 {
-    public int UsuarioPuestoId { get; set; }
+    public int AsignacionUsuarioId { get; set; }
     public int UsuarioId { get; set; }
     public int PuestoId { get; set; }
     public Puesto? Puesto { get; set; }

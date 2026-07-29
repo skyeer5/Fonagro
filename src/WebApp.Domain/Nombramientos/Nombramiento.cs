@@ -16,7 +16,7 @@ public class Nombramiento : AuditableEntity
     public bool Es_Piloto { get; set; }
     public string? Estado { get; set; }
     public int UsuarioPuestoId { get; set; } 
-    public UsuarioPuesto? UsuarioPuesto { get; set; }
+    public AsignacionUsuario? UsuarioPuesto { get; set; }
     public int ComisionId { get; set; }
     public Comision? Comision { get; set; }
     public ICollection<NomMunicipio>? NomMunicipios { get; set; }

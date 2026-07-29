@@ -14,8 +14,10 @@ public class Comision : AuditableEntity
     public decimal Presupuesto_Combustible_Estimado { get; set; }
     public int UsuarioId_Aprobador_Combustible { get; set; }
     public decimal Presupuesto_Combustible_Aprobado { get; set; }
+    public DateTime? Fecha {get; set; }
     public string? Estado { get; set; }
-    public int UsuarioId { get; set; }
+    public int Usuario_Piloto { get; set; }
+    public int Usuario_Creador_Comision { get; set; }
     public int VehiculoId { get; set; } 
     public Vehiculo? Vehiculo { get; set; }
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
@@ -36,12 +38,13 @@ public class Comision : AuditableEntity
             Fecha_Regreso = fecha_Regreso,
             Precio_Galon_Usado = gasolinaPrecio,
             VehiculoId = vehiculoId,
+            Fecha = DateTime.Now,
             Estado = ComisionEstados.Creada
         };
     }
     public void AgregarCreadoPor(int usuarioId)
     {
-        this.UsuarioId = usuarioId;
+        this.Usuario_Creador_Comision = usuarioId;
         this.Creado_Por = usuarioId;
         this.Fecha_Creacion = DateTime.Now;
     }

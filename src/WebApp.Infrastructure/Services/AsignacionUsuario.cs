@@ -19,6 +19,6 @@ public class AsignacionUsuarioService : IAsignacionUsuarioService
             .Where(au => au.UsuarioId == usuarioId && au.Fecha_Desasignacion == null)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return asignacionUsuario?.UsuarioPuestoId;
+        return asignacionUsuario?.AsignacionUsuarioId;
     }
 }
