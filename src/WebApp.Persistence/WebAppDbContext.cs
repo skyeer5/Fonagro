@@ -73,7 +73,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasPrecision(18, 2);
 
         modelBuilder.Entity<Comision>()
-            .Property(c => c.Precio_Galon_Usado)
+            .Property(c => c.Precio_Gasolina_Usado)
             .HasPrecision(18, 2);
         modelBuilder.Entity<Comision>()
             .Property(c => c.Galon_Estimado)

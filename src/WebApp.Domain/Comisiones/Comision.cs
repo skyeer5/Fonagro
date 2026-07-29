@@ -9,11 +9,13 @@ public class Comision : AuditableEntity
     public string? Departamento { get; set; } //
     public DateTime Fecha_Salida { get; set; } //
     public DateTime Fecha_Regreso { get; set; } //
-    public decimal Precio_Galon_Usado { get; set; }
+    public decimal Precio_Gasolina_Usado { get; set; }
     public decimal Galon_Estimado { get; set; }
     public decimal Presupuesto_Combustible_Estimado { get; set; }
     public int UsuarioId_Aprobador_Combustible { get; set; }
     public decimal Presupuesto_Combustible_Aprobado { get; set; }
+    public decimal Kilometraje_Inicial { get; set; }
+    public decimal Kilometraje_Final { get; set; }
     public DateTime? Fecha {get; set; }
     public string? Estado { get; set; }
     public int Usuario_Piloto { get; set; }
@@ -36,7 +38,7 @@ public class Comision : AuditableEntity
             Departamento = departamento.Any() ? string.Join(", ", departamento.OrderBy(x => x)) : null,
             Fecha_Salida = fecha_Salida,
             Fecha_Regreso = fecha_Regreso,
-            Precio_Galon_Usado = gasolinaPrecio,
+            Precio_Gasolina_Usado = gasolinaPrecio,
             VehiculoId = vehiculoId,
             Fecha = DateTime.Now,
             Estado = ComisionEstados.Creada
@@ -83,7 +85,7 @@ public class Comision : AuditableEntity
             this.ComisionDestinos.Add(destino);
         }
         this.Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
-        this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Galon_Usado, Galon_Estimado);
+        this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Gasolina_Usado, Galon_Estimado);
         this.Estado = ComisionEstados.DestinosDefinidos;
 
     }

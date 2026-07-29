@@ -13,7 +13,6 @@ public class Vehiculo : AuditableEntity
     public string? Color { get; set; }
     public string? Cilindraje { get; set;}
     public int ConsumoKmPorGalon { get; set; }
-    public double Kilometraje { get; set; }
     public string? Estado { get; set; }
     public Gasolina? Gasolina { get; set; }
     public int? GasolinaId { get; set; }
@@ -68,7 +67,6 @@ public class Vehiculo : AuditableEntity
             Color = color,
             Cilindraje = cilindraje,
             ConsumoKmPorGalon = consumo,
-            Kilometraje = kilometraje,
             GasolinaId = gasolinaId,
             Estado = VehiculoEstados.Disponible,
             Fecha_Creacion = DateTime.Now
