@@ -8,7 +8,8 @@ namespace WebApp.Persistence.Models;
 
 public class AppUser : IdentityUser<int>
 {
-    public string? Nombre_Completo { get; set; }
+    public string? Nombres { get; set; }
+    public string? Apellidos { get; set; }
     public string? NIT { get; set; }
     public string? Tipo_Servicios{ get; set; }
     public string? Numero_Contrato { get; set; }
@@ -19,7 +20,7 @@ public class AppUser : IdentityUser<int>
     {
         return new AppUser
         {
-            Nombre_Completo = nombreCompleto.ToUpper(),
+            Nombres = nombreCompleto.ToUpper(),
             NIT = nit.ToUpper().Replace("-", "").Replace(" ", ""),
             Tipo_Servicios = tipoServicios.ToUpper(),
             Numero_Contrato = numeroContrato,

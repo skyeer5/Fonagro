@@ -34,7 +34,7 @@ public static class DataSeed
             {
                 var userAdmin = new AppUser
                 {
-                    Nombre_Completo = "Encargado de Sistemas",
+                    Nombres = "Encargado de Sistemas",
                     UserName = RolesTipos.Administrador,
                     Email = "soporte.ti@fonagro.gob.gt",
                     NIT = "117752649"

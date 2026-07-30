@@ -32,7 +32,7 @@ public class UsuarioService : IUsuarioService
     public async Task<string?> GetNombreUsuarioAsync(int usuarioId)
     {
         return await _userManager.Users.Where(u => u.Id == usuarioId)
-            .Select(u => u.Nombre_Completo)
+            .Select(u => u.Nombres)
             .FirstOrDefaultAsync();
     }
 
@@ -43,7 +43,7 @@ public class UsuarioService : IUsuarioService
             .Select(u => new GetUsuariosActivosResponse
             {
                 Id = u.Id,
-                Nombre_Completo = u.Nombre_Completo
+                Nombre_Completo = u.Nombres
             })
             .ToListAsync();
     }
@@ -57,7 +57,7 @@ public class UsuarioService : IUsuarioService
         if(!string.IsNullOrEmpty(request.request.Nombre))
         {
             predicate = predicate
-                        .And(x=>x.Nombre_Completo!
+                        .And(x=>x.Nombres!
                         .Contains(request.request.Nombre)
                         );
         }
@@ -73,8 +73,8 @@ public class UsuarioService : IUsuarioService
             Expression<Func<AppUser, object>> orderBySelector = 
                         request.request.OrderBy.ToLower() switch
                         {
-                            "nombre" => user => user.Nombre_Completo!,
-                            _ => user => user.Nombre_Completo!
+                            "nombre" => user => user.Nombres!,
+                            _ => user => user.Nombres!
                         };
             bool orderBy = request.request.OrderAsc.HasValue 
                             ? request.request.OrderAsc.Value :
@@ -97,11 +97,11 @@ public class UsuarioService : IUsuarioService
     { 
         return await _userManager.Users
             .Where(u => u.Estado == UsuarioEstados.Activo /*&& !u.UsuarioPuestos!.Any(up => up.Nombramientos!.Any(cu => cu.Comision!.Estado != ComisionEstados.Completada && cu.Comision.Estado != ComisionEstados.Cancelada))*/)
-            .OrderBy(x=> x.Nombre_Completo)
+            .OrderBy(x=> x.Nombres)
             .Select(u => new GetUsuariosSinComisionResponse
             {
                 Id = u.Id,
-                Nombre_Completo = u.Nombre_Completo
+                Nombre_Completo = u.Nombres
             })
             .ToListAsync();
     }

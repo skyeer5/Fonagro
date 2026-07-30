@@ -1,4 +1,4 @@
-@model WebApp.Application.Usuarios.Commands.UsuarioCreate.UsuarioCreateRequest;
+@model WebApp.Web.Models.Usuarios.UsuarioCreateViewModel;
 
 @{
     ViewData["Title"] = "Crear Usuario";
@@ -21,6 +21,16 @@
         </div>
 
         <div class="col">
+            <label asp-for="Unidad" class="form-label">Unidad</label>
+            <select asp-for="Unidad"
+                asp-items="Model.Unidades"
+                class="form-select">
+                <option value="">Seleccione...</option>
+            </select>
+            <span asp-validation-for="Unidad" class="text-danger"></span>
+        </div>
+
+        @* <div class="col">
             <label class="form-label">Puesto</label>
             <select id="puestoSelect" class="form-control" required>
                 <option value="">Seleccionar puesto</option>
@@ -40,29 +50,18 @@
 
         <input type="hidden" asp-for="Puesto" id="valorFinal" />
 
-        <div class="col">
-            <label asp-for="Unidad" class="form-label">Unidad</label>
-            <select asp-for="Unidad" id="unidadSelect" class="form-control" required>
-                <option value="">Seleccionar unidad</option>
-                @foreach (var unidad in ViewBag.Unidades)
-                {
-                    <option value="@unidad">@unidad</option>
-                }
-            </select>
-            <span asp-validation-for="Unidad" class="text-danger"></span>
-        </div>
+ *@
 
         <div class="col">
-            <label asp-for="Tipo_Servicios" class="form-label">Tipo de servicios</label>
-            <select asp-for="Tipo_Servicios" id="tipoServiciosSelect" class="form-control" required>
-                <option value="">Seleccionar tipo de servicio</option>
-                @foreach (var tipo in ViewBag.TipoServicios)
-                {
-                    <option value="@tipo">@tipo</option>
-                }
+            <label asp-for="Tipo_Servicios" class="form-label">Tipo de Servicios</label>
+            <select asp-for="Tipo_Servicios"
+                asp-items="Model.TipoServicios"
+                class="form-select">
+                <option value="">Seleccione...</option>
             </select>
             <span asp-validation-for="Tipo_Servicios" class="text-danger"></span>
         </div>
+
 
         <div class="col">
             <label asp-for="Numero_Contrato" class="form-label">Número de contrato</label>
@@ -99,76 +98,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-<script>
-    var puestoSelect = document.getElementById("puestoSelect");
-    var personaDiv = document.getElementById("personaDiv");
-    var personaSelect = document.getElementById("personaSelect");
-    var valorFinal = document.getElementById("valorFinal");
-
-    puestoSelect.addEventListener("change", function () {
-        var valor = this.value.toLowerCase();
-        personaSelect.innerHTML = ""; // limpiar opciones previas
-
-        if (valor === "encargado") {
-            personaDiv.style.display = "block";
-
-            // Opción por defecto
-            var defaultOpt = document.createElement("option");
-            defaultOpt.value = "";
-            defaultOpt.text = "Seleccione un puesto";
-            defaultOpt.selected = true;
-            defaultOpt.disabled = true;
-            personaSelect.appendChild(defaultOpt);
-
-            var encargados = [
-                @foreach (var e in ViewBag.Encargados)
-                {
-                    @: "@e",
-                }
-            ];
-            encargados.forEach(function (nombre) {
-                var opt = document.createElement("option");
-                opt.value = nombre;
-                opt.text = nombre;
-                personaSelect.appendChild(opt);
-            });
-
-            personaSelect.addEventListener("change", function () {
-                valorFinal.value = this.value; // se envía la persona
-            });
-
-        } else if (valor === "auxiliar") {
-            personaDiv.style.display = "block";
-
-            // Opción por defecto
-            var defaultOpt = document.createElement("option");
-            defaultOpt.value = "";
-            defaultOpt.text = "Seleccione un puesto";
-            defaultOpt.selected = true;
-            defaultOpt.disabled = true;
-            personaSelect.appendChild(defaultOpt);
-
-            var auxiliares = [
-                @foreach (var a in ViewBag.Auxiliares)
-                {
-                    @: "@a",
-                }
-            ];
-            auxiliares.forEach(function (nombre) {
-                var opt = document.createElement("option");
-                opt.value = nombre;
-                opt.text = nombre;
-                personaSelect.appendChild(opt);
-            });
-
-            personaSelect.addEventListener("change", function () {
-                valorFinal.value = this.value; // se envía la persona
-            });
-        } else {
-            personaDiv.style.display = "none";
-            valorFinal.value = this.value;
-        }
-    });
-</script>
-
 }
