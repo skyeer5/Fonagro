@@ -84,6 +84,12 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<Comision>()
             .Property(c => c.Presupuesto_Combustible_Aprobado)
             .HasPrecision(18, 2);
+        modelBuilder.Entity<Comision>()
+            .Property(cv => cv.Kilometraje_Inicial)
+            .HasPrecision(18, 2);
+        modelBuilder.Entity<Comision>()
+            .Property(cv => cv.Kilometraje_Final)
+            .HasPrecision(18, 2);
 
         modelBuilder.Entity<ComisionDestino>()
             .Property(c => c.Kilometros)
@@ -180,8 +186,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
 
         modelBuilder.Entity<AsignacionUsuario>()
             .HasMany(up => up.Nombramientos)
-            .WithOne(n => n.UsuarioPuesto)
-            .HasForeignKey(n => n.UsuarioPuestoId)
+            .WithOne(n => n.AsignacionUsuario)
+            .HasForeignKey(n => n.AsignacionUsuarioId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 

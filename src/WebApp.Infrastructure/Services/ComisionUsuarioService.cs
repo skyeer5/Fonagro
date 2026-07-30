@@ -22,7 +22,7 @@ public class NombramientoService : INombramientoService
     {
         var userId = _currentUser.userId;
         var usuarioPuestoId = await _asignacionUsuarioService.GetAsignacionUsuarioIdByUsuarioIdAsync(userId, cancellationToken);
-        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioPuestoId == usuarioPuestoId)
+        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.AsignacionUsuarioId == usuarioPuestoId)
                                         .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -30,7 +30,7 @@ public class NombramientoService : INombramientoService
     {
         var usuarioPuestoId = await _asignacionUsuarioService.GetAsignacionUsuarioIdByUsuarioIdAsync(usuarioId, cancellationToken);
 
-        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.UsuarioPuestoId == usuarioPuestoId)
+        return await _context.Nombramientos!.Where(cu=>cu.ComisionId == comisionId && cu.AsignacionUsuarioId == usuarioPuestoId)
                                         .Select(cu => cu.Descripcion)
                                         .FirstOrDefaultAsync(cancellationToken);
     }

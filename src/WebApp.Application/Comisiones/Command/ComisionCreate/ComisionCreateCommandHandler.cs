@@ -11,7 +11,6 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
 {
     private readonly IGasolinaPrecioService _gasolinaPrecioService;
     private readonly IVehiculoService _vehiculoService;
-    private readonly IUsuarioService _usuarioService;
     private readonly IComisionRepository _comisionRepository;
     private readonly IComisionUsuarioPolicy _comisionUsuarioPolicy;
     private readonly IViaticosService _viaticosService;
@@ -20,7 +19,6 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
     {
         _gasolinaPrecioService = gasolinaPrecioService;
         _vehiculoService = vehiculoService;
-        _usuarioService = usuarioService;
         _comisionRepository = comisionRepository;
         _comisionUsuarioPolicy = comisionUsuarioPolicy;
         _viaticosService = viaticosService;

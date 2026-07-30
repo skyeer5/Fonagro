@@ -15,8 +15,8 @@ public class Nombramiento : AuditableEntity
     public string? Descripcion { get; set; } // Para el Plan de Viaje
     public bool Es_Piloto { get; set; }
     public string? Estado { get; set; }
-    public int UsuarioPuestoId { get; set; } 
-    public AsignacionUsuario? UsuarioPuesto { get; set; }
+    public int AsignacionUsuarioId { get; set; } 
+    public AsignacionUsuario? AsignacionUsuario { get; set; }
     public int ComisionId { get; set; }
     public Comision? Comision { get; set; }
     public ICollection<NomMunicipio>? NomMunicipios { get; set; }
