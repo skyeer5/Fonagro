@@ -1,21 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WebApp.Domain.Usuarios;
 
-public static class UsuarioEstados
+public enum UsuarioEstados
 {
-    public const string PendientePrimerAcceso = "Pendiente Primer Acceso";
-    public const string Activo = "Activo";
-    public const string Suspendido = "Suspendido";
-    public const string Baja = "Baja";
-    public const string EnComision = "En comisión";
-    public static List<string> GetEstados()
-    {
-        return new List<string>
-        {
-            PendientePrimerAcceso,
-            Activo,
-            Suspendido,
-            EnComision,
-            Baja
-        };
-    }
+    [Display(Name = "Pendiente Primer Acceso")]
+    PendientePrimerAcceso = 1,
+    [Display(Name = "Activo")]
+    Activo = 2,
+    [Display(Name = "Suspendido")]
+    Suspendido = 3,
+    [Display(Name = "Baja")]
+    Baja = 4,
+    [Display(Name = "En Comisión")]
+    EnComision = 5,
+
 }

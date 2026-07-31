@@ -47,14 +47,14 @@ public class UsuarioController : Controller
     {
         var request = new UsuarioCreateRequest
         {
-            Nombre_Completo = model.Nombre_Completo,
+            Nombres = model.Nombres,
+            Apellidos = model.Apellidos,
             NIT = model.NIT,
             Numero_Contrato = model.Numero_Contrato,
             Email = model.Email,
             Password = model.Password,
-            Tipo_Servicios = model.Tipo_Servicios.ToString(),
-            Unidad = model.Unidad.ToString(),
-            Puesto = "1"
+            Tipo_Servicios = model.Tipo_Servicios,
+            Puesto = model.Puesto
         };
         var command = new UsuarioCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
@@ -90,7 +90,7 @@ public class UsuarioController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? nombre = "", string? puesto = "", string? unidad = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = UsuarioEstados.GetEstados();
+        ViewBag.Estados = UsuarioEstados1.GetEstados();
         var request = new GetUsuariosActivosDetalleRequest
         {
             Nombre = nombre,

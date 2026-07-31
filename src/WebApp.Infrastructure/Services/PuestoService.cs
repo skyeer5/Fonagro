@@ -13,6 +13,11 @@ public class PuestoService : IPuestoService
         _context = context;
     }
 
+    public async Task<bool> ExistsAsync(int puestoId)
+    {
+        return _context.Puestos.Any(x=>x.PuestoId == puestoId);
+    }
+
     public async Task<List<GetPuestosByUnidadResponse>> GetPuestosByUnidadAsync(int unidadId)
     {
         return await _context.Puestos.Where(x=>x.UnidadId == unidadId).Select(x=> new GetPuestosByUnidadResponse

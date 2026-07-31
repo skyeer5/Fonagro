@@ -9,9 +9,14 @@
 <form asp-action="Crear" method="post" class="max-w-xl">
     <div class="row row-cols-1 row-cols-md-2 g-3">
         <div class="col">
-            <label asp-for="Nombre_Completo" class="form-label">Nombre completo</label>
-            <input asp-for="Nombre_Completo" class="form-control" required/>
-            <span asp-validation-for="Nombre_Completo" class="text-danger"></span>
+            <label asp-for="Nombres" class="form-label">Nombres</label>
+            <input asp-for="Nombres" class="form-control" required/>
+            <span asp-validation-for="Nombres" class="text-danger"></span>
+        </div>
+        <div class="col">
+            <label asp-for="Apellidos" class="form-label">Apellidos</label>
+            <input asp-for="Apellidos" class="form-control" required/>
+            <span asp-validation-for="Apellidos" class="text-danger"></span>
         </div>
 
         <div class="col">
@@ -21,13 +26,13 @@
         </div>
 
         <div class="col">
-            <label asp-for="Unidad" class="form-label">Unidad</label>
-            <select asp-for="Unidad" id="UnidadId"
+            <label class="form-label">Unidad</label>
+            <select id="UnidadId"
                 asp-items="Model.Unidades"
                 class="form-select">
                 <option value="">Seleccione...</option>
             </select>
-            <span asp-validation-for="Unidad" class="text-danger"></span>
+            <span class="text-danger"></span>
         </div>
 
         <div class="col">
@@ -62,8 +67,8 @@
         </div>
 
         <div class="col">
-            <label asp-for="Password" class="form-label">Contraseña <em>(El usuario cambiará esta contraseña)</em></label>
-            <input asp-for="Password" type="password" class="form-control" required />
+            <label asp-for="Password" class="form-label">Contraseña <em>(Por defecto viene Fonagro2026)</em></label>
+            <input asp-for="Password" type="password" value="Fonagro2026" class="form-control" required />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
@@ -102,7 +107,7 @@
         puestos.forEach(p => {
 
             combo.innerHTML +=
-                `<option value="${p.id}">
+                `<option value="${p.puestoId}">
                     ${p.nombre}
                 </option>`;
         });

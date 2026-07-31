@@ -38,7 +38,7 @@ public class AuthController : Controller
         if(!resultado.IsSuccess)
         {
             TempData["msg"] = resultado.Error!;
-            return View(request);
+            return View();
         }
         if(resultado.Value!.PideCambioContrasena)
         {

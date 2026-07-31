@@ -11,4 +11,13 @@ public class AsignacionUsuario : AuditableEntity
     public DateTime Fecha_Asignacion { get; set; }
     public DateTime? Fecha_Desasignacion { get; set; }
     public ICollection<Nombramiento>? Nombramientos { get; set; }
+
+    public static AsignacionUsuario Crear(int puestoId)
+    {
+        return new AsignacionUsuario
+        {
+            PuestoId = puestoId,
+            Fecha_Asignacion = DateTime.Now  
+        };
+    }
 }

@@ -11,22 +11,25 @@ public class AppUser : IdentityUser<int>
     public string? Nombres { get; set; }
     public string? Apellidos { get; set; }
     public string? NIT { get; set; }
-    public string? Tipo_Servicios{ get; set; }
+    public TipoServicios Tipo_Servicios{ get; set; }
     public string? Numero_Contrato { get; set; }
-    public string? Estado { get; set; }
-    public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; }
+    public UsuarioEstados Estado { get; set; }
+    public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; } 
 
-    public static AppUser Crear(string nombreCompleto, string nit, string puesto, string unidad, string tipoServicios, string numeroContrato, string email)
+    public static AppUser Crear(string nombres, string apellidos, string nit,  TipoServicios tipoServicios, string numeroContrato, string email, int puestoId)
     {
+        var asignacion = AsignacionUsuario.Crear(puestoId);
         return new AppUser
         {
-            Nombres = nombreCompleto.ToUpper(),
+            Nombres = nombres.ToUpper(),
+            Apellidos = apellidos.ToUpper(),
             NIT = nit.ToUpper().Replace("-", "").Replace(" ", ""),
-            Tipo_Servicios = tipoServicios.ToUpper(),
+            Tipo_Servicios = tipoServicios,
             Numero_Contrato = numeroContrato,
             Estado = UsuarioEstados.PendientePrimerAcceso,
             Email = email,
-            UserName = nit.ToUpper().Replace("-", "").Replace(" ", "")
+            UserName = nit.ToUpper().Replace("-", "").Replace(" ", ""),
+            UsuarioPuestos = new List<AsignacionUsuario>{asignacion}
         };
 
     }

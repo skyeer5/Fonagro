@@ -17,12 +17,7 @@ public class MapperProfile : Profile
     {
         CreateMap<Vehiculo, GetVehiculosDetalleResponse>();
         CreateMap<Vehiculo, GetVehiculoResponse>();
-        CreateMap<AppUser, GetUsuariosActivosDetalleResponse>()
-            .ForMember(dest => dest.Estado, opt => opt.MapFrom(src =>
-                src.UsuarioPuestos!.Any(cu => cu.Nombramientos!.Any(nm=>nm.Comision!.Estado != ComisionEstados.Completada && nm.Comision.Estado != ComisionEstados.Cancelada))
-                    ? UsuarioEstados.EnComision
-                    : src.Estado
-            ));
+        CreateMap<AppUser, GetUsuariosActivosDetalleResponse>();
         CreateMap<Domain.Comisiones.Comision, GetComisionesDetalleResponse>()
             .ForMember(dest => dest.Descripcion_Vehiculo, opt => opt.MapFrom(src =>
             $"{src.Vehiculo!.Placa} - {src.Vehiculo.Modelo}"
