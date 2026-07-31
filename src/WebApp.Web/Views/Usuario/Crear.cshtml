@@ -22,7 +22,7 @@
 
         <div class="col">
             <label asp-for="Unidad" class="form-label">Unidad</label>
-            <select asp-for="Unidad"
+            <select asp-for="Unidad" id="UnidadId"
                 asp-items="Model.Unidades"
                 class="form-select">
                 <option value="">Seleccione...</option>
@@ -30,27 +30,13 @@
             <span asp-validation-for="Unidad" class="text-danger"></span>
         </div>
 
-        @* <div class="col">
-            <label class="form-label">Puesto</label>
-            <select id="puestoSelect" class="form-control" required>
-                <option value="">Seleccionar puesto</option>
-                @foreach (var puesto in ViewBag.Puestos)
-                {
-                    <option value="@puesto">@puesto</option>
-                }
+        <div class="col">
+            <label asp-for="Puesto" class="form-label">Puesto</label>
+            <select asp-for="Puesto"  id="PuestoId" class="form-select">
+                <option>Seleccione un puesto</option>
             </select>
+            <span asp-validation-for="Puesto" class="text-danger"></span>
         </div>
-
-        <div class="col" id="personaDiv" style="display:none;">
-            <label for="personaSelect" class="form-label">Seleccionar puesto específico</label>
-            <select id="personaSelect" class="form-control" >
-                <option value="">Seleccione un puesto específico</option>
-            </select>
-        </div>
-
-        <input type="hidden" asp-for="Puesto" id="valorFinal" />
-
- *@
 
         <div class="col">
             <label asp-for="Tipo_Servicios" class="form-label">Tipo de Servicios</label>
@@ -98,4 +84,28 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("UnidadId")
+        .addEventListener("change", async function () {
+
+        const unidadId = this.value;
+
+        const response = await fetch(
+            `/Usuario/GetPuestosByUnidadId?unidadId=${unidadId}`);
+
+        const puestos = await response.json();
+
+        const combo = document.getElementById("PuestoId");
+
+        combo.innerHTML = "";
+
+        puestos.forEach(p => {
+
+            combo.innerHTML +=
+                `<option value="${p.id}">
+                    ${p.nombre}
+                </option>`;
+        });
+    });
+    </script>
 }

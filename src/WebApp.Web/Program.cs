@@ -37,6 +37,7 @@ builder.Services.AddScoped<IBackgroundJob, ComisionEstadoJob>();
 builder.Services.AddScoped<ILocacionesService, LocacionesService>();
 builder.Services.AddScoped<IAsignacionUsuarioService, AsignacionUsuarioService>();
 builder.Services.AddScoped<IUnidadService, UnidadService>();
+builder.Services.AddScoped<IPuestoService, PuestoService>();
 builder.Services.AddHostedService<SchedulerService>();
 
 
