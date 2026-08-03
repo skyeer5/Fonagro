@@ -38,6 +38,8 @@ builder.Services.AddScoped<ILocacionesService, LocacionesService>();
 builder.Services.AddScoped<IAsignacionUsuarioService, AsignacionUsuarioService>();
 builder.Services.AddScoped<IUnidadService, UnidadService>();
 builder.Services.AddScoped<IPuestoService, PuestoService>();
+builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
+builder.Services.AddScoped<IMunicipioService, MunicipioService>();
 builder.Services.AddHostedService<SchedulerService>();
 
 

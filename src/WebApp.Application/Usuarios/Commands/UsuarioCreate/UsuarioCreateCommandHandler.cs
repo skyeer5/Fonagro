@@ -17,7 +17,7 @@ public class UsuarioCreateCommandHandler : IRequestHandler<UsuarioCreateCommand.
 
     public async Task<Result<int>> Handle(UsuarioCreateCommand.UsuarioCreateCommandRequest request, CancellationToken cancellationToken)
     {
-        if(!await _puestoService.ExistsAsync(request.UsuarioCreateRequest.Puesto))
+        if(! _puestoService.ExistsAsync(request.UsuarioCreateRequest.Puesto))
         {
             return Result<int>.Failure("No se encontró el puesto");
         }

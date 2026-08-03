@@ -11,7 +11,7 @@ using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Core;
 using WebApp.Domain.Comisiones;
-using WebApp.Web.Models;
+using WebApp.Web.Models.Comisiones;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
 using static WebApp.Application.Comisiones.Command.ComisionAddDestinos.ComisionAddDestinosCommand;
@@ -22,7 +22,6 @@ using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComis
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
-using static WebApp.Application.Locaciones.Queries.GetDepartamentos.GetDepartamentosQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -88,15 +87,6 @@ public class ComisionController : Controller
         }
         ViewBag.Vehiculos = new SelectList(vehiculos.Value, "id", "Descripcion");
 
-        var departamentos = await _mediator.Send(new GetDepartamentosQueryRequest());
-
-        if(!departamentos.IsSuccess)
-        {
-            TempData["msg"] = departamentos.Error;
-            return View();
-        }
-        ViewBag.Departamentos = new SelectList(departamentos.Value!.Departamentos, "title", "title");
-        
         return View();
     }
     [HttpPost]

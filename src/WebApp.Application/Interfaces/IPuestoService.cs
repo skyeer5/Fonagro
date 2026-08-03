@@ -6,5 +6,5 @@ namespace WebApp.Application.Interfaces;
 public interface IPuestoService
 {
     Task<List<GetPuestosByUnidadResponse>> GetPuestosByUnidadAsync(int unidadId);
-    Task<bool> ExistsAsync(int puestoId);
+    bool ExistsAsync(int puestoId);
 }

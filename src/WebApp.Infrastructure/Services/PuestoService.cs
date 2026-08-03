@@ -13,7 +13,7 @@ public class PuestoService : IPuestoService
         _context = context;
     }
 
-    public async Task<bool> ExistsAsync(int puestoId)
+    public bool ExistsAsync(int puestoId)
     {
         return _context.Puestos.Any(x=>x.PuestoId == puestoId);
     }

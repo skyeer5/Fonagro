@@ -1,8 +1,8 @@
 using WebApp.Application.Core;
-using WebApp.Application.Usuarios.Commands.UsuarioCreate;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivos;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
+using WebApp.Application.Usuarios.Queries.GetUsuariosSinNom;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 
 namespace WebApp.Application.Interfaces;
@@ -15,5 +15,5 @@ public interface IUsuarioService
     Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleQueryRequest request);
     Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync();
     Task<string?> GetNombreUsuarioAsync(int usuarioId); 
-    
+    Task<List<GetUsuariosSinNomResponse>> GetUsuariosSinNomAsync();
 }

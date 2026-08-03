@@ -1,6 +1,6 @@
 using WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 
-namespace WebApp.Web.Models;
+namespace WebApp.Web.Models.Comisiones;
 
 public class ComisionViewModel
 {

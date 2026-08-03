@@ -1,0 +1,101 @@
+@model WebApp.Web.Models.Nombramientos.NombramientoCreateViewModel;
+
+@{
+    ViewData["Title"] = "Crear Nombramiento";
+}
+
+<h2 class="text-xl font-semibold mb-4">Crear Nombramiento</h2>
+
+<form asp-action="Crear" method="post" class="max-w-xl">
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        
+        <div class="col">
+            <label asp-for="UsuarioId" class="form-label">Usuario</label>
+            <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select">
+                <option>Seleccione un usuario</option>
+            </select>
+            <span asp-validation-for="UsuarioId" class="text-danger"></span>
+        </div>
+
+        <div class="col">
+            <label class="form-label">Departamentos</label>
+            <select id="DepartamentoId"
+                asp-items="Model.Departamentos"
+                multiple="multiple" 
+                class="select2">
+                <option value="">Seleccione...</option>
+            </select>
+            <span class="text-danger"></span>
+        </div>
+
+        <div class="col">
+            <label asp-for="Municipios" class="form-label">Municipios</label>
+            <select asp-for="Municipios" id="MunicipioId" class="form-select">
+                <option>Seleccione un municipio</option>
+            </select>
+            <span asp-validation-for="Municipios" class="text-danger"></span>
+        </div>
+
+        
+    </div>
+    <!-- ERROR -->
+    @if (TempData["msg"] != null)
+    {
+        <div class="alert alert-danger text-center py-2 mt-2 small">
+            @TempData["msg"]
+        </div>
+    }
+    <div class="pt-4">
+        <button type="submit" class="btn btn-primary">Crear nombramiento</button>
+        <a asp-action="List" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Seleccione departamentos",
+            allowClear: true,
+            width: '100%' 
+        });
+
+        $('#DepartamentoId').on('change', async function () {
+            const selectedOptions = $(this).val(); // select2 devuelve array de valores
+
+            const combo = document.getElementById("MunicipioId");
+            combo.innerHTML = "";
+
+            if (!selectedOptions || selectedOptions.length === 0) return;
+
+            for (const departamentoId of selectedOptions) {
+                if (!departamentoId) continue;
+
+                const response = await fetch(
+                    `/Municipio/GetMunicipiosByDepartamentoId?departamentoId=${departamentoId}`);
+
+                const municipios = await response.json();
+
+                municipios.forEach(m => {
+                    combo.innerHTML +=
+                        `<option value="${m.Id}">
+                            ${m.nombre}
+                        </option>`;
+                });
+            }
+        });
+    });
+
+
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Seleccione departamentos",
+            allowClear: true,
+            width: '100%' 
+        });
+    });
+    </script>
+}

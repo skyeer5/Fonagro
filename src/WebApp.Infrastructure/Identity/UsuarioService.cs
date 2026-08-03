@@ -8,9 +8,8 @@ using WebApp.Application.Interfaces;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivos;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
-using WebApp.Domain.Comisiones;
+using WebApp.Application.Usuarios.Queries.GetUsuariosSinNom;
 using WebApp.Domain.Usuarios;
-using WebApp.Persistence;
 using WebApp.Persistence.Models;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 
@@ -18,14 +17,12 @@ namespace WebApp.Infrastructure.Identity;
 
 public class UsuarioService : IUsuarioService
 {
-    private readonly WebAppDbContext _context;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMapper _mapper;
 
-    public UsuarioService(UserManager<AppUser> userManager, WebAppDbContext context, IMapper mapper)
+    public UsuarioService(UserManager<AppUser> userManager, IMapper mapper)
     {
         _userManager = userManager;
-        _context = context;
         _mapper = mapper;
     }
 
@@ -97,6 +94,18 @@ public class UsuarioService : IUsuarioService
                 Nombre_Completo = u.Nombres
             })
             .ToListAsync();
+    }
+
+    public Task<List<GetUsuariosSinNomResponse>> GetUsuariosSinNomAsync()
+    {
+        return _userManager.Users.Include(x=>x.UsuarioPuestos)
+                        .Where(x=>x.UsuarioPuestos!
+                                    .Any(u=>u.Fecha_Desasignacion == null)
+                        ).Select(x=> new GetUsuariosSinNomResponse
+                        {
+                            UsuarioId = x.Id,
+                            Nombre_Completo = x.Nombres + " " + x.Apellidos
+                        }).ToListAsync();
     }
 
     public async Task<bool> UsuariosExistsAsync(int usuarioId)
