@@ -23,6 +23,6 @@ public class ComisionAddDescripcionCommandHandler : IRequestHandler<ComisionAddD
         comision.Descripcion = request.request.Descripcion;
         await _comisionRepository.UpdateAsync(comision, cancellationToken);
 
-        return Result<int>.Success(comision.ComisionId);
+        return Result<int>.Success(comision.ComisionId!.Value);
     }
 }

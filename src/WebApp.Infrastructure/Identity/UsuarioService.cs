@@ -98,14 +98,15 @@ public class UsuarioService : IUsuarioService
 
     public Task<List<GetUsuariosSinNomResponse>> GetUsuariosSinNomAsync()
     {
-        return _userManager.Users.Include(x=>x.UsuarioPuestos)
-                        .Where(x=>x.UsuarioPuestos!
-                                    .Any(u=>u.Fecha_Desasignacion == null)
-                        ).Select(x=> new GetUsuariosSinNomResponse
-                        {
-                            UsuarioId = x.Id,
-                            Nombre_Completo = x.Nombres + " " + x.Apellidos
-                        }).ToListAsync();
+        return _userManager.Users
+            .SelectMany(u => u.UsuarioPuestos!
+                .Where(a => a.Fecha_Desasignacion == null)
+                .Select(a => new GetUsuariosSinNomResponse
+                {
+                    UsuarioId = a.AsignacionUsuarioId,
+                    Nombre_Completo = u.Nombres + " " + u.Apellidos
+                })
+            ).ToListAsync();
     }
 
     public async Task<bool> UsuariosExistsAsync(int usuarioId)

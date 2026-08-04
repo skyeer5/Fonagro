@@ -12,10 +12,10 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
     private readonly IGasolinaPrecioService _gasolinaPrecioService;
     private readonly IVehiculoService _vehiculoService;
     private readonly IComisionRepository _comisionRepository;
-    private readonly IComisionUsuarioPolicy _comisionUsuarioPolicy;
+    private readonly INombramientoPolicy _comisionUsuarioPolicy;
     private readonly IViaticosService _viaticosService;
 
-    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IUsuarioService usuarioService, IComisionRepository comisionRepository, IComisionUsuarioPolicy comisionUsuarioPolicy, IViaticosService viaticosService)
+    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IUsuarioService usuarioService, IComisionRepository comisionRepository, INombramientoPolicy comisionUsuarioPolicy, IViaticosService viaticosService)
     {
         _gasolinaPrecioService = gasolinaPrecioService;
         _vehiculoService = vehiculoService;

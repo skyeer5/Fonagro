@@ -13,20 +13,39 @@ public class Nombramiento : AuditableEntity
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public string? Descripcion { get; set; } // Para el Plan de Viaje
-    public bool Es_Piloto { get; set; }
-    public string? Estado { get; set; }
+    public NombramientoTipos Estado { get; set; }
     public int AsignacionUsuarioId { get; set; } 
     public AsignacionUsuario? AsignacionUsuario { get; set; }
-    public int ComisionId { get; set; }
+    public int? ComisionId { get; set; }
     public Comision? Comision { get; set; }
     public ICollection<NomMunicipio>? NomMunicipios { get; set; }
     public ICollection<ComisionViaticos>? ComisionViaticosList { get; set; }
 
+    public static Nombramiento Crear(int usuarioId, string proposito, DateTime fechaSalida, DateTime fechaRegreso, List<int> Municipios)
+    {
+        var municipios = new List<NomMunicipio>();
+        foreach (var municipioId in Municipios)
+        {
+            var nomMunicipio = new NomMunicipio
+            {
+                MunicipioId = municipioId
+            };
+            municipios.Add(nomMunicipio);
+        }
+        return new Nombramiento
+        {
+            Proposito = proposito,
+            Fecha_Salida = fechaSalida,
+            Fecha_Regreso = fechaRegreso,
+            Estado = NombramientoTipos.Asignado,
+            AsignacionUsuarioId = usuarioId,
+            NomMunicipios = municipios
+        };
+    }
     public static Nombramiento AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)
     {
         return new Nombramiento
         {
-            Es_Piloto = es_Piloto,
             Estado = NombramientoTipos.Asignado,
         };
     }
@@ -50,19 +69,19 @@ public class Nombramiento : AuditableEntity
                 if (salida.TimeOfDay < TimeSpan.FromHours(11))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
                         );
                 }
                 if (salida.TimeOfDay < TimeSpan.FromHours(17))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
                         );
                 }
                 if (salida.TimeOfDay < TimeSpan.FromHours(24))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
                         );
                 }
 
@@ -72,39 +91,39 @@ public class Nombramiento : AuditableEntity
                 if (entrada.TimeOfDay >= TimeSpan.FromHours(6))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
                         );
                 }
                 if (entrada.TimeOfDay >= TimeSpan.FromHours(11))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
                         );
                 }
                 if (entrada.TimeOfDay >= TimeSpan.FromHours(17))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
                         );
                 }
             }
             else
             {
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
                         );
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
                         );
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
                         );
             }
 
             if(i<dias)
             {
                 ComisionViaticosList.Add(
-                    ComisionViaticos.Crear(1, hospedaje!.Monto, diaActual, hospedaje.ViaticoId, ComisionId)
+                    ComisionViaticos.Crear(1, hospedaje!.Monto, diaActual, hospedaje.ViaticoId, ComisionId!.Value)
                     );
             }
 

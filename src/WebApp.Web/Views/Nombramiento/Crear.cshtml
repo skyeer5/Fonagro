@@ -18,6 +18,11 @@
         </div>
 
         <div class="col">
+            <label>Proposito</label>
+            <input asp-for="Proposito" type="text" class="form-control" required />
+        </div>
+
+        <div class="col">
             <label class="form-label">Departamentos</label>
             <select id="DepartamentoId"
                 asp-items="Model.Departamentos"
@@ -36,7 +41,16 @@
             <span asp-validation-for="Municipios" class="text-danger"></span>
         </div>
 
-        
+        <div class="col">
+            <label>Fecha salida</label>
+            <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" required value="@Model.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm")"/>
+        </div>
+
+        <div class="col">
+            <label>Fecha regreso</label>
+            <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" required value="@Model.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm")"/>
+        </div>
+
     </div>
     <!-- ERROR -->
     @if (TempData["msg"] != null)
@@ -81,7 +95,7 @@
 
                 municipios.forEach(m => {
                     combo.innerHTML +=
-                        `<option value="${m.Id}">
+                        `<option value="${m.id}">
                             ${m.nombre}
                         </option>`;
                 });

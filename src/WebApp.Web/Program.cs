@@ -25,7 +25,7 @@ builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<IGasolinaPrecioService, GasolinaPrecioService>();
 builder.Services.AddScoped<IComisionRepository, ComisionRepository>();
-builder.Services.AddScoped<IComisionUsuarioPolicy, ComisionUsuarioPolicy>();
+builder.Services.AddScoped<INombramientoPolicy, NombramientoPolicy>();
 builder.Services.AddScoped<IViaticosService, ViaticosService>();
 builder.Services.AddScoped<IComisionService, ComisionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
@@ -40,6 +40,7 @@ builder.Services.AddScoped<IUnidadService, UnidadService>();
 builder.Services.AddScoped<IPuestoService, PuestoService>();
 builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
 builder.Services.AddScoped<IMunicipioService, MunicipioService>();
+builder.Services.AddScoped<INombramientoRepository, NombramientoRepository>();
 builder.Services.AddHostedService<SchedulerService>();
 
 

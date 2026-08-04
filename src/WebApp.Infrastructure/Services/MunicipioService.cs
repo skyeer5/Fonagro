@@ -24,4 +24,9 @@ public class MunicipioService : IMunicipioService
                 Nombre = m.Nombre
             }).ToListAsync();
     }
+
+    public bool MunicipiosExists(List<int> municipiosIds)
+    {
+        return _context.Municipios.Any(m => municipiosIds.Contains(m.MunicipioId));
+    }
 }

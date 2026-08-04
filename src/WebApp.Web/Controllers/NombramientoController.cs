@@ -1,9 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Application.Nombramientos.Command.NombramientoCreate;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
+using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -31,8 +33,33 @@ public class NombramientoController : Controller
             Departamentos = departamentos.Value!.ToSelectList(
                 x => x.Id.ToString(),
                 x => x.Nombre!
-            )
+            ),
+            Fecha_Salida = DateTime.Now,
+            Fecha_Regreso = DateTime.Now.AddDays(1)
         };
         return View(model);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Crear(
+        [FromForm] NombramientoCreateViewModel model,
+        CancellationToken cancellationToken
+    )
+    {
+        var request = new NombramientoCreateRequest
+        {
+            UsuarioId = model.UsuarioId,
+            Proposito = model.Proposito,
+            Fecha_Salida = model.Fecha_Salida,
+            Fecha_Regreso = model.Fecha_Regreso,
+            Municipios = model.Municipios
+        };
+        var command = new NombramientoCreateCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+            return RedirectToAction(nameof(Crear));
+        }
+        return RedirectToAction("Index", "Home");
     }
 }

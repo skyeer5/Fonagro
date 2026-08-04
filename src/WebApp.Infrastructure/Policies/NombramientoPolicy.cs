@@ -6,13 +6,22 @@ using WebApp.Domain.Nombramientos;
 
 namespace WebApp.Infrastructure.Policies;
 
-public class ComisionUsuarioPolicy : IComisionUsuarioPolicy
+public class NombramientoPolicy : INombramientoPolicy
 {
     private readonly WebAppDbContext _context;
 
-    public ComisionUsuarioPolicy(WebAppDbContext context)
+    public NombramientoPolicy(WebAppDbContext context)
     {
         _context = context;
+    }
+
+    public async Task<bool> UsuarioEstaNombradoAsync(int usuarioId, CancellationToken cancellationToken)
+    {
+        return await _context.Nombramientos.AnyAsync( u=>
+            u.AsignacionUsuarioId == usuarioId &&
+            u.Estado == NombramientoTipos.Asignado,
+            cancellationToken
+        );
     }
 
     public async Task<bool> UsuariosEstanAsignadosAsync(List<UsuariosNombrados> usuariosNombrados, CancellationToken cancellationToken)

@@ -132,11 +132,10 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(d => d.ComisionId)
             .IsRequired();
 
-        modelBuilder.Entity<Nombramiento>()
-            .HasOne(cu => cu.Comision)
-            .WithMany(c => c.Nombramientos)
-            .HasForeignKey(cu => cu.ComisionId)
-            .IsRequired()
+        modelBuilder.Entity<Comision>()
+            .HasMany(c => c.Nombramientos)
+            .WithOne(n => n.Comision)
+            .HasForeignKey(n => n.ComisionId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<ComisionViaticos>()
