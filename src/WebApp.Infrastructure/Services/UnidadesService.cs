@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Unidades.Queries.GetUnidades;
+using WebApp.Domain.Unidades;
 using WebApp.Persistence;
 
 namespace WebApp.Infrastructure.Services;
@@ -22,5 +23,16 @@ public class UnidadService : IUnidadService
                 Nombre = u.Nombre
             })
             .ToListAsync();
+    }
+
+    public async Task<UnidadesEnum?> GetUnidadIdByUsuarioIdAsync(int usuarioId, CancellationToken cancellationToken)
+    {
+        var unidadId = await  _context.AsignacionesUsuarios
+                .Include(p=>p.Puesto)
+                .Where(x=>x.AsignacionUsuarioId == usuarioId)
+                .Select(x=>x.Puesto!.UnidadId)
+                .FirstOrDefaultAsync();
+                
+        return (UnidadesEnum?)unidadId;
     }
 }

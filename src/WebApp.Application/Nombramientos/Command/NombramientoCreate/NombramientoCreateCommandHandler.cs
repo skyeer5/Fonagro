@@ -10,12 +10,14 @@ public class NombramientoCreateCommandHandler : IRequestHandler<NombramientoCrea
     private readonly INombramientoRepository _nombramientoRepository;
     private readonly IMunicipioService _municipioService;
     private readonly INombramientoPolicy _nombramientoPolicy;
+    private readonly IUnidadService _unidadService;
 
-    public NombramientoCreateCommandHandler(INombramientoRepository nombramientoRepository, IMunicipioService municipioService, INombramientoPolicy nombramientoPolicy)
+    public NombramientoCreateCommandHandler(INombramientoRepository nombramientoRepository, IMunicipioService municipioService, INombramientoPolicy nombramientoPolicy, IUnidadService unidadService)
     {
         _nombramientoRepository = nombramientoRepository;
         _municipioService = municipioService;
         _nombramientoPolicy = nombramientoPolicy;
+        _unidadService = unidadService;
     }
 
     public async Task<Result<int>> Handle(NombramientoCreateCommandRequest request, CancellationToken cancellationToken)
@@ -30,7 +32,13 @@ public class NombramientoCreateCommandHandler : IRequestHandler<NombramientoCrea
         {
             return Result<int>.Failure("El usuario ya tiene un nombramiento activo.");
         }
-        var nombramientoId = await _nombramientoRepository.CreateNombramientoAsync(request.request, cancellationToken);
+        var unidad = _unidadService.GetUnidadIdByUsuarioIdAsync(request.request.UsuarioId!, cancellationToken);
+        if(unidad is null)
+        {
+            return Result<int>.Failure("El usuario no tiene una unidad asignada.");
+        }
+        var correlativo = await _nombramientoRepository.ObtenerCorrelativoByUsuarioIdAsync(unidad.Result!.Value, cancellationToken);
+        var nombramientoId = await _nombramientoRepository.CreateNombramientoAsync(request.request, correlativo, cancellationToken);
         return Result<int>.Success(nombramientoId);
     }
 }

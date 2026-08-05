@@ -80,7 +80,7 @@ public static class DataSeed
             {
                 var unidades = new List<Unidad>();
                 //GERENCIA
-                var gerencia = new Unidad { Nombre = "GERENCIA" };
+                var gerencia = new Unidad { Nombre = EnumExtensions.GetDisplayName(UnidadesEnum.GERENCIA) };
                 gerencia.Puestos = new List<Puesto>
                 {
                     new Puesto { Nombre = "GERENTE GENERAL"},
@@ -90,7 +90,7 @@ public static class DataSeed
                 unidades.Add(gerencia);
 
                 //UNIDAD ADMINISTRATIVA
-                var ua = new Unidad { Nombre = "UNIDAD ADMINISTRATIVA" };
+                var ua = new Unidad { Nombre = EnumExtensions.GetDisplayName(UnidadesEnum.UA) };
                 ua.Puestos = new List<Puesto>
                 {
                     new Puesto { Nombre = "COORDINADOR DE LA UNIDAD ADMINISTRATIVA"},
@@ -114,7 +114,7 @@ public static class DataSeed
                 unidades.Add(ua);
                 
                 //UNIDAD DE ASUNTOS JURÍDICOS
-                var uaj = new Unidad { Nombre = "UNIDAD DE ASUNTOS JURÍDICOS" };
+                var uaj = new Unidad { Nombre = EnumExtensions.GetDisplayName(UnidadesEnum.UAJ) };
                 uaj.Puestos = new List<Puesto>
                 {
                     new Puesto { Nombre = "COORDINADOR DE ASESORÍA JURÍDICA"},
@@ -125,7 +125,7 @@ public static class DataSeed
                 unidades.Add(uaj);
 
                 //UNIDAD TÉCNICA DE SEGUIMIENTO Y EVALUACIÓN
-                var utse = new Unidad { Nombre = "UNIDAD TÉCNICA DE SEGUIMIENTO Y EVALUACIÓN" };
+                var utse = new Unidad { Nombre = EnumExtensions.GetDisplayName(UnidadesEnum.UTSE) };
                 utse.Puestos = new List<Puesto>
                 {
                     new Puesto { Nombre = "COORDINADOR DE LA UNIDAD TÉCNICA DE SEGUIMIENTO Y EVALUACIÓN"},
@@ -139,7 +139,7 @@ public static class DataSeed
                 unidades.Add(utse);
 
                 //UNIDAD DE AUDITORÍA INTERNA
-                var udai = new Unidad { Nombre = "UNIDAD DE AUDITORÍA INTERNA" };
+                var udai = new Unidad { Nombre = EnumExtensions.GetDisplayName(UnidadesEnum.UDAI) };
                 udai.Puestos = new List<Puesto>
                 {
                     new Puesto { Nombre = "COORDINADOR DE AUDITORÍA INTERNA"},

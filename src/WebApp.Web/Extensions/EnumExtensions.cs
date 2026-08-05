@@ -16,7 +16,7 @@ public static class EnumExtensions
             .ToList();
     }
 
-    private static string GetDisplayName(Enum value)
+    public static string GetDisplayName(Enum value)
     {
         var member = value.GetType().GetMember(value.ToString()).First();
 

@@ -1,8 +1,10 @@
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
+using WebApp.Domain.Unidades;
 
 namespace WebApp.Application.Interfaces;
 
 public interface INombramientoRepository
 {
-    Task<int> CreateNombramientoAsync(NombramientoCreateRequest request, CancellationToken cancellationToken);
+    Task<int> CreateNombramientoAsync(NombramientoCreateRequest request, int correlativo, CancellationToken cancellationToken);
+    Task<int> ObtenerCorrelativoByUsuarioIdAsync(UnidadesEnum unidad, CancellationToken cancellationToken);
 }
