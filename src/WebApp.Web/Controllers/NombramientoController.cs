@@ -2,10 +2,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
+using WebApp.Application.Nombramientos.Queries.GetNomParaAprobar;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
 using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
+using static WebApp.Application.Nombramientos.Queries.GetNomParaAprobar.GetNomParaAprobarQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -61,5 +63,18 @@ public class NombramientoController : Controller
             return RedirectToAction(nameof(Crear));
         }
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List( int currentPage = 1, string orderBy = "")
+    {
+        var request = new GetNomParaAprobarRequest
+        {
+            PageNumber = currentPage,
+            OrderBy = orderBy
+        };
+        var query = new GetNomParaAprobarQueryRequest(request);
+        var result = await _mediator.Send(query);
+        return View(result.Value);
     }
 }
