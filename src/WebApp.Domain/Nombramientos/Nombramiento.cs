@@ -13,6 +13,8 @@ public class Nombramiento : AuditableEntity
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public string? Descripcion { get; set; } // Para el Plan de Viaje
+    public int UsuarioId_Creador { get; set; }
+    public DateTime Fecha_Aprobado { get; set; }
     public NombramientoTipos Estado { get; set; }
     public int AsignacionUsuarioId { get; set; } 
     public AsignacionUsuario? AsignacionUsuario { get; set; }

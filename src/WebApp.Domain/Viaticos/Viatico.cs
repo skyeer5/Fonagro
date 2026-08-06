@@ -1,7 +1,7 @@
 namespace WebApp.Domain.Viaticos;
 using WebApp.Domain.ComisionesViaticos;
 
-public class Viatico : AuditableEntity
+public class Viatico 
 {
     public int ViaticoId { get; set; }
     public string? Nombre { get; set; }

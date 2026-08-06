@@ -2,7 +2,7 @@ namespace WebApp.Domain.Gasolinas;
 using WebApp.Domain.GasolinaPrecios;
 using WebApp.Domain.Vehiculos;
 
-public class Gasolina : AuditableEntity
+public class Gasolina 
 {
     public int GasolinaId { get; set; }
     public string? Nombre { get; set; }
