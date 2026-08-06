@@ -11,15 +11,18 @@ namespace WebApp.Infrastructure.Repositories;
 public class NombramientoRepository : INombramientoRepository
 {
     private readonly WebAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public NombramientoRepository(WebAppDbContext context)
+    public NombramientoRepository(WebAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<int> CreateNombramientoAsync(NombramientoCreateRequest request, int correlativo, CancellationToken cancellationToken)
     {
-        var nombramiento = Nombramiento.Crear(request.UsuarioId, request.Proposito!, request.Fecha_Salida, request.Fecha_Regreso, request.Municipios!, correlativo);
+        var user = _currentUser.userId;
+        var nombramiento = Nombramiento.Crear(request.UsuarioId, request.Proposito!, request.Fecha_Salida, request.Fecha_Regreso, request.Municipios!, correlativo, user);
         await _context.Nombramientos.AddAsync(nombramiento);
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0 ? nombramiento.NombramientoId : result;

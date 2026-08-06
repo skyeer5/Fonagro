@@ -23,7 +23,7 @@ public class Nombramiento : AuditableEntity
     public ICollection<NomMunicipio>? NomMunicipios { get; set; }
     public ICollection<ComisionViaticos>? ComisionViaticosList { get; set; }
 
-    public static Nombramiento Crear(int usuarioId, string proposito, DateTime fechaSalida, DateTime fechaRegreso, List<int> Municipios, int correlativo)
+    public static Nombramiento Crear(int usuarioId, string proposito, DateTime fechaSalida, DateTime fechaRegreso, List<int> Municipios, int correlativo, int usuarioId_Creador)
     {
         var municipios = new List<NomMunicipio>();
         foreach (var municipioId in Municipios)
@@ -42,7 +42,10 @@ public class Nombramiento : AuditableEntity
             Estado = NombramientoTipos.Asignado,
             AsignacionUsuarioId = usuarioId,
             NomMunicipios = municipios,
-            Correlativo = correlativo
+            Correlativo = correlativo,
+            UsuarioId_Creador = usuarioId_Creador,
+            Creado_Por = usuarioId_Creador,
+            Fecha_Creacion = DateTime.Now
         };
     }
     public static Nombramiento AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)

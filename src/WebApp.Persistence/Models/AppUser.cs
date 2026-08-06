@@ -16,9 +16,9 @@ public class AppUser : IdentityUser<int>
     public UsuarioEstados Estado { get; set; }
     public ICollection<AsignacionUsuario>? UsuarioPuestos { get; set; } 
 
-    public static AppUser Crear(string nombres, string apellidos, string nit,  TipoServicios tipoServicios, string numeroContrato, string email, int puestoId)
+    public static AppUser Crear(string nombres, string apellidos, string nit,  TipoServicios tipoServicios, string numeroContrato, string email, int puestoId, int usuarioCreador)
     {
-        var asignacion = AsignacionUsuario.Crear(puestoId);
+        var asignacion = AsignacionUsuario.Crear(puestoId, usuarioCreador);
         return new AppUser
         {
             Nombres = nombres.ToUpper(),
@@ -33,76 +33,5 @@ public class AppUser : IdentityUser<int>
         };
 
     }
-    public static string DefinirPuesto(string puesto, string unidad)
-    {
-        if(puesto.Contains(UsuariosTipos.AUXILIAR) || puesto.Contains(UsuariosTipos.ENCARGADO))
-        {
-            return puesto;
-        }
-        switch(unidad)
-        {
-            case UsuariosTipos.UA:
-                switch(puesto)
-                {
-                    case UsuariosTipos.ASESOR:
-                        return UsuariosTipos.ASESOR_ADMON;
-                    case UsuariosTipos.ASISTENTE:
-                        return UsuariosTipos.ASISTENTE_ADMON;
-                    case UsuariosTipos.COORDINADOR:
-                        return UsuariosTipos.COORDINADOR_ADMON;
-                    case UsuariosTipos.SUBCOORDINADOR:
-                        return UsuariosTipos.SUBCOORDINADOR_ADMON;
-                    default:
-                        return puesto;
-                }
-            case UsuariosTipos.UAJ:
-                switch(puesto)
-                {
-                    case UsuariosTipos.ASESOR:
-                        return UsuariosTipos.ASESOR_UAJ;
-                    case UsuariosTipos.ASISTENTE:
-                        return UsuariosTipos.ASISTENTE_UAJ;
-                    case UsuariosTipos.COORDINADOR:
-                        return UsuariosTipos.COORDINADOR_UAJ;
-                    case UsuariosTipos.SUBCOORDINADOR:
-                        return UsuariosTipos.SUBCOORDINADOR_UAJ;
-                    default:
-                        return puesto;
-                }
-            case UsuariosTipos.UTSE:
-                switch(puesto)
-                {
-                    case UsuariosTipos.ASESOR:
-                        return UsuariosTipos.ASESOR_UTSE;
-                    case UsuariosTipos.ASISTENTE:
-                        return UsuariosTipos.ASISTENTE_UTSE;
-                    case UsuariosTipos.COORDINADOR:
-                        return UsuariosTipos.COORDINADOR_UTSE;
-                    case UsuariosTipos.SUBCOORDINADOR:
-                        return UsuariosTipos.SUBCOORDINADOR_UTSE;
-                    default:
-                        return puesto;
-                }
-            case UsuariosTipos.UDAI:
-                switch(puesto)
-                {
-                    case UsuariosTipos.ASESOR:
-                        return UsuariosTipos.ASESOR_UDAI;
-                    case UsuariosTipos.ASISTENTE:
-                        return UsuariosTipos.ASISTENTE_UDAI;
-                    case UsuariosTipos.COORDINADOR:
-                        return UsuariosTipos.COORDINADOR_UDAI;
-                    case UsuariosTipos.SUBCOORDINADOR:
-                        return UsuariosTipos.SUBCOORDINADOR_UDAI;
-                    default:
-                        return puesto;
-                }
 
-
-
-            default:
-                return puesto;
-        }
-
-    }
 }
