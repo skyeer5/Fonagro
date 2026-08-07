@@ -1,13 +1,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Application.Nombramientos.Command.NombramientoApprove;
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
-using WebApp.Application.Nombramientos.Queries.GetNomParaAprobar;
+using WebApp.Application.Nombramientos.Queries.GetNombramientos;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
+using static WebApp.Application.Nombramientos.Command.NombramientoApprove.NombramientoApproveCommand;
 using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
-using static WebApp.Application.Nombramientos.Queries.GetNomParaAprobar.GetNomParaAprobarQuery;
+using static WebApp.Application.Nombramientos.Queries.GetNombramientos.GetNomParaAprobarQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -62,19 +64,30 @@ public class NombramientoController : Controller
             TempData["msg"] = result.Error;
             return RedirectToAction(nameof(Crear));
         }
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction(nameof(List));
     }
 
     [HttpGet]
     public async Task<IActionResult> List( int currentPage = 1, string orderBy = "")
     {
-        var request = new GetNomParaAprobarRequest
+        var request = new GetNombramientosRequest
         {
             PageNumber = currentPage,
             OrderBy = orderBy
         };
-        var query = new GetNomParaAprobarQueryRequest(request);
+        var query = new GetNombramientosQueryRequest(request);
         var result = await _mediator.Send(query);
         return View(result.Value);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Aprobar(
+        [FromForm] NombramientoApproveRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new NombramientoApproveCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+        return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
     }
 }

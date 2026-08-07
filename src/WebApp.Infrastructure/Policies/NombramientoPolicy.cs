@@ -19,7 +19,7 @@ public class NombramientoPolicy : INombramientoPolicy
     {
         return await _context.Nombramientos.AnyAsync( u=>
             u.AsignacionUsuarioId == usuarioId &&
-            u.Estado == NombramientoTipos.Asignado,
+            u.Estado == NombramientoEstados.Creado,
             cancellationToken
         );
     }
@@ -30,7 +30,7 @@ public class NombramientoPolicy : INombramientoPolicy
 
         return await _context.Nombramientos.AnyAsync(u=>
                 /*usuarioIds.Contains(u.UsuarioPuesto!.UsuarioId) 
-                &&*/ u.Estado == NombramientoTipos.Asignado 
+                &&*/ u.Estado == NombramientoEstados.Creado 
                 , cancellationToken);
     }
 }

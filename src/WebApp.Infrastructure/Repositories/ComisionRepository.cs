@@ -82,7 +82,7 @@ public class ComisionRepository : IComisionRepository
                     foreach (var cu in comision.Nombramientos!)
                     {
                         _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-                        cu.Estado = NombramientoTipos.Cancelada;
+                        cu.Estado = NombramientoEstados.Cancelada;
                     }
                 }
                 
@@ -135,7 +135,7 @@ public class ComisionRepository : IComisionRepository
         foreach (var cu in comision.Nombramientos!)
         {
             _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-            cu.Estado = NombramientoTipos.Cancelada;
+            cu.Estado = NombramientoEstados.Cancelada;
         }
         var resultado = await _context.SaveChangesAsync(cancellationToken);
         return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al cancelar la comisión");

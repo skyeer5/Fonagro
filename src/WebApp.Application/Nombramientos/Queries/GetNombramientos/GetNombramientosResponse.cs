@@ -1,6 +1,8 @@
-namespace WebApp.Application.Nombramientos.Queries.GetNomParaAprobar;
+using WebApp.Domain.Nombramientos;
 
-public class GetNomParaAprobarResponse
+namespace WebApp.Application.Nombramientos.Queries.GetNombramientos;
+
+public class GetNombramientosResponse
 {
     public int NombramientoId { get; set; }
     public string? Correlativo { get; set; }
@@ -9,6 +11,6 @@ public class GetNomParaAprobarResponse
     public DateTime Fecha_Regreso { get; set;}
     public string? Proposito { get; set; }
     public string? Nombre_Creador_Nombramiento { get; set; }
-
+    public NombramientoEstados Estado { get; set; }
 
 }

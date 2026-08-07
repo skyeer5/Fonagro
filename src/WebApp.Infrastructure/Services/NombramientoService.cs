@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Application.Nombramientos.Queries.GetNomParaAprobar;
+using WebApp.Application.Nombramientos.Queries.GetNombramientos;
 using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Unidades;
 using WebApp.Persistence;
@@ -38,7 +38,7 @@ public class NombramientoService : INombramientoService
                                         .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<PagedList<GetNomParaAprobarResponse>> GetListNMParaAprobarAsync(GetNomParaAprobarRequest request,CancellationToken cancellationToken)
+    public async Task<PagedList<GetNombramientosResponse>> GetNombramientosAsync(GetNombramientosRequest request,CancellationToken cancellationToken)
     {
         var query =
             from n in _context.Nombramientos
@@ -49,11 +49,11 @@ public class NombramientoService : INombramientoService
             join usuarioCreador in _context.Users
                 on n.UsuarioId_Creador equals usuarioCreador.Id
 
-            select new GetNomParaAprobarResponse
+            select new GetNombramientosResponse
             {
                 NombramientoId = n.NombramientoId,
 
-                Correlativo = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{DateTime.Now.Year}",
+                Correlativo = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
 
                 Nombre_Nombrado =
                     usuarioNombrado.Nombres + " " +
@@ -67,9 +67,11 @@ public class NombramientoService : INombramientoService
 
                 Fecha_Regreso = n.Fecha_Regreso,
 
-                Proposito = n.Proposito
+                Proposito = n.Proposito,
+
+                Estado = n.Estado
             };
-        var pagination = await PagedList<GetNomParaAprobarResponse>.CreateAsync(
+        var pagination = await PagedList<GetNombramientosResponse>.CreateAsync(
                                     query,
                                     request.PageNumber,
                                     request.PageSize
