@@ -138,6 +138,18 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasForeignKey(n => n.ComisionId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Comision>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(up => up.UsuarioId_Aprobador_Combustible)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Comision>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(up => up.UsuarioId_Creador_Comision)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<ComisionViaticos>()
             .HasKey(x=>x.ComisionViaticosId);
 
@@ -207,6 +219,17 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<NomMunicipio>()
             .HasKey(nm => new { nm.NombramientoId, nm.MunicipioId });
         
+        modelBuilder.Entity<Nombramiento>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(up => up.UsuarioId_Aprobador);
+        
+        modelBuilder.Entity<Nombramiento>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(up => up.UsuarioId_Creador)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // Carga de datos iniciales de seguridad
         CargarDataSeguridad(modelBuilder);
     }
