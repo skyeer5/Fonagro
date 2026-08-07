@@ -47,8 +47,8 @@ public class Comision : AuditableEntity
     public void AgregarCreadoPor(int usuarioId)
     {
         this.Usuario_Creador_Comision = usuarioId;
-        this.Creado_Por = usuarioId;
-        this.Fecha_Creacion = DateTime.Now;
+        this.CreatedBy = usuarioId;
+        this.CreatedDate = DateTime.Now;
     }
     public void AgregarUsuarios(ICollection<UsuariosNombrados> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
     {
@@ -80,8 +80,8 @@ public class Comision : AuditableEntity
         }
         foreach(var destino in comisionDestinos)
         {
-            destino.Creado_Por = userId;
-            destino.Fecha_Creacion = DateTime.Now;
+            destino.CreatedBy = userId;
+            destino.CreatedDate = DateTime.Now;
             this.ComisionDestinos.Add(destino);
         }
         this.Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);

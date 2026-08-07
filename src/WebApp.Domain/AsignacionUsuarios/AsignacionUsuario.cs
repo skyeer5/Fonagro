@@ -18,8 +18,8 @@ public class AsignacionUsuario : AuditableEntity
         {
             PuestoId = puestoId,
             Fecha_Asignacion = DateTime.Now  ,
-            Fecha_Creacion = DateTime.Now,
-            Creado_Por = usuarioId
+            CreatedDate = DateTime.Now,
+            CreatedBy = usuarioId
         };
     }
 }

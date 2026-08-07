@@ -69,12 +69,12 @@ public class Vehiculo : AuditableEntity
             ConsumoKmPorGalon = consumo,
             GasolinaId = gasolinaId,
             Estado = VehiculoEstados.Disponible,
-            Fecha_Creacion = DateTime.Now
+            CreatedDate = DateTime.Now
     };
     }
     public void AgregarCreadoPor(int usuarioId)
     {
-        Creado_Por = usuarioId;
+        CreatedBy = usuarioId;
     }   
     public void ModificarEstadoEnComision()
     {

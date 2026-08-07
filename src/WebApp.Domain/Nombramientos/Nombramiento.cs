@@ -47,8 +47,8 @@ public class Nombramiento : AuditableEntity
             Correlativo = correlativo,
             UsuarioId_Creador = usuarioId_Creador,
             Fecha_Creado = DateTime.Now,
-            Creado_Por = usuarioId_Creador,
-            Fecha_Creacion = DateTime.Now
+            CreatedBy = usuarioId_Creador,
+            CreatedDate = DateTime.Now
         };
     }
     public static Nombramiento AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)

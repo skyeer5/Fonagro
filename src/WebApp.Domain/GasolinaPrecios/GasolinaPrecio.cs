@@ -16,7 +16,7 @@ public class GasolinaPrecio : AuditableEntity
             GasolinaId = gasolinaId,
             Precio = precio,
             Fecha = DateTime.Now,
-            Creado_Por = userId
+            CreatedBy = userId
         };
     }
     
