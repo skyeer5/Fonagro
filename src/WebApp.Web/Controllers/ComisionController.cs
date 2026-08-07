@@ -10,6 +10,7 @@ using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Core;
+using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Comisiones;
 using WebApp.Web.Models.Comisiones;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
@@ -22,6 +23,7 @@ using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComis
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
+using static WebApp.Application.Nombramientos.Queries.GetNomsApproved.GetNomsApprovedQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
@@ -71,21 +73,19 @@ public class ComisionController : Controller
     [HttpGet]
     public async Task<IActionResult> Crear()
     {
-        var usuarios = await _mediator.Send(new GetUsuariosSinComisionQueryRequest());
+        var usuarios = await _mediator.Send(new GetNomsApprovedQueryRequest());
         if(!usuarios.IsSuccess)
         {
             TempData["msg"] = usuarios.Error;
             return View();
         }
-        ViewBag.Usuarios = new SelectList(usuarios.Value, "Id", "Nombre_Completo");
-
+        
         var vehiculos = await _mediator.Send(new GetVehiculosDisponiblesQueryRequest());
         if(!vehiculos.IsSuccess)
         {
             TempData["msg"] = vehiculos.Error;
             return View();
         }
-        ViewBag.Vehiculos = new SelectList(vehiculos.Value, "id", "Descripcion");
 
         return View();
     }

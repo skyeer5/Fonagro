@@ -2,9 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
+using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Unidades;
 using WebApp.Persistence;
+using WebApp.Persistence.Models;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -77,5 +79,18 @@ public class NombramientoService : INombramientoService
                                     request.PageSize
         );
         return pagination;
+    }
+
+    public async Task<List<GetNomsApprovedResponse>> GetNomsApprovedAsync(CancellationToken cancellationToken)
+    {
+        var query = from n in _context.Nombramientos
+                    join u in _context.Users
+                        on n.AsignacionUsuario!.UsuarioId equals u.Id
+                    select new GetNomsApprovedResponse
+                    {
+                        NombramientoId = n.NombramientoId,
+                        Descripcion = $"{u.Nombres} {u.Apellidos} | FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}"
+                    };
+        return await query.ToListAsync(cancellationToken);
     }
 }
