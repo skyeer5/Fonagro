@@ -53,4 +53,17 @@ public class NombramientoRepository : INombramientoRepository
 
         return Convert.ToInt32(result);
     }
+    
+    public async Task<int> AprobarNombramientoAsync(int nombramientoId, CancellationToken cancellationToken)
+    {
+        var usuarioAprobador = _currentUser.userId;
+        var nombramiento =  await _context.Nombramientos.FindAsync(nombramientoId);
+        if(nombramiento is null)
+        {
+            return 0;
+        }
+        nombramiento.AprobarNombramiento(usuarioAprobador);
+        var result = await _context.SaveChangesAsync(cancellationToken);
+        return result;
+    }
 }

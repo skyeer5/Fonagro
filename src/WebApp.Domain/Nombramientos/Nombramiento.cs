@@ -14,8 +14,10 @@ public class Nombramiento : AuditableEntity
     public DateTime Fecha_Regreso { get; set; }
     public string? Descripcion { get; set; } // Para el Plan de Viaje
     public int UsuarioId_Creador { get; set; }
+    public DateTime Fecha_Creado { get; set; }
+    public int UsuarioId_Aprobador { get; set; }
     public DateTime Fecha_Aprobado { get; set; }
-    public NombramientoTipos Estado { get; set; }
+    public NombramientoEstados Estado { get; set; }
     public int AsignacionUsuarioId { get; set; } 
     public AsignacionUsuario? AsignacionUsuario { get; set; }
     public int? ComisionId { get; set; }
@@ -39,11 +41,12 @@ public class Nombramiento : AuditableEntity
             Proposito = proposito,
             Fecha_Salida = fechaSalida,
             Fecha_Regreso = fechaRegreso,
-            Estado = NombramientoTipos.Asignado,
+            Estado = NombramientoEstados.Creado,
             AsignacionUsuarioId = usuarioId,
             NomMunicipios = municipios,
             Correlativo = correlativo,
             UsuarioId_Creador = usuarioId_Creador,
+            Fecha_Creado = DateTime.Now,
             Creado_Por = usuarioId_Creador,
             Fecha_Creacion = DateTime.Now
         };
@@ -52,8 +55,15 @@ public class Nombramiento : AuditableEntity
     {
         return new Nombramiento
         {
-            Estado = NombramientoTipos.Asignado,
+            Estado = NombramientoEstados.Creado,
         };
+    }
+
+    public void AprobarNombramiento(int usuarioAprobador)
+    {
+        this.UsuarioId_Aprobador = usuarioAprobador;
+        this.Fecha_Aprobado = DateTime.Now;
+        this.Estado = NombramientoEstados.Aprobado;
     }
     public void AsignarViaticos(ICollection<Viatico> viaticosVigentes, DateTime salida, DateTime entrada)
     {

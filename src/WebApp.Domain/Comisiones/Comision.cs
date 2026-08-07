@@ -121,7 +121,7 @@ public class Comision : AuditableEntity
         {
             foreach(var comisionUsuario in this.Nombramientos)
             {
-                comisionUsuario.Estado = NombramientoTipos.Completada;
+                comisionUsuario.Estado = NombramientoEstados.Completada;
             }
         }
     }
