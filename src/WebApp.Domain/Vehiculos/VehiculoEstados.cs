@@ -1,23 +1,10 @@
 namespace WebApp.Domain.Vehiculos;
 
-public static class VehiculoEstados
+public enum VehiculoEstados
 {
-    // Estados de Vehículo
-    public const string Disponible = nameof(Disponible);
-    public const string Baja = nameof(Baja);
-    public const string EnMantenimiento = nameof(EnMantenimiento);
-    public const string Ocupado = nameof(Ocupado);
-    public const string Reservado = nameof(Reservado);
+    Disponible = 1,
+    Ocupado = 2,
+    EnMantenimiento = 3,
+    Baja = 4
 
-    public static List<string> GetEstadosVehiculo()
-    {
-        return
-        [
-            Disponible,
-            Baja,
-            EnMantenimiento,
-            Ocupado,
-            Reservado
-        ];
-    }
 }

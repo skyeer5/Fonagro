@@ -104,8 +104,8 @@ public class ComisionService : IComisionService
                 Fecha_Regreso = p.Fecha_Regreso,
                 // Descripcion = p.Nombramientos!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
                 TotalCombustibleAutorizado = p.Presupuesto_Combustible_Aprobado,
-                Es_Gasolina = p.Vehiculo!.Gasolina!.Nombre != GasolinaTipos.Disel ? true : false,
-                Precio_Galon = p.Vehiculo!.Gasolina!.GasolinaPrecios!
+                Es_Gasolina = (CombustibleTipos)p.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
+                Precio_Galon = p.Vehiculo!.Combustible!.GasolinaPrecios!
                     .OrderByDescending(gp => gp.Fecha)
                     .Select(gp => gp.Precio)
                     .FirstOrDefault(),

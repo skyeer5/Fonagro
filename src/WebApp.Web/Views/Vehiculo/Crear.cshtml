@@ -1,5 +1,4 @@
-@using WebApp.Domain.Vehiculos
-@model WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateRequest
+@model WebApp.Web.Models.Vehiculos.VehiculoCreateViewModel
 
 @{
     ViewData["Title"] = "Crear Vehículo";
@@ -43,13 +42,8 @@
 
             <div class="col-md-6 mb-3">
                 <label asp-for="Tipo_Vehiculo" class="form-label"></label>
-                <select asp-for="Tipo_Vehiculo" class="form-control" required>
-                    <option value="">Seleccionar Tipo</option>
-                    <option value="@VehiculosTipos.Automovil">@VehiculosTipos.Automovil</option>
-                    <option value="@VehiculosTipos.Pickup">@VehiculosTipos.Pickup</option>
-                    <option value="@VehiculosTipos.Jeep">@VehiculosTipos.Jeep</option>
-                    <option value="@VehiculosTipos.Panel">@VehiculosTipos.Panel</option>
-                    <option value="@VehiculosTipos.Camionetilla">@VehiculosTipos.Camionetilla</option>
+                <select asp-for="Tipo_Vehiculo" asp-items="Model.Tipos" class="form-control" required>
+                    <option value="">--Seleccionar--</option>
                 </select>
                 <span asp-validation-for="Tipo_Vehiculo" class="text-danger"></span>
             </div>
@@ -62,31 +56,18 @@
 
             <div class="col-md-6 mb-3">
                 <label asp-for="Cilindraje" class="form-label"></label>
-                <select asp-for="Cilindraje" class="form-control" required>
+                <select asp-for="Cilindraje" asp-items="Model.Cilindrajes" class="form-control" required>
                     <option value="">--Seleccionar--</option>
-                    <option value="@VehiculoCilindraje.Cilindraje_4">@VehiculoCilindraje.Cilindraje_4</option>
-                    <option value="@VehiculoCilindraje.Cilindraje_6">@VehiculoCilindraje.Cilindraje_6</option>
-                    <option value="@VehiculoCilindraje.Cilindraje_8">@VehiculoCilindraje.Cilindraje_8</option>
-                    <option value="@VehiculoCilindraje.Cilindraje_8_Lujo">@VehiculoCilindraje.Cilindraje_8_Lujo</option>
                 </select>
                 <span asp-validation-for="Cilindraje" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label asp-for="Kilometraje" class="form-label"></label>
-                <input asp-for="Kilometraje" type="number" class="form-control" required/>
-                <span asp-validation-for="Kilometraje" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Gasolina</label>
-                <select class="form-select mt-2" asp-for="GasolinaId" required>
+                <label>Combustible</label>
+                <select class="form-select mt-2" asp-for="GasolinaId" asp-items="Model.Gasolinas" required>
                     <option value="">--Seleccionar--</option>
-                    @foreach (var gasolina in (ViewBag.Gasolinas as SelectList)!)
-                    {
-                        <option value="@gasolina.Value">@gasolina.Text</option>
-                    }
                 </select>
+                <span asp-validation-for="GasolinaId" class="text-danger"></span>
             </div>
 
         </div>

@@ -19,9 +19,9 @@ public class GasolinaPrecioRepository : IGasolinaPrecioRepository
     public async Task<Result<int>> CreateAsync(int gasolinaId, decimal precio, CancellationToken cancellationToken)
     {
         var userId = _currentUser.userId;
-        var entity = GasolinaPrecio.Crear(gasolinaId, precio, userId);
+        var entity = CombustiblePrecio.Crear(gasolinaId, precio, userId);
 
-        _context.GasolinaPrecios.Add(entity);
+        _context.CombustiblePrecios.Add(entity);
         var resultado = await _context.SaveChangesAsync(cancellationToken);
         if(resultado <= 0)
         {

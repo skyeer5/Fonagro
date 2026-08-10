@@ -26,8 +26,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         : base(options)
     {
     }
-    public DbSet<Gasolina> Gasolinas { get; set; }
-    public DbSet<GasolinaPrecio> GasolinaPrecios { get; set; }
+    public DbSet<Combustible> Combustibles { get; set; }
+    public DbSet<CombustiblePrecio> CombustiblePrecios { get; set; }
     public DbSet<Vehiculo> Vehiculos { get; set; }
     public DbSet<Viatico> Viaticos { get; set; }
     public DbSet<Comision> Comisiones { get; set; }
@@ -48,8 +48,8 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         base.OnModelCreating(modelBuilder);
 
         // Definicion de las tablas
-        modelBuilder.Entity<Gasolina>().ToTable("gasolinas");
-        modelBuilder.Entity<GasolinaPrecio>().ToTable("gasolinaPrecios");
+        modelBuilder.Entity<Combustible>().ToTable("combustibles");
+        modelBuilder.Entity<CombustiblePrecio>().ToTable("combustibleprecios");
         modelBuilder.Entity<Vehiculo>().ToTable("vehiculos");
         modelBuilder.Entity<Viatico>().ToTable("viaticos");
         modelBuilder.Entity<Comision>().ToTable("comisiones");
@@ -64,7 +64,7 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
         modelBuilder.Entity<NomMunicipio>().ToTable("nombramientoMunicipios");
 
         // Definicion de las propiedades
-        modelBuilder.Entity<GasolinaPrecio>()
+        modelBuilder.Entity<CombustiblePrecio>()
             .Property(gp => gp.Precio)
             .HasPrecision(18, 2);
 
@@ -106,17 +106,17 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasPrecision(18, 2);
 
         // Definicion de las relaciones
-        modelBuilder.Entity<Gasolina>()
+        modelBuilder.Entity<Combustible>()
             .HasMany(g => g.GasolinaPrecios)
-            .WithOne(p => p.Gasolina)
-            .HasForeignKey(p => p.GasolinaId)
+            .WithOne(p => p.Combustible)
+            .HasForeignKey(p => p.CombustibleId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Gasolina>()
+        modelBuilder.Entity<Combustible>()
             .HasMany(g => g.Vehiculos)
-            .WithOne(p => p.Gasolina)
-            .HasForeignKey(p => p.GasolinaId)
+            .WithOne(p => p.Combustible)
+            .HasForeignKey(p => p.CombustibleId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
         

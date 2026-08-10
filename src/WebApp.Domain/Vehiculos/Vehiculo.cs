@@ -9,32 +9,33 @@ public class Vehiculo : AuditableEntity
     public string? Marca { get; set; }
     public string? Modelo { get; set; }
     public int Anio { get; set; }
-    public string? Tipo_Vehiculo { get; set; }
+    public VehiculoTipos Tipo_Vehiculo { get; set; }
     public string? Color { get; set; }
-    public string? Cilindraje { get; set;}
+    public VehiculoCilindrajes Cilindraje { get; set;}
     public int ConsumoKmPorGalon { get; set; }
-    public string? Estado { get; set; }
-    public Gasolina? Gasolina { get; set; }
-    public int? GasolinaId { get; set; }
+    public VehiculoEstados Estado { get; set; }
+    public Combustible? Combustible { get; set; }
+    public int? CombustibleId { get; set; }
     public ICollection<Comision>? Comisiones { get; set; }
 
-    public static Vehiculo Crear(string placa, string marca, string modelo, int anio, string tipo_Vehiculo, string color, string cilindraje, double kilometraje, int? gasolinaId, string tipo_gasolina)
+    public static Vehiculo Crear(string placa, string marca, string modelo, int anio, VehiculoTipos tipo_Vehiculo, string color, VehiculoCilindrajes cilindraje, int? gasolinaId)
     {
+        var tipo_gasolina = (CombustibleTipos)gasolinaId!;
         int consumo = 0;
-        if(tipo_gasolina == GasolinaTipos.Disel)
+        if(tipo_gasolina == CombustibleTipos.Disel)
         {
             switch(cilindraje)
             {
-                case VehiculoCilindraje.Cilindraje_4:
+                case VehiculoCilindrajes.Cilindraje_4:
                     consumo = 32;
                     break;
-                case VehiculoCilindraje.Cilindraje_6:
+                case VehiculoCilindrajes.Cilindraje_6:
                     consumo = 28;
                     break;
-                case VehiculoCilindraje.Cilindraje_8:
+                case VehiculoCilindrajes.Cilindraje_8:
                     consumo = 16;
                     break;
-                case VehiculoCilindraje.Cilindraje_8_Lujo:
+                case VehiculoCilindrajes.Cilindraje_8_Lujo:
                     consumo = 12;
                     break;
             }
@@ -43,16 +44,16 @@ public class Vehiculo : AuditableEntity
         {
             switch(cilindraje)
             {
-                case VehiculoCilindraje.Cilindraje_4:
+                case VehiculoCilindrajes.Cilindraje_4:
                     consumo = 35;
                     break;
-                case VehiculoCilindraje.Cilindraje_6:
+                case VehiculoCilindrajes.Cilindraje_6:
                     consumo = 25;
                     break;
-                case VehiculoCilindraje.Cilindraje_8:
+                case VehiculoCilindrajes.Cilindraje_8:
                     consumo = 15;
                     break;
-                case VehiculoCilindraje.Cilindraje_8_Lujo:
+                case VehiculoCilindrajes.Cilindraje_8_Lujo:
                     consumo = 10;
                     break;
             }
@@ -67,7 +68,7 @@ public class Vehiculo : AuditableEntity
             Color = color,
             Cilindraje = cilindraje,
             ConsumoKmPorGalon = consumo,
-            GasolinaId = gasolinaId,
+            CombustibleId = gasolinaId,
             Estado = VehiculoEstados.Disponible,
             CreatedDate = DateTime.Now
     };

@@ -24,8 +24,6 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
                 return Result<int>.Failure("Tipo de gasolina no encontrado");
             }
 
-            var gasoNombre= await _gasolinaService.GetNombreByIdAsync(request.VehiculoCreateRequest.GasolinaId, cancellationToken);
-
             var vehiculo = Vehiculo.Crear(request.VehiculoCreateRequest.Placa!,
                                 request.VehiculoCreateRequest.Marca!,
                                 request.VehiculoCreateRequest.Modelo!,
@@ -33,9 +31,8 @@ public sealed class VehiculoCreateCommandHandler : IRequestHandler<VehiculoCreat
                                 request.VehiculoCreateRequest.Tipo_Vehiculo!,
                                 request.VehiculoCreateRequest.Color!,
                                 request.VehiculoCreateRequest.Cilindraje!,
-                                request.VehiculoCreateRequest.Kilometraje,
-                                request.VehiculoCreateRequest.GasolinaId,
-                                gasoNombre!);
+                                request.VehiculoCreateRequest.GasolinaId
+                                );
             
             var resultado = await _vehiculoRepository.CreateVehiculoAsync(vehiculo, cancellationToken);
 

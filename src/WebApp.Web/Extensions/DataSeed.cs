@@ -48,15 +48,15 @@ public static class DataSeed
                 await userManager.AddToRoleAsync(userAdmin, RolesTipos.Administrador);
             }
 
-            if(!context.Gasolinas.Any())
+            if(!context.Combustibles.Any())
             {
-                var gasolinas = new List<Gasolina>
+                var gasolinas = new List<Combustible>
                 {
-                    new Gasolina { Nombre = GasolinaTipos.Super},
-                    new Gasolina { Nombre = GasolinaTipos.Regular},
-                    new Gasolina { Nombre = GasolinaTipos.Disel}
+                    new Combustible { Nombre = CombustibleTipos.Superior.ToString()},
+                    new Combustible { Nombre = CombustibleTipos.Regular.ToString()},
+                    new Combustible { Nombre = CombustibleTipos.Disel.ToString()}
                 };
-                await context.Gasolinas.AddRangeAsync(gasolinas);
+                await context.Combustibles.AddRangeAsync(gasolinas);
             }
 
             if(!context.Viaticos.Any())

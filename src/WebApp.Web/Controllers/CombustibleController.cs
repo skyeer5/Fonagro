@@ -6,11 +6,11 @@ using WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio;
 
 namespace WebApp.Web.Controllers;
 [Authorize]
-public class GasolinaController : Controller
+public class CombustibleController : Controller
 {
     private readonly IMediator _mediator;
 
-    public GasolinaController(IMediator mediator)
+    public CombustibleController(IMediator mediator)
     {
         _mediator = mediator;
     }

@@ -5,13 +5,13 @@
     var gasolinas = ViewBag.Gasolinas as IEnumerable<WebApp.Application.Gasolinas.Queries.GetGasolinasWithPrecio.GetGasolinasWithPrecioResponse>;
 }
 
-<h2>Actualizar Precio de Gasolina</h2>
+<h2>Actualizar Precio de Combustible</h2>
 
 <form asp-action="UpdatePrecio" method="post">
     <div class="form-group">
-        <label for="GasolinaId">Gasolina</label>
+        <label for="GasolinaId">Combustible</label>
         <select id="GasolinaId" name="GasolinaId" class="form-control" required>
-            <option value="">-- Seleccione una gasolina --</option>
+            <option value="">-- Seleccione un combustible --</option>
             @foreach (var g in gasolinas!)
             {
                 <option value="@g.Id">@g.Nombre - Precio actual: @(g.Precio?.ToString("C"))</option>

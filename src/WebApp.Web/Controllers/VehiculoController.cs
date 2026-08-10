@@ -6,7 +6,10 @@ using WebApp.Application.Core;
 using WebApp.Application.Vehiculos.Commands.VehiculoCreate;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
+using WebApp.Domain.Usuarios;
 using WebApp.Domain.Vehiculos;
+using WebApp.Web.Extensions;
+using WebApp.Web.Models.Vehiculos;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinas.GetGasolinasQuery;
 using static WebApp.Application.Vehiculos.Commands.VehiculoCreate.VehiculoCreateCommand;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
@@ -27,16 +30,21 @@ public class VehiculoController : Controller
         return View();
     }
     [HttpGet]
-    public IActionResult Crear()
+    public async Task<IActionResult> Crear()
     {
-        var gasolinas = _mediator.Send(new GetGasolinasQueryRequest());
-        if (!gasolinas.Result.IsSuccess)
+        var gasolinas = await _mediator.Send(new GetGasolinasQueryRequest());
+
+        var model = new VehiculoCreateViewModel
         {
-            ModelState.AddModelError(string.Empty, gasolinas.Result.Error!);
-            return View();
-        }
-        ViewBag.Gasolinas = new SelectList(gasolinas.Result.Value, "Id", "Nombre");
-        return View();
+            Gasolinas = gasolinas.Value!.ToSelectList(
+                x=> x.Id.ToString(),
+                x=>x.Nombre
+            ),
+            Tipos = EnumExtensions.ToSelectList<VehiculoTipos>(),
+            Cilindrajes = EnumExtensions.ToSelectList<VehiculoCilindrajes>()
+        };
+
+        return View(model);
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> Crear(
@@ -63,7 +71,6 @@ public class VehiculoController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? marca = "", string? modelo = "", string? placa = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = VehiculoEstados.GetEstadosVehiculo();
         var request = new GetVehiculosDetalleRequest
         {
             Marca = marca,

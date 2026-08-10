@@ -66,13 +66,6 @@ public class VehiculoService : IVehiculoService
                             .Contains(request.Placa)
                         );
         }
-        if(!string.IsNullOrEmpty(request.Estado))
-        {
-            predicate = predicate.And(x=>
-                            x.Estado!
-                            .Contains(request.Estado)
-                        );
-        }
         if(!string.IsNullOrEmpty(request.OrderBy))
         {
             Expression<Func<Vehiculo, object>> orderBySelector =

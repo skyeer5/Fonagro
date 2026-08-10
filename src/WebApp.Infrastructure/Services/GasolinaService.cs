@@ -16,16 +16,16 @@ public class GasolinaService : IGasolinaService
     }
     public async Task<bool> GasolinaExistsAsync(int gasolinaId, CancellationToken cancellationToken)
     {
-        return await _context.Gasolinas.AsNoTracking().AnyAsync(g => g.GasolinaId == gasolinaId, cancellationToken);
+        return await _context.Combustibles.AsNoTracking().AnyAsync(g => g.CombustibleId == gasolinaId, cancellationToken);
 
     }
 
     public async Task<List<GetGasolinasResponse>?> GetGasolinasListAsync(CancellationToken cancellationToken)
     {
-        var gasolinas = await _context.Gasolinas
+        var gasolinas = await _context.Combustibles
             .Select(g => new GetGasolinasResponse
             {
-                Id = g.GasolinaId,
+                Id = g.CombustibleId,
                 Nombre = g.Nombre!
             })
             .ToListAsync(cancellationToken);
@@ -34,10 +34,10 @@ public class GasolinaService : IGasolinaService
     }
     public async Task<List<GetGasolinasWithPrecioResponse>?> GetGasolinasWithPrecioListAsync(CancellationToken cancellationToken)
     {
-        var gasolinas = await _context.Gasolinas
+        var gasolinas = await _context.Combustibles
             .Select(g => new GetGasolinasWithPrecioResponse
             {
-                Id = g.GasolinaId,
+                Id = g.CombustibleId,
                 Nombre = g.Nombre!,
                 Precio = g.GasolinaPrecios!.OrderByDescending(p => p.Fecha).Select(p => p.Precio).FirstOrDefault()
             })
@@ -47,7 +47,7 @@ public class GasolinaService : IGasolinaService
     }
     public async Task<List<GetGasolinasWithFechaResponse>?> GetGasolinasWithFechaListAsync(CancellationToken cancellationToken)
     {
-        var gasolinas = await _context.Gasolinas
+        var gasolinas = await _context.Combustibles
             .Select(g =>GetGasolinasWithFechaResponse.Crear
             (
                 g.Nombre!,
@@ -61,6 +61,6 @@ public class GasolinaService : IGasolinaService
 
     public async Task<string?> GetNombreByIdAsync(int gasolinaId, CancellationToken cancellationToken)
     {
-        return await _context.Gasolinas.Where(x=>x.GasolinaId == gasolinaId).Select(x=>x.Nombre).FirstOrDefaultAsync();
+        return await _context.Combustibles.Where(x=>x.CombustibleId == gasolinaId).Select(x=>x.Nombre).FirstOrDefaultAsync();
     }
 }

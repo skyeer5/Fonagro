@@ -1,9 +1,9 @@
 namespace WebApp.Domain.Vehiculos;
 
-public static class VehiculoCilindraje
+public enum VehiculoCilindrajes
 {
-    public const string Cilindraje_4 = nameof(Cilindraje_4);
-    public const string Cilindraje_6 = nameof(Cilindraje_6);
-    public const string Cilindraje_8 = nameof(Cilindraje_8);
-    public const string Cilindraje_8_Lujo = nameof(Cilindraje_8_Lujo);
+    Cilindraje_4 = 1,
+    Cilindraje_6 = 2,
+    Cilindraje_8 = 3,
+    Cilindraje_8_Lujo = 4
 }

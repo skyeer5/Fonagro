@@ -16,8 +16,8 @@ public class GasolinaPrecioService : IGasolinaPrecioService
         return await _context.Vehiculos
                 .AsNoTracking()
                 .Where(x=>x.VehiculoId == vehiculoId)
-                .SelectMany(x=> _context.GasolinaPrecios
-                    .Where(gp=>gp.GasolinaId==x.GasolinaId))
+                .SelectMany(x=> _context.CombustiblePrecios
+                    .Where(gp=>gp.CombustibleId==x.CombustibleId))
                     .OrderByDescending(gp => gp.Fecha)
                     .Select(gp => gp.Precio)
                     .Take(1)

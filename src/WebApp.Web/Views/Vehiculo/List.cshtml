@@ -95,9 +95,9 @@
                         <td>@item.Modelo</td>
                         <td>@item.Placa</td>
                         <td>
-                            <span class="badge @(item.Estado == VehiculoEstados.Disponible ? "bg-success" : "bg-secondary")">
+                            @* <span class="badge @(item.Estado == VehiculoEstados.Disponible ? "bg-success" : "bg-secondary")"> *@
                                 @item.Estado
-                            </span>
+                            @* </span> *@
                         </td>
                         <td class="text-center">
                             <a href="/Vehiculo/Edit?id=@item.VehiculoId" class="btn btn-sm btn-outline-primary">
