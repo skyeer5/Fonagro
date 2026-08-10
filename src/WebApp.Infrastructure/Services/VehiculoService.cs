@@ -74,7 +74,6 @@ public class VehiculoService : IVehiculoService
                             "marca" => v => v.Marca!,
                             "modelo" => v => v.Modelo!,
                             "placa" => v => v.Placa!,
-                            "estado" => v => v.Estado!,
                             _ => v => v.VehiculoId
                         };
             bool orderBy = request.OrderAsc.HasValue

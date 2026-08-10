@@ -1,5 +1,4 @@
 @using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle
-@using WebApp.Domain.Vehiculos
 @model WebApp.Application.Core.PagedList<GetVehiculosDetalleResponse>;
 @{
     ViewData["Title"] = "Listado de Vehículos";
@@ -59,10 +58,6 @@
                 </label>
                 <select name="estado" id="estado" class="form-control">
                     <option value="">Seleccionar estado</option>
-                    @foreach (var estado in ViewBag.Estados)
-                    {
-                        <option value="@estado">@estado</option>
-                    }
                 </select>
             </div>
 
