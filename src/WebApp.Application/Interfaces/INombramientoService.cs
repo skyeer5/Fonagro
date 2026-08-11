@@ -1,5 +1,6 @@
 using WebApp.Application.Core;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
+using WebApp.Application.Nombramientos.Queries.GetNomDatosById;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Nombramientos;
 
@@ -11,4 +12,5 @@ public interface INombramientoService
     Task<string?> GetDescripcionAsync(int comisionId, int usuarioId, CancellationToken cancellationToken); // Nombramiento(NM)
     Task<PagedList<GetNombramientosResponse>> GetNombramientosAsync(GetNombramientosRequest request,CancellationToken cancellationToken);
     Task<List<GetNomsApprovedResponse>> GetNomsApprovedAsync(CancellationToken cancellationToken);
+    Task<GetNomDatosByIdResponse?> GetNomDatosByIdAsync(int nombramientoId, CancellationToken cancellationToken);
 }

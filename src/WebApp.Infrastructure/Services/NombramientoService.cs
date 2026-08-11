@@ -2,8 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
+using WebApp.Application.Nombramientos.Queries.GetNomDatosById;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Nombramientos;
+using WebApp.Domain.NomMunicipios;
 using WebApp.Domain.Unidades;
 using WebApp.Persistence;
 using WebApp.Persistence.Models;
@@ -92,5 +94,24 @@ public class NombramientoService : INombramientoService
                         Descripcion = $"{u.Nombres} {u.Apellidos} | FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}"
                     };
         return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<GetNomDatosByIdResponse?> GetNomDatosByIdAsync(int nombramientoId, CancellationToken cancellationToken)
+    {
+        return await _context.Nombramientos
+            .Where(x => x.NombramientoId == nombramientoId)
+            .Select(x => new GetNomDatosByIdResponse
+            {
+                Departamentos = string.Join(", ", x.NomMunicipios!
+                    .Select(nm => nm.Municipio!.Departamento.Nombre)
+                    .Distinct()), 
+                    
+                Municipios = string.Join(", ", x.NomMunicipios!
+                    .Select(nm => nm.Municipio!.Nombre)),
+                    
+                Fecha_Regreso = x.Fecha_Regreso,
+                Fecha_Salida = x.Fecha_Salida
+            })
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

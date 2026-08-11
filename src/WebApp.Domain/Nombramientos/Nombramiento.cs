@@ -15,8 +15,8 @@ public class Nombramiento : AuditableEntity
     public string? Descripcion { get; set; } // Para el Plan de Viaje
     public int UsuarioId_Creador { get; set; }
     public DateTime Fecha_Creado { get; set; }
-    public int UsuarioId_Aprobador { get; set; }
-    public DateTime Fecha_Aprobado { get; set; }
+    public int? UsuarioId_Aprobador { get; set; }
+    public DateTime? Fecha_Aprobado { get; set; }
     public NombramientoEstados Estado { get; set; }
     public int AsignacionUsuarioId { get; set; } 
     public AsignacionUsuario? AsignacionUsuario { get; set; }

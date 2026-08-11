@@ -10,6 +10,7 @@ using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepart
 using static WebApp.Application.Nombramientos.Command.NombramientoApprove.NombramientoApproveCommand;
 using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
 using static WebApp.Application.Nombramientos.Queries.GetNombramientos.GetNomParaAprobarQuery;
+using static WebApp.Application.Nombramientos.Queries.GetNomDatosById.GetNomDatosByIdQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -89,5 +90,17 @@ public class NombramientoController : Controller
         var command = new NombramientoApproveCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> ObtenerDatosById(int nombramientoId)
+    {
+        var query = new GetNomDatosByIdQueryRequest(nombramientoId);
+        var nombramiento = await _mediator.Send(query);
+        if(!nombramiento.IsSuccess)
+        {
+            return Json(nombramiento.Error);
+        }
+        return Json(nombramiento.Value);
     }
 }

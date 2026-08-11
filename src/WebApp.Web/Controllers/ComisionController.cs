@@ -12,6 +12,7 @@ using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Core;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Comisiones;
+using WebApp.Web.Extensions;
 using WebApp.Web.Models.Comisiones;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 using static WebApp.Application.Comisiones.Command.ComisionAddDescripcion.ComisionAddDescripcionQuery;
@@ -73,21 +74,22 @@ public class ComisionController : Controller
     [HttpGet]
     public async Task<IActionResult> Crear()
     {
-        var usuarios = await _mediator.Send(new GetNomsApprovedQueryRequest());
-        if(!usuarios.IsSuccess)
-        {
-            TempData["msg"] = usuarios.Error;
-            return View();
-        }
+        var nombramientos = await _mediator.Send(new GetNomsApprovedQueryRequest());
         
         var vehiculos = await _mediator.Send(new GetVehiculosDisponiblesQueryRequest());
-        if(!vehiculos.IsSuccess)
-        {
-            TempData["msg"] = vehiculos.Error;
-            return View();
-        }
 
-        return View();
+        var model = new ComisionCreateViewModel
+        {
+            Nombramientos = nombramientos.Value!.ToSelectList(
+                x=>x.NombramientoId.ToString(),
+                x=>x.Descripcion!
+            ),
+            Vehiculos = vehiculos.Value!.ToSelectList(
+                x=>x.id.ToString(),
+                x=>x.Descripcion!
+            )
+        };
+        return View(model);
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> Crear(
