@@ -4,9 +4,10 @@ namespace WebApp.Application.Comisiones.Queries.GetComisionesActivas;
 
 public class GetComisionActivaResponse
 {
-    public int id { get; set; }
+    public int ComisionId { get; set; }
     public string? Nombramiento { get; set; }
     public string? Departamento { get; set; }
+    public string? Municipio { get; set; }
     public string? Descripcion { get; set; }
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }

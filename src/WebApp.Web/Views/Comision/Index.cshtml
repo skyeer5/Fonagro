@@ -123,7 +123,7 @@
 
                     <div class="row mb-2">
                         <div class="col-md-6"><strong>Nombramiento:</strong> @Model.Comision.Nombramiento</div>
-                        <div class="col-md-6"><strong>Departamento:</strong> @Model.Comision.Departamento</div>
+                        <div class="col-md-6"><strong>Estado: </strong><span class="badge bg-primary">@Model.Comision.Estado</span></div>
                     </div>
 
                     <div class="row mb-2">
@@ -131,13 +131,13 @@
                         <div class="col-md-6"><strong>Regreso:</strong> @Model.Comision.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</div>
                     </div>
 
-                    <div class="mb-3">
-                        <strong>Estado:</strong>
-                        <span class="badge bg-primary">@Model.Comision.Estado</span>
+                    <div class="row mb-2">
+                        <div class="col-md-6"><strong>Departamento:</strong> @Model.Comision.Departamento</div>
+                        <div class="col-md-6"><strong>Municipio:</strong> @Model.Comision.Municipio</div>
                     </div>
 
                     <form asp-controller="Comision" asp-action="AgregarDescripcion" method="post">
-                        <input type="hidden" name="IdComision" value="@Model.Comision.id" />
+                        <input type="hidden" name="IdComision" value="@Model.Comision.ComisionId" />
 
                         <label class="form-label"><strong>Descripción</strong></label>
                         <textarea name="Descripcion" class="form-control mb-2">@Model.Comision.Descripcion</textarea>
@@ -184,12 +184,12 @@
             @if (Model.TieneCombustiblesAprobados)
             {
                 <div class="mb-4">
-                    <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.id"
+                    <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.ComisionId"
                        class="btn btn-success me-2">
                         Plan de Viaje
                     </a>
 
-                    <a asp-action="ImprimirViaticos" asp-route-id="@Model.Comision.id"
+                    <a asp-action="ImprimirViaticos" asp-route-id="@Model.Comision.ComisionId"
                        class="btn btn-success">
                         Viáticos
                     </a>
@@ -209,7 +209,7 @@
                     asp-action="AgregarDestinos"
                     method="post">
 
-                    <input type="hidden" name="ComisionId" value="@Model.Comision!.id" />
+                    <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
                     <div id="destinos-container">
                         <div class="row mb-2 destino-row">

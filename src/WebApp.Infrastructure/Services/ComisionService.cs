@@ -15,6 +15,7 @@ using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Gasolinas;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
+using WebApp.Domain.Unidades;
 
 
 namespace WebApp.Infrastructure.Services;
@@ -35,39 +36,38 @@ public class ComisionService : IComisionService
     public async Task<GetComisionActivaResponse?> GetComisionActivaAsync()
     {
         var userId = _currentUser.userId;
-        return await _context.Comisiones
-                .AsNoTracking()
-                .Where(c => 
-                    c.Estado!= ComisionEstados.Cancelada 
-                    && c.Estado != ComisionEstados.Completada 
-                    /*&& c.Nombramientos! 
-                    .Any(cu => cu.UsuarioId == userId && cu.Estado != NombramientoTipos.Cancelada && cu.Estado !=NombramientoTipos.Completada)*/)
-                .Select(c => new GetComisionActivaResponse
-                {
-                    id = c.ComisionId,
-                    // Departamento = c.Departamento,
-                    Fecha_Salida = c.Fecha_Salida,
-                    Fecha_Regreso = c.Fecha_Regreso,
-                    Estado = c.Estado,
-                    // Descripcion = c.Comision!
-                    //     .First(cu => cu.UsuarioId == userId).Descripcion,
-                    // Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
-                    // Nombramiento = c.Nombramientos!
-                    //     .First(cu => cu.UsuarioId == userId).Num_Nombramiento,
-
-                    // Piloto = c.Nombramientos!
-                    //     .First(cu => cu.UsuarioId == userId).Es_Piloto,
-                    // Destinos = c.ComisionDestinos!
-                    //                 .Select( x=> new GetComisionDestinosResponse
-                    //                 {
-                    //                     id = x.ComisionDestinoId,
-                    //                     descripcion =x.Descripcion,
-                    //                     kilometros = x.Kilometros
-                    //                 }
-                    
-                })
-                .FirstOrDefaultAsync();
-
+        var query = from n in _context.Nombramientos.AsNoTracking()
+                    join c in _context.Comisiones
+                            on n.ComisionId equals c.ComisionId
+                    join au in _context.AsignacionesUsuarios 
+                            on n.AsignacionUsuarioId equals au.AsignacionUsuarioId
+                    join u in _context.Users
+                            on au.UsuarioId equals u.Id
+                    where u.Id == userId 
+                        && au.Fecha_Desasignacion == null
+                        && c.Estado != ComisionEstados.Cancelada 
+                        && c.Estado != ComisionEstados.Completada
+                    select new GetComisionActivaResponse
+                    {
+                        ComisionId = c.ComisionId,
+                        Departamento = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Departamento.Nombre)),
+                        Municipio = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Nombre)),
+                        Fecha_Salida = n.Fecha_Salida,
+                        Fecha_Regreso = n.Fecha_Regreso,
+                        Estado = c.Estado,
+                        Descripcion = n.Descripcion,
+                        Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
+                        Nombramiento = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
+                        Piloto = n.NombramientoId == c.NombramientoId_Respon_Vehiculo,
+                        Destinos = c.ComisionDestinos!
+                                        .Select( cd=> new GetComisionDestinosResponse
+                                        {
+                                            id = cd.ComisionDestinoId,
+                                            descripcion = cd.Descripcion,
+                                            kilometros = cd.Kilometros
+                                        }).ToList()
+                    };
+        return await query.FirstOrDefaultAsync();                
 
     }
 
