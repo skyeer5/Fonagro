@@ -88,6 +88,7 @@ public class NombramientoService : INombramientoService
         var query = from n in _context.Nombramientos
                     join u in _context.Users
                         on n.AsignacionUsuario!.UsuarioId equals u.Id
+                    where n.Estado == NombramientoEstados.Aprobado && n.Comision == null
                     select new GetNomsApprovedResponse
                     {
                         NombramientoId = n.NombramientoId,
@@ -113,5 +114,14 @@ public class NombramientoService : INombramientoService
                 Fecha_Salida = x.Fecha_Salida
             })
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<Nombramiento>?> GetNombramientosByListIdsAsync(List<int> nombramientos, CancellationToken cancellationToken)
+    {
+        return await _context.Nombramientos
+                        .Where(x=>nombramientos.Contains(x.NombramientoId))
+                        .Include(x=>x.NomMunicipios!)
+                            .ThenInclude(nm=>nm.Municipio)
+                        .ToListAsync();
     }
 }

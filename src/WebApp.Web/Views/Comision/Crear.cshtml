@@ -11,128 +11,65 @@
 
         <div class="col">
             <label>Departamento de visita</label>
-            <input id="departamentoVisita"
-                   class="form-control"
-                   type="text"
-                   disabled
-                   readonly>
+            <input id="departamentoVisita" class="form-control" type="text" disabled readonly>
         </div>
 
         <div class="col">
-            <label>Vehículo</label>
-
-            <select asp-for="VehiculoId"
-                    asp-items="Model.Vehiculos"
-                    class="form-select"
-                    id="vehiculoSelect">
-
-                <option value="">-- Seleccione --</option>
-
-            </select>
+            <label>Municipio de visita</label>
+            <input id="municipioVisita" class="form-control" type="text" disabled readonly>
         </div>
 
         <div class="col">
             <label>Fecha salida</label>
-
-            <input id="fechaSalida"
-                   class="form-control"
-                   type="text"
-                   disabled
-                   readonly>
+            <input id="fechaSalida" class="form-control" type="text" disabled readonly>
         </div>
 
         <div class="col">
             <label>Fecha regreso</label>
-
-            <input id="fechaRegreso"
-                   class="form-control"
-                   type="text"
-                   disabled
-                   readonly>
+            <input id="fechaRegreso" class="form-control" type="text" disabled readonly>
         </div>
-
+        
+        <div class="col">
+            <label>Vehículo</label>
+            <select asp-for="VehiculoId" asp-items="Model.Vehiculos" class="form-select" id="vehiculoSelect">
+                <option value="">-- Seleccione --</option>
+            </select>
+        </div>
     </div>
-
-    <div id="vehiculoPreview"
-         class="alert alert-info mt-3"
-         style="display:none;">
-
-        <strong>Vehículo seleccionado:</strong>
-
-        <p id="vehiculoInfo" class="mb-0"></p>
-
-    </div>
-
     <hr />
 
     <h4>Usuarios nombrados</h4>
 
     <table id="tablaUsuarios" class="table">
-
         <thead>
-
             <tr>
                 <th>Descripción del nombramiento</th>
                 <th>Responsable</th>
                 <th>Acción</th>
             </tr>
-
         </thead>
-
         <tbody>
-
             <tr>
-
                 <td>
-
-                    <select name="UsuariosNombrados[0].UsuariosId"
-                            class="form-select nombramiento-select"
-                            required>
-
-                        <option value="">
-                            -- Seleccione --
-                        </option>
-
-                        @foreach (SelectListItem u in Model.Nombramientos!)
+                    <select name="Nombramientos[0]" class="form-select nombramiento-select" required>
+                        <option value="">-- Seleccione --</option>
+                        @foreach (SelectListItem u in Model.NombramientosList!)
                         {
-                            <option value="@u.Value">
-                                @u.Text
-                            </option>
+                            <option value="@u.Value">@u.Text</option>
                         }
-
                     </select>
-
                 </td>
-
-                <td>
-                    Responsable del vehículo
-                </td>
-
+                <td>Responsable del vehículo</td>
                 <td class="text-center">
-
-                    <button type="button"
-                            class="btn btn-danger btn-sm"
-                            disabled>
-                        X
-                    </button>
-
+                    <button type="button" class="btn btn-danger btn-sm" disabled>X</button>
                 </td>
-
             </tr>
-
         </tbody>
-
     </table>
 
-
-    <button type="button"
-            class="btn btn-success"
-            onclick="agregarUsuario()">
-
+    <button type="button" class="btn btn-success" onclick="agregarUsuario()">
         Agregar Nombramiento
-
     </button>
-
 
     @if (TempData["msg"] != null)
     {
@@ -140,374 +77,157 @@
             @TempData["msg"]
         </div>
     }
-
-
-    <button type="submit"
-            class="btn btn-primary">
-
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary mt-3">
         Guardar comisión
-
-    </button>
+        </button>
+    </div>
 
 </form>
 
 
-<!-- ================= MODAL CONFIRMACIÓN ================= -->
-
-<div class="modal fade"
-     id="confirmarComisionModal"
-     tabindex="-1"
-     aria-labelledby="confirmarComisionModalLabel"
-     aria-hidden="true"
-     data-bs-backdrop="static"
-     data-bs-keyboard="false">
-
+<div class="modal fade" id="confirmarComisionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
-
             <div class="modal-header">
-
-                <h5 class="modal-title"
-                    id="confirmarComisionModalLabel">
-
-                    Confirmar comisión
-
-                </h5>
-
+                <h5 class="modal-title">Confirmar comisión</h5>
             </div>
-
             <div class="modal-body">
-
                 <p id="mensajeConfirmacion"></p>
-
             </div>
-
             <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-
-                    Cancelar
-
-                </button>
-
-                <button type="button"
-                        id="btnConfirmarComision"
-                        class="btn btn-primary">
-
-                    Confirmar
-
-                </button>
-
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarComision" class="btn btn-primary">Confirmar</button>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 
-<!-- ================= TEMPLATE ================= -->
-
 <script type="text/template" id="usuarioTemplate">
-
 <tr>
-
     <td>
-
-        <select name="UsuariosNombrados[__i__].UsuariosId"
-                class="form-select nombramiento-select"
-                required>
-
-            <option value="">
-                -- Seleccione --
-            </option>
-
-            @foreach (SelectListItem u in Model.Nombramientos!)
+        <select name="Nombramientos[__i__]" class="form-select nombramiento-select" required>
+            <option value="">-- Seleccione --</option>
+            @foreach (SelectListItem u in Model.NombramientosList!)
             {
-                <option value="@u.Value">
-                    @u.Text
-                </option>
+                <option value="@u.Value">@u.Text</option>
             }
-
         </select>
-
     </td>
-
-    <td>
-        Responsable del vehículo
-    </td>
-
+    <td></td>
     <td class="text-center">
-
-        <button type="button"
-                class="btn btn-danger btn-sm"
-                onclick="eliminarFila(this)">
-
-            X
-
-        </button>
-
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarFila(this)">X</button>
     </td>
-
 </tr>
-
 </script>
 
 
-<!-- ================= JAVASCRIPT ================= -->
+@section Scripts {
+    <script>
+        let index = 1;
 
-<script>
-
-    let index = 1;
-
-    // AGREGAR NOMBRAMIENTO
-
-    function agregarUsuario() {
-
-        const template =
-            document.getElementById("usuarioTemplate").innerHTML;
-
-        const fila =
-            template.replaceAll("__i__", index++);
-
-        document
-            .querySelector("#tablaUsuarios tbody")
-            .insertAdjacentHTML("beforeend", fila);
-    }
-
-    // ELIMINAR NOMBRAMIENTO
-
-    function eliminarFila(btn) {
-
-        btn.closest("tr").remove();
-    }
-
-    // VEHÍCULO
-
-    const vehiculoSelect =
-        document.getElementById("vehiculoSelect");
-
-    const vehiculoPreview =
-        document.getElementById("vehiculoPreview");
-
-    const vehiculoInfo =
-        document.getElementById("vehiculoInfo");
-
-
-    vehiculoSelect.addEventListener("change", function () {
-
-        const selectedOption =
-            this.options[this.selectedIndex];
-
-        if (selectedOption.value) {
-
-            vehiculoInfo.textContent =
-                selectedOption.text;
-
-            vehiculoPreview.style.display =
-                "block";
-
-        } else {
-
-            vehiculoPreview.style.display =
-                "none";
+        function agregarUsuario() {
+            const template = document.getElementById("usuarioTemplate").innerHTML;
+            const fila = template.replaceAll("__i__", index++);
+            document.querySelector("#tablaUsuarios tbody").insertAdjacentHTML("beforeend", fila);
         }
 
-    });
-
-    // PRIMER NOMBRAMIENTO
-
-    const departamentoVisita =
-        document.getElementById("departamentoVisita");
-
-    const fechaSalida =
-        document.getElementById("fechaSalida");
-
-    const fechaRegreso =
-        document.getElementById("fechaRegreso");
-
-
-    document.addEventListener("change", async function (event) {
-
-        if (!event.target.classList.contains("nombramiento-select")) {
-            return;
+        function eliminarFila(btn) {
+            btn.closest("tr").remove();
         }
 
-        const primerNombramiento =
-            document.querySelector(
-                'select[name="UsuariosNombrados[0].UsuariosId"]'
-            );
+        const departamentoVisita = document.getElementById("departamentoVisita");
+        const municipioVisita = document.getElementById("municipioVisita");
+        const fechaSalida = document.getElementById("fechaSalida");
+        const fechaRegreso = document.getElementById("fechaRegreso");
 
-        if (!primerNombramiento) {
-            return;
-        }
+        document.addEventListener("change", async function (event) {
+            if (!event.target.classList.contains("nombramiento-select")) return;
 
-        if (event.target !== primerNombramiento) {
-            return;
-        }
+            const primerNombramiento = document.querySelector('select[name="Nombramientos[0]"]');
+            if (!primerNombramiento || event.target !== primerNombramiento) return;
 
-        const nombramientoId =
-            primerNombramiento.value;
+            const nombramientoId = primerNombramiento.value;
 
-        if (!nombramientoId) {
-
-            departamentoVisita.value = "";
-            fechaSalida.value = "";
-            fechaRegreso.value = "";
-
-            return;
-        }
-
-
-        try {
-
-            const response = await fetch(
-                `/Nombramiento/ObtenerDatosById?nombramientoId=${encodeURIComponent(nombramientoId)}`
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "No fue posible obtener los datos del nombramiento."
-                );
-
+            if (!nombramientoId) {
+                departamentoVisita.value = "";
+                municipioVisita.value = "";
+                fechaSalida.value = "";
+                fechaRegreso.value = "";
+                return;
             }
 
+            try {
+                const response = await fetch(`/Nombramiento/ObtenerDatosById?nombramientoId=${encodeURIComponent(nombramientoId)}`);
+                if (!response.ok) throw new Error("No fue posible obtener los datos del nombramiento.");
 
-            const data =
-                await response.json();
-
-
-            departamentoVisita.value =
-                data.departamentos ?? "";
-
-            fechaSalida.value =
-                formatearFecha(data.fecha_Salida);
-
-            fechaRegreso.value =
-                formatearFecha(data.fecha_Regreso);
-
-
-        }
-        catch (error) {
-
-            departamentoVisita.value = "";
-            fechaSalida.value = "";
-            fechaRegreso.value = "";
-
-            console.error(error);
-
-            alert(
-                "No fue posible obtener los datos del nombramiento."
-            );
-        }
-
-    });
-
-
-    // =====================================================
-    // FORMATEAR FECHA
-    // =====================================================
-
-    function formatearFecha(fecha) {
-
-        if (!fecha) {
-            return "";
-        }
-
-        const date =
-            new Date(fecha);
-
-        return date.toLocaleString("es-GT", {
-
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-
+                const data = await response.json();
+                departamentoVisita.value = data.departamentos ?? "";
+                municipioVisita.value = data.municipios ?? "";
+                fechaSalida.value = formatearFecha(data.fecha_Salida);
+                fechaRegreso.value = formatearFecha(data.fecha_Regreso);
+            } catch (error) {
+                departamentoVisita.value = "";
+                municipioVisita.value = "";
+                fechaSalida.value = "";
+                fechaRegreso.value = "";
+                console.error(error);
+                alert("No fue posible obtener los datos del nombramiento.");
+            }
         });
-    }
 
-
-    // =====================================================
-    // MODAL DE CONFIRMACIÓN
-    // =====================================================
-
-    const formularioComision =
-        document.getElementById("formCrearComision");
-
-    const modalElement =
-        document.getElementById("confirmarComisionModal");
-
-    const mensajeConfirmacion =
-        document.getElementById("mensajeConfirmacion");
-
-    const btnConfirmarComision =
-        document.getElementById("btnConfirmarComision");
-
-
-    const modalConfirmacion =
-        bootstrap.Modal.getOrCreateInstance(modalElement);
-
-
-    let formularioConfirmado = false;
-
-
-    formularioComision.addEventListener("submit", function (event) {
-
-        if (formularioConfirmado) {
-            return;
+        function formatearFecha(fecha) {
+            if (!fecha) return "";
+            const date = new Date(fecha);
+            return date.toLocaleString("es-GT", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
         }
 
+        // =====================================================
+        // MODAL DE CONFIRMACIÓN
+        // =====================================================
+        const formularioComision = document.getElementById("formCrearComision");
+        const modalElement = document.getElementById("confirmarComisionModal");
+        const mensajeConfirmacion = document.getElementById("mensajeConfirmacion");
+        const btnConfirmarComision = document.getElementById("btnConfirmarComision");
 
-        event.preventDefault();
+        let formularioConfirmado = false;
 
+        formularioComision.addEventListener("submit", function (event) {
+            if (formularioConfirmado) {
+                return;
+            }
 
-        const vehiculoId =
-            vehiculoSelect.value;
+            // Si faltan campos requeridos por llenar, deja actuar a la validación de HTML5
+            if (!formularioComision.checkValidity()) {
+                return;
+            }
 
+            event.preventDefault();
 
-        if (vehiculoId) {
+            const vehiculoId = vehiculoSelect.value;
 
-            const vehiculoSeleccionado =
-                vehiculoSelect.options[
-                    vehiculoSelect.selectedIndex
-                ].text;
+            if (vehiculoId) {
+                const vehiculoSeleccionado = vehiculoSelect.options[vehiculoSelect.selectedIndex].text;
+                mensajeConfirmacion.textContent = `La comisión se realizará utilizando el vehículo "${vehiculoSeleccionado}". ¿Desea continuar?`;
+            } else {
+                mensajeConfirmacion.textContent = "La comisión se realizará sin vehículo. ¿Desea continuar?";
+            }
 
+            // Aquí ya no dará error porque Bootstrap ya está cargado
+            const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modalConfirmacion.show();
+        });
 
-            mensajeConfirmacion.textContent =
-                `La comisión se realizará utilizando el vehículo "${vehiculoSeleccionado}". ¿Desea continuar?`;
-
-        }
-        else {
-
-            mensajeConfirmacion.textContent =
-                "La comisión se realizará sin vehículo. ¿Desea continuar?";
-
-        }
-
-
-        modalConfirmacion.show();
-
-    });
-
-
-    // =====================================================
-    // CONFIRMAR COMISIÓN
-    // =====================================================
-
-    btnConfirmarComision.addEventListener("click", function () {
-
-        formularioConfirmado = true;
-
-        formularioComision.requestSubmit();
-
-    });
-
-</script>
+        btnConfirmarComision.addEventListener("click", function () {
+            formularioConfirmado = true;
+            formularioComision.requestSubmit();
+        });
+    </script>
+}

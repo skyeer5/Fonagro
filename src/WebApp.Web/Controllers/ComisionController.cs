@@ -80,7 +80,7 @@ public class ComisionController : Controller
 
         var model = new ComisionCreateViewModel
         {
-            Nombramientos = nombramientos.Value!.ToSelectList(
+            NombramientosList = nombramientos.Value!.ToSelectList(
                 x=>x.NombramientoId.ToString(),
                 x=>x.Descripcion!
             ),
@@ -104,6 +104,7 @@ public class ComisionController : Controller
             TempData["msg"] = result.Error;
             return RedirectToAction(nameof(Crear));
         }
+        TempData["SuccessMsg"] = "La comisión se ha creado y registrado con exito!";
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]

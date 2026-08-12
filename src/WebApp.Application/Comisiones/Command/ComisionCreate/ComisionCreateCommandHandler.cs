@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Viaticos;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
 
@@ -12,60 +13,71 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
     private readonly IGasolinaPrecioService _gasolinaPrecioService;
     private readonly IVehiculoService _vehiculoService;
     private readonly IComisionRepository _comisionRepository;
-    private readonly INombramientoPolicy _comisionUsuarioPolicy;
+    private readonly INombramientoPolicy _NombramientoPolicy;
     private readonly IViaticosService _viaticosService;
+    private readonly INombramientoService _nombramientoService;
 
-    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IUsuarioService usuarioService, IComisionRepository comisionRepository, INombramientoPolicy comisionUsuarioPolicy, IViaticosService viaticosService)
+    public ComisionCreateCommandHandler(IGasolinaPrecioService gasolinaPrecioService, IVehiculoService vehiculoService, IComisionRepository comisionRepository, INombramientoPolicy nombramientoPolicy, IViaticosService viaticosService, INombramientoService nombramientoService)
     {
         _gasolinaPrecioService = gasolinaPrecioService;
         _vehiculoService = vehiculoService;
         _comisionRepository = comisionRepository;
-        _comisionUsuarioPolicy = comisionUsuarioPolicy;
+        _NombramientoPolicy = nombramientoPolicy;
         _viaticosService = viaticosService;
+        _nombramientoService = nombramientoService;
     }
 
     public async Task<Result<int>> Handle(ComisionCreateCommandRequest request, CancellationToken cancellationToken)
     {
-        var vehiculo = await _vehiculoService.GetVehiculoByIdAsync(request.ComisionCreateRequest.VehiculoId, cancellationToken);
-        if(vehiculo is null)
-        {
-            return Result<int>.Failure("Vehículo no encontrado");
-        }
-        vehiculo.ModificarEstadoEnComision();
+        var comision = Domain.Comisiones.Comision.Crear();
 
-        var gasolinaPrecio = await _gasolinaPrecioService.GetPrecioActualByVehiculoIdAsync(request.ComisionCreateRequest.VehiculoId, cancellationToken);
-        if(gasolinaPrecio is null)
+        if(request.ComisionCreateRequest.VehiculoId is not null)
         {
-            return Result<int>.Failure("No se pudo obtener el precio de gasolina para el vehículo especificado");
+            var vehiculo = await _vehiculoService.GetVehiculoByIdAsync(request.ComisionCreateRequest.VehiculoId.Value, cancellationToken);
+            if(vehiculo is null)
+            {
+                return Result<int>.Failure("Vehículo no encontrado");
+            }
+            vehiculo.ModificarEstadoEnComision();
+
+            var gasolinaPrecio = await _gasolinaPrecioService.GetPrecioActualByVehiculoIdAsync(request.ComisionCreateRequest.VehiculoId.Value, cancellationToken);
+            if(gasolinaPrecio is null)
+            {
+                return Result<int>.Failure("No se pudo obtener el precio de gasolina para el vehículo especificado");
+            }
+            comision.AgregarVehiculo(vehiculo.VehiculoId, gasolinaPrecio.Value);
         }
 
-        var usuarioAsignados = await _comisionUsuarioPolicy.UsuariosEstanAsignadosAsync(request.ComisionCreateRequest.UsuariosNom, cancellationToken);
-        if(usuarioAsignados)
-        {
-            return Result<int>.Failure("El usuario(s) ya se encuentra en otra comisión");
-        }
+        var nombramientosAsignados = await _NombramientoPolicy.NombramientosEstanAsignadosAsync(request.ComisionCreateRequest.Nombramientos, cancellationToken);
+            if(nombramientosAsignados)
+            {
+                return Result<int>.Failure("Uno o más de los nombramientos ya se encuentra en otra comisión.");
+            }
 
         var viaticosVigentes = await _viaticosService.GetViaticosVigentesAsync();
-        if(viaticosVigentes.IsNullOrEmpty())
+            if(viaticosVigentes.IsNullOrEmpty())
+            {
+                return Result<int>.Failure("No hay viáticos vigentes para asignar a la comisión");
+            }
+            var viaticos = new List<Viatico>();
+            foreach(var viatico in viaticosVigentes)
+            {
+                viaticos.Add(new Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
+            }
+
+        var nombramientos = await _nombramientoService.GetNombramientosByListIdsAsync(request.ComisionCreateRequest.Nombramientos, cancellationToken);
+        if(nombramientos is null)
         {
-            return Result<int>.Failure("No hay viáticos vigentes para asignar a la comisión");
-        }
-        var viaticos = new List<Viatico>();
-        foreach(var viatico in viaticosVigentes)
-        {
-            viaticos.Add(new Viatico(viatico.Id, viatico.Nombre, viatico.Monto));
+            return Result<int>.Failure("Error al encontrar los nombramientos");
         }
 
-        var comision = Domain.Comisiones.Comision.Crear(
-            request.ComisionCreateRequest.Departamento!,
-            request.ComisionCreateRequest.Fecha_Salida,
-            request.ComisionCreateRequest.Fecha_Regreso,
-            request.ComisionCreateRequest.VehiculoId,
-            gasolinaPrecio.Value
-            );
-        comision.AgregarUsuarios(request.ComisionCreateRequest.UsuariosNom, viaticos, request.ComisionCreateRequest.Fecha_Salida, request.ComisionCreateRequest.Fecha_Regreso);
+        var nombramientosTienenMismosMunicipios = Nombramiento.TodosTienenMismosMunicipios(nombramientos);
+        if(!nombramientosTienenMismosMunicipios)
+        {
+            return Result<int>.Failure("Los nombramientos no coinciden sus municipios asignados para realizar la comisión.");
+        }
 
-        
+        comision.AgregarUsuarios(nombramientos, viaticos);
 
         var comisionAdded = await _comisionRepository.AddAsync(comision, cancellationToken);
 

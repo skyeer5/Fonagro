@@ -1,0 +1,25 @@
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right", 
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "4000", 
+        "extendedTimeOut": "1000"
+    };
+
+    @if (TempData["SuccessMsg"] != null)
+    {
+        <text>
+            toastr.success('@TempData["SuccessMsg"]', '¡Éxito!');
+        </text>
+    }
+
+    @if (TempData["msg"] != null)
+    {
+        <text>
+            toastr.error('@TempData["msg"]', '¡Error!');
+        </text>
+    }
+</script>

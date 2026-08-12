@@ -65,6 +65,7 @@ public class NombramientoController : Controller
             TempData["msg"] = result.Error;
             return RedirectToAction(nameof(Crear));
         }
+        TempData["SuccessMsg"] = "El nombramiento se ha creado y registrado con exito!";
         return RedirectToAction(nameof(List));
     }
 

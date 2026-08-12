@@ -13,4 +13,5 @@ public interface INombramientoService
     Task<PagedList<GetNombramientosResponse>> GetNombramientosAsync(GetNombramientosRequest request,CancellationToken cancellationToken);
     Task<List<GetNomsApprovedResponse>> GetNomsApprovedAsync(CancellationToken cancellationToken);
     Task<GetNomDatosByIdResponse?> GetNomDatosByIdAsync(int nombramientoId, CancellationToken cancellationToken);
+    Task<List<Nombramiento>?> GetNombramientosByListIdsAsync(List<int> nombramientos, CancellationToken cancellationToken);
 }

@@ -43,7 +43,6 @@ public class VehiculoController : Controller
             Tipos = EnumExtensions.ToSelectList<VehiculoTipos>(),
             Cilindrajes = EnumExtensions.ToSelectList<VehiculoCilindrajes>()
         };
-
         return View(model);
     }
     [HttpPost]
@@ -54,7 +53,24 @@ public class VehiculoController : Controller
     {
         var command = new VehiculoCreateCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(Detalle), new { id = result.Value }) : BadRequest(result.Error);
+        if(!result.IsSuccess)
+        {
+            var gasolinas = await _mediator.Send(new GetGasolinasQueryRequest());
+
+            var model = new VehiculoCreateViewModel
+            {
+                Gasolinas = gasolinas.Value!.ToSelectList(
+                    x=> x.Id.ToString(),
+                    x=>x.Nombre
+                ),
+                Tipos = EnumExtensions.ToSelectList<VehiculoTipos>(),
+                Cilindrajes = EnumExtensions.ToSelectList<VehiculoCilindrajes>()
+            };
+            TempData["msg"] = result.Error;
+            return RedirectToAction(nameof(Crear));
+        }
+        TempData["SuccessMsg"] = "El vehiculo se ha creado y registrado con exito!";
+        return RedirectToAction(nameof(List));
     }
 
     [HttpGet]

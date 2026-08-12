@@ -51,21 +51,33 @@ public class Nombramiento : AuditableEntity
             CreatedDate = DateTime.Now
         };
     }
-    public static Nombramiento AsignarAComision(int usuarioId, string nombramiento, bool es_Piloto)
-    {
-        return new Nombramiento
-        {
-            Estado = NombramientoEstados.Creado,
-        };
-    }
 
+    public static bool TodosTienenMismosMunicipios(List<Nombramiento> nombramientos)
+    {
+        if(nombramientos.Count == 1) 
+            return true;
+
+
+        var primerGrupoIds = nombramientos[0].NomMunicipios!
+            .Select(nm => nm.MunicipioId)
+            .ToHashSet();
+
+        return nombramientos.Skip(1).All(n => 
+        {
+            var idsActuales = n.NomMunicipios!
+                .Select(nm => nm.MunicipioId)
+                .ToHashSet();
+
+            return primerGrupoIds.SetEquals(idsActuales);
+        });
+    }
     public void AprobarNombramiento(int usuarioAprobador)
     {
         this.UsuarioId_Aprobador = usuarioAprobador;
         this.Fecha_Aprobado = DateTime.Now;
         this.Estado = NombramientoEstados.Aprobado;
     }
-    public void AsignarViaticos(ICollection<Viatico> viaticosVigentes, DateTime salida, DateTime entrada)
+    public void AsignarViaticos(ICollection<Viatico> viaticosVigentes)
     {
         this.ComisionViaticosList ??= new List<ComisionViaticos>();
 
@@ -74,72 +86,72 @@ public class Nombramiento : AuditableEntity
         var cena = viaticosVigentes.FirstOrDefault(x=>x.Nombre== ViaticosTipos.Cena);
         var hospedaje = viaticosVigentes.FirstOrDefault(x=>x.Nombre == ViaticosTipos.Hospedaje);
 
-        var dias = (entrada-salida).Days + 1;
-        var diaActual = salida.Date;
+        var dias = (Fecha_Regreso-Fecha_Salida).Days + 1;
+        var diaActual = Fecha_Salida.Date;
 
 
         for (int i = 1; i <= dias; i++)
         {
             if (i == 1)
             {
-                if (salida.TimeOfDay < TimeSpan.FromHours(11))
+                if (Fecha_Salida.TimeOfDay < TimeSpan.FromHours(11))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, NombramientoId)
                         );
                 }
-                if (salida.TimeOfDay < TimeSpan.FromHours(17))
+                if (Fecha_Salida.TimeOfDay < TimeSpan.FromHours(17))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, NombramientoId)
                         );
                 }
-                if (salida.TimeOfDay < TimeSpan.FromHours(24))
+                if (Fecha_Salida.TimeOfDay < TimeSpan.FromHours(24))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, NombramientoId)
                         );
                 }
 
             }
             else if (i == dias && i != 1)
             {
-                if (entrada.TimeOfDay >= TimeSpan.FromHours(6))
+                if (Fecha_Regreso.TimeOfDay >= TimeSpan.FromHours(6))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, NombramientoId)
                         );
                 }
-                if (entrada.TimeOfDay >= TimeSpan.FromHours(11))
+                if (Fecha_Regreso.TimeOfDay >= TimeSpan.FromHours(11))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, NombramientoId)
                         );
                 }
-                if (entrada.TimeOfDay >= TimeSpan.FromHours(17))
+                if (Fecha_Regreso.TimeOfDay >= TimeSpan.FromHours(17))
                 {
                     ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, NombramientoId)
                         );
                 }
             }
             else
             {
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, desayuno!.Monto, diaActual, desayuno.ViaticoId, NombramientoId)
                         );
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, almuerzo!.Monto, diaActual, almuerzo.ViaticoId, NombramientoId)
                         );
                 ComisionViaticosList.Add(
-                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, ComisionId!.Value)
+                        ComisionViaticos.Crear(1, cena!.Monto, diaActual, cena.ViaticoId, NombramientoId)
                         );
             }
 
             if(i<dias)
             {
                 ComisionViaticosList.Add(
-                    ComisionViaticos.Crear(1, hospedaje!.Monto, diaActual, hospedaje.ViaticoId, ComisionId!.Value)
+                    ComisionViaticos.Crear(1, hospedaje!.Monto, diaActual, hospedaje.ViaticoId, NombramientoId)
                     );
             }
 

@@ -24,13 +24,12 @@ public class NombramientoPolicy : INombramientoPolicy
         );
     }
 
-    public async Task<bool> UsuariosEstanAsignadosAsync(List<UsuariosNombrados> usuariosNombrados, CancellationToken cancellationToken)
+    public async Task<bool> NombramientosEstanAsignadosAsync(List<int> usuariosNombrados, CancellationToken cancellationToken)
     {
-        var usuarioIds = usuariosNombrados.Select(u => u.UsuariosId).ToList();
-
         return await _context.Nombramientos.AnyAsync(u=>
-                /*usuarioIds.Contains(u.UsuarioPuesto!.UsuarioId) 
-                &&*/ u.Estado == NombramientoEstados.Creado 
+                usuariosNombrados.Contains(u.AsignacionUsuarioId) 
+                && (u.ComisionId != null)
                 , cancellationToken);
     }
+
 }

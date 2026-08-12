@@ -18,31 +18,27 @@ public class Comision : AuditableEntity
     public decimal Kilometraje_Final { get; set; }
     public DateTime? Fecha {get; set; }
     public string? Estado { get; set; }
-    public int? UsuarioId_Piloto { get; set; }
+    public int? NombramientoId_Respon_Vehiculo { get; set; }
+    public Nombramiento? Nombramiento_Respon_Vehiculo { get; set; }
     public int? UsuarioId_Creador_Comision { get; set; }
     public int? VehiculoId { get; set; } 
     public Vehiculo? Vehiculo { get; set; }
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
     public ICollection<Nombramiento>? Nombramientos { get; set; } 
 
-    public static Comision Crear(
-                                 List<string> departamento,
-                                 DateTime fecha_Salida,
-                                 DateTime fecha_Regreso,
-                                 int vehiculoId,
-                                 decimal gasolinaPrecio
-                                )
-{
+    public static Comision Crear()
+    {
         return new Comision
         {
-            Departamento = departamento.Any() ? string.Join(", ", departamento.OrderBy(x => x)) : null,
-            Fecha_Salida = fecha_Salida,
-            Fecha_Regreso = fecha_Regreso,
-            Precio_Gasolina_Usado = gasolinaPrecio,
-            VehiculoId = vehiculoId,
             Fecha = DateTime.Now,
             Estado = ComisionEstados.Creada
         };
+    }
+
+    public void AgregarVehiculo(int vehiculoId, decimal gasolinaPrecio)
+    {
+        this.Precio_Gasolina_Usado = gasolinaPrecio;
+        this.VehiculoId = vehiculoId;
     }
     public void AgregarCreadoPor(int usuarioId)
     {
@@ -50,24 +46,18 @@ public class Comision : AuditableEntity
         this.CreatedBy = usuarioId;
         this.CreatedDate = DateTime.Now;
     }
-    public void AgregarUsuarios(ICollection<UsuariosNombrados> usuariosNombrados, List<Viatico> viaticos, DateTime salida, DateTime regreso)
+    public void AgregarUsuarios(List<Nombramiento> usuariosNombrados, List<Viatico> viaticos)
     {
-        this.Nombramientos ??= new List<Nombramiento>();
-        if(!usuariosNombrados.Any())
-        {
-            throw new Exception("Debe asignar al menos un usuario");
-        }
-        usuariosNombrados = usuariosNombrados.DistinctBy(u => u.UsuariosId).ToList();
+        usuariosNombrados = usuariosNombrados.Distinct().ToList();
+        this.Nombramientos = usuariosNombrados;
+
+
+        var usuarioPiloto = usuariosNombrados.First();
+        this.Nombramiento_Respon_Vehiculo = usuarioPiloto;
+
         foreach(var usuario in usuariosNombrados)
         {
-            var comisionUsuario = Nombramiento.AsignarAComision(
-                usuario.UsuariosId,
-                usuario.Numero_Nombramiento!,
-                usuario.Es_Piloto
-            );
-            comisionUsuario.AsignarViaticos(viaticos, salida, regreso);
-            Nombramientos.Add(comisionUsuario);
-            
+            usuario.AsignarViaticos(viaticos);            
         }
         
     }

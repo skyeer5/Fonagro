@@ -77,6 +77,7 @@ public class UsuarioController : Controller
             return View(newModel);
         }
 
+        TempData["SuccessMsg"] = "El usuario se ha creado y registrado con exito!";
         return RedirectToAction(nameof(List));
     }
 

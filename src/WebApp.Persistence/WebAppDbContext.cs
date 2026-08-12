@@ -149,10 +149,11 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .WithMany()
             .HasForeignKey(up => up.UsuarioId_Creador_Comision)
             .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<Comision>()
-            .HasOne<AppUser>()
+            .HasOne(c=>c.Nombramiento_Respon_Vehiculo)
             .WithMany()
-            .HasForeignKey(up => up.UsuarioId_Piloto)
+            .HasForeignKey(up => up.NombramientoId_Respon_Vehiculo)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<ComisionViaticos>()
