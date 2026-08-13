@@ -52,7 +52,7 @@ public class NombramientoService : INombramientoService
 
             join usuarioCreador in _context.Users
                 on n.UsuarioId_Creador equals usuarioCreador.Id
-
+            orderby n.Fecha_Creado descending
             select new GetNombramientosResponse
             {
                 NombramientoId = n.NombramientoId,

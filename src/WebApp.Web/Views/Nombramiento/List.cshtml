@@ -25,7 +25,7 @@
                     <th>Fecha regreso</th>
                     <th>Proposito</th>
                     <th>Creador del nombramiento</th>
-                    <th></th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,8 +40,9 @@
                         <td>@item.Nombre_Creador_Nombramiento</td>
                         <td class="text-center">
                             <div class="d-flex flex-column align-items-center">
-                                <a href="/Comision/Edit?id=@item.NombramientoId" 
-                                class="btn btn-sm btn-outline-primary mb-2">
+                            @if(item.Estado == NombramientoEstados.Creado)
+                            {
+                                <a href="/Comision/Edit?id=@item.NombramientoId" class="btn btn-sm btn-outline-primary mb-2">
                                     <i class="bi bi-pencil-square"></i> Editar
                                 </a>
 
@@ -52,6 +53,14 @@
                                         <i class="bi bi-x-circle"></i> Aprobar
                                     </button>
                                 </form>
+                            }
+                            else
+                            {
+                                <a href="/Nombramiento/Detalle?id=@item.NombramientoId" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-eye"></i> Ver
+                                </a>
+                            }
+
                             </div>
                         </td>
                     </tr>
