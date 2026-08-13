@@ -40,6 +40,8 @@ builder.Services.AddScoped<IUnidadService, UnidadService>();
 builder.Services.AddScoped<IPuestoService, PuestoService>();
 builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
 builder.Services.AddScoped<IMunicipioService, MunicipioService>();
+builder.Services.AddScoped<INombramientoPdfService, NombramientoPdfService>();
+builder.Services.AddScoped<IWordTemplateFiller, OpenXmlWordTemplateFiller>();
 builder.Services.AddScoped<INombramientoRepository, NombramientoRepository>();
 builder.Services.AddHostedService<SchedulerService>();
 

@@ -4,6 +4,7 @@ using WebApp.Application.Interfaces;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
 using WebApp.Application.Nombramientos.Queries.GetNomDatosById;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
+using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 using WebApp.Domain.Nombramientos;
 using WebApp.Domain.NomMunicipios;
 using WebApp.Domain.Unidades;
@@ -123,5 +124,35 @@ public class NombramientoService : INombramientoService
                         .Include(x=>x.NomMunicipios!)
                             .ThenInclude(nm=>nm.Municipio)
                         .ToListAsync();
+    }
+
+    public async Task<NombramientoPdfDto?> GetNombramientoPdfDtoAsync(int nombramientoId, CancellationToken cancellationToken)
+    {
+        var query = from n in _context.Nombramientos 
+                    join au in _context.AsignacionesUsuarios
+                            on n.AsignacionUsuarioId equals au.AsignacionUsuarioId
+                    join u in _context.Users 
+                            on au.UsuarioId equals u.Id
+                    join uc in _context.Users
+                            on n.UsuarioId_Creador equals uc.Id
+                    select new NombramientoPdfDto
+                    {
+                        NumeroNombramiento = $"FON-{((UnidadesEnum)au.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
+                        FechaCreacion = n.Fecha_Creado,
+                        NombreCompleto = $"{u.Nombres} {u.Apellidos}",
+                        Puesto = au.Puesto.Nombre!,
+                        Proposito = n.Proposito!,
+                        Destinos = n.NomMunicipios!.Select(nms=>
+                                        new NombramientoPdfDestinosDto
+                                        {
+                                            Departamento = nms.Municipio!.Departamento.Nombre,
+                                            Municipio = nms.Municipio.Nombre
+                                        }
+                                    ).ToList(),
+                        FechaInicio = n.Fecha_Salida,
+                        FechaFin = n.Fecha_Regreso,
+                        EmitidoPor = $"{uc.Nombres} {uc.Apellidos}"
+                    };
+        return await query.FirstOrDefaultAsync();
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Application.Nombramientos.Command.NombramientoApprove;
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
+using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
@@ -11,6 +12,7 @@ using static WebApp.Application.Nombramientos.Command.NombramientoApprove.Nombra
 using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
 using static WebApp.Application.Nombramientos.Queries.GetNombramientos.GetNomParaAprobarQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomDatosById.GetNomDatosByIdQuery;
+using static WebApp.Application.Nombramientos.Queries.NombramientoPdf.NombramientoPdfQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -104,4 +106,16 @@ public class NombramientoController : Controller
         }
         return Json(nombramiento.Value);
     }
+        [HttpGet]
+    public async Task<IActionResult> ImprimirNombramiento(int nombramientoId)
+    {
+        var query = new NombramientoPdfQueryRequest(nombramientoId);
+        var result = await _mediator.Send(query);
+        if (!result.IsSuccess)
+        {
+            return NotFound("Nombramiento no encontrado");
+        }
+        return File(result.Value!, "application/pdf", $"Nombramiento_{nombramientoId}.pdf");
+    }
+
 }

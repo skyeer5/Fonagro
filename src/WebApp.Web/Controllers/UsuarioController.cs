@@ -91,7 +91,7 @@ public class UsuarioController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? nombre = "", string? puesto = "", string? unidad = "", string? estado = "", int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = UsuarioEstados1.GetEstados();
+        ViewBag.Estados = EnumExtensions.ToSelectList<UsuarioEstados>();
         var request = new GetUsuariosActivosDetalleRequest
         {
             Nombre = nombre,
