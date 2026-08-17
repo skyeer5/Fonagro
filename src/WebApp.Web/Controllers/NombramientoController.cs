@@ -107,7 +107,7 @@ public class NombramientoController : Controller
         return Json(nombramiento.Value);
     }
         [HttpGet]
-    public async Task<IActionResult> ImprimirNombramiento(int nombramientoId)
+    public async Task<IActionResult> Imprimir(int nombramientoId)
     {
         var query = new NombramientoPdfQueryRequest(nombramientoId);
         var result = await _mediator.Send(query);

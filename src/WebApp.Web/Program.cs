@@ -56,6 +56,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 .AddEntityFrameworkStores<WebAppDbContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.Configure<NombramientoOptions>(
+    builder.Configuration.GetSection(NombramientoOptions.SectionName));
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";

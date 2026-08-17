@@ -135,6 +135,7 @@ public class NombramientoService : INombramientoService
                             on au.UsuarioId equals u.Id
                     join uc in _context.Users
                             on n.UsuarioId_Creador equals uc.Id
+                    where n.NombramientoId == nombramientoId
                     select new NombramientoPdfDto
                     {
                         NumeroNombramiento = $"FON-{((UnidadesEnum)au.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",

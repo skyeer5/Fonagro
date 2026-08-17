@@ -1,20 +1,25 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using WebApp.Application.Interfaces;
 
 namespace WebApp.Infrastructure.Services;
 
 public class NombramientoPdfService : INombramientoPdfService
 {
-private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2, maxCount: 2);
+    private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2, maxCount: 2);
     private readonly ILogger<NombramientoPdfService> _logger;
     private readonly string _workingDir;
+    private readonly string _sofficePath;
     private readonly TimeSpan _timeout = TimeSpan.FromSeconds(30);
 
-    public NombramientoPdfService(ILogger<NombramientoPdfService> logger)
+    public NombramientoPdfService(
+        ILogger<NombramientoPdfService> logger,
+        IOptions<NombramientoOptions> options)
     {
         _logger = logger;
-        _workingDir = "/tmp/nombramientos";
+        _workingDir = options.Value.WorkingDir;
+        _sofficePath = options.Value.SofficePath;
         Directory.CreateDirectory(_workingDir);
     }
 
@@ -33,8 +38,7 @@ private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2,
             await RunSofficeAsync(docxPath, profileDir, cancellationToken);
 
             if (!File.Exists(pdfPath) || new FileInfo(pdfPath).Length == 0)
-                throw new Exception(
-                    "LibreOffice no generó un PDF válido.");
+                throw new Exception("LibreOffice no generó un PDF válido.");
 
             return await File.ReadAllBytesAsync(pdfPath, cancellationToken);
         }
@@ -49,12 +53,17 @@ private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2,
 
     private async Task RunSofficeAsync(string docxPath, string profileDir, CancellationToken cancellationToken)
     {
+        Directory.CreateDirectory(profileDir);
+        var profileUri = BuildFileUri(profileDir);
+
+        var argument = $"--headless --norestore " +
+                        $"-env:UserInstallation={profileUri} " +
+                        $"--convert-to pdf --outdir \"{_workingDir}\" \"{docxPath}\"";
+
         var startInfo = new ProcessStartInfo
         {
-            FileName = "soffice",
-            Arguments = $"--headless --norestore " +
-                        $"-env:UserInstallation=file://{profileDir} " +
-                        $"--convert-to pdf --outdir {_workingDir} {docxPath}",
+            FileName = _sofficePath,
+            Arguments = argument,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false
@@ -94,5 +103,11 @@ private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2,
     {
         try { if (Directory.Exists(path)) Directory.Delete(path, recursive: true); }
         catch (IOException ex) { _logger.LogWarning(ex, "No se pudo borrar {Path}", path); }
+    }
+
+    private static string BuildFileUri(string path)
+    {
+        var uri = new Uri(Path.GetFullPath(path));
+        return uri.AbsoluteUri;
     }
 }
