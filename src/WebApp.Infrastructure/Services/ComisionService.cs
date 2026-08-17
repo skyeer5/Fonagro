@@ -78,19 +78,64 @@ public class ComisionService : IComisionService
 
     public async Task<List<GetComisionesPendApprovResponse>?> GetComisionPendApprovAsync()
     {
-         return await _context.Comisiones
-                .Where(c => c.Estado == ComisionEstados.DestinosDefinidos)
-                .Select(c => new GetComisionesPendApprovResponse
+        var comisiones = await _context.Comisiones
+        .Where(c => c.Estado == ComisionEstados.DestinosDefinidos)
+        .Select(c => new
+        {
+            c.ComisionId,
+            c.Precio_Gasolina_Usado,
+            c.Presupuesto_Combustible_Estimado,
+
+            FechaSalida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
+            FechaRegreso = c.Nombramiento_Respon_Vehiculo.Fecha_Regreso,
+
+            Departamentos = c.Nombramiento_Respon_Vehiculo.NomMunicipios!
+                .Select(nm => nm.Municipio!.Departamento.Nombre),
+
+            Municipios = c.Nombramiento_Respon_Vehiculo.NomMunicipios!
+                .Select(nm => nm.Municipio!.Nombre),
+
+            Destinos = c.ComisionDestinos!
+                .Select(cd => new
                 {
-                    id = c.ComisionId,
-                    Departamento = c.Departamento,
-                    Fecha_Salida = c.Fecha_Salida,
-                    Fecha_Regreso = c.Fecha_Regreso,
-                    Kilometros = c.ComisionDestinos!.Sum(x=>x.Kilometros),
-                    precio_Gasolina = c.Precio_Gasolina_Usado,
-                    Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado
-                })
-                .ToListAsync();
+                    cd.Descripcion,
+                    cd.Kilometros
+                }),
+
+            Kilometros = c.ComisionDestinos!
+                .Sum(x => x.Kilometros)
+        })
+        .ToListAsync();
+        
+        return comisiones.Select(c => new GetComisionesPendApprovResponse
+        {
+            ComisionId = c.ComisionId,
+
+            Departamento = string.Join(
+                ", ",
+                c.Departamentos.Distinct()
+            ),
+
+            Municipio = string.Join(
+                ", ",
+                c.Municipios.Distinct()
+            ),
+
+            Destinos = c.Destinos
+                .Select(x => $"{x.Descripcion} - {x.Kilometros}")
+                .ToList(),
+
+            Fecha_Salida = c.FechaSalida,
+
+            Fecha_Regreso = c.FechaRegreso,
+
+            Kilometros = c.Kilometros,
+
+            Precio_Gasolina = c.Precio_Gasolina_Usado,
+
+            Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado
+
+        }).ToList();
     }
 
     public async Task<Result<PlanViajeResponse>> GetPlanViajeResponseAsync(int idUsuario, int idComision)

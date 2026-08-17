@@ -23,12 +23,13 @@
             <table class="table table-hover align-middle shadow-sm">
                 <thead class="bg-azul">
                     <tr>
-                        <th>ID</th>
                         <th>Departamento</th>
+                        <th>Municipio</th>
+                        <th>Destinos</th>
+                        <th>Kilometros</th>
                         <th>Fecha Salida</th>
                         <th>Fecha Regreso</th>
-                        <th>Kilometros</th>
-                        <th>Precio Gasolina Usado</th>
+                        <th>Precio Combus.</th>
                         <th class="text-center">Acción</th>
                     </tr>
                 </thead>
@@ -36,18 +37,24 @@
                     @foreach (var item in comisiones!)
                     {
                         <tr>
-                            <td>@item.id</td>
                             <td>@item.Departamento</td>
+                            <td>@item.Municipio</td>
+                            <td>
+                            @foreach(var dest in item.Destinos)
+                            {
+                               @dest <br>
+                            }
+                            </td>
+                            <td>@item.Kilometros</td>
                             <td>@item.Fecha_Salida.ToString("dd/MM/yyyy")</td>
                             <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy")</td>
-                            <td>@item.Kilometros</td>
-                            <td>@item.precio_Gasolina</td>
+                            <td>@item.Precio_Gasolina</td>
                             <td class="text-center">
                                 <!-- Botón que abre el modal -->
                                 <button type="button" class="btn btn-sm btn-outline-primary" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#precioModal"
-                                        data-id="@item.id"
+                                        data-id="@item.ComisionId"
                                         data-presupuesto="@item.Prespuesto_Estimado">
                                     <i class="bi bi-check-circle"></i> Seleccionar
                                 </button>
@@ -76,7 +83,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="PrespuestoAprobado" class="form-label">Presupuesto Aprobado 
+                                <label for="PrespuestoAprobado" class="form-label">Presupuesto Aprobado (Montos fijos divisibles en 50) 
                                     <!-- Botón con tooltip -->
                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ingrese cantidad en múltiplos de 50 (ej. 100, 150, 200…) debido a que los vales de combustible solo manejan valores de 50 y 100">
                                         <i class="bi bi-info-circle"></i>

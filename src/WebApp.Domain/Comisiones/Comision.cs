@@ -96,9 +96,7 @@ public class Comision : AuditableEntity
         if(this.Vehiculo is not null)
         {
             this.Vehiculo.ModificarEstadoDisponible();
-        }
-
-        
+        }        
     }
     public void CompletarComision()
     {
