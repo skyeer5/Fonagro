@@ -12,6 +12,6 @@ public interface IComisionService
     Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request);
     Task<List<GetComisionesPendApprovResponse>?> GetComisionPendApprovAsync();
     Task<Domain.Comisiones.Comision?> GetComisionByIdAsync(int comisionId);
-    Task<Result<PlanViajeResponse>> GetPlanViajeResponseAsync(int idUsuario, int idComision);
+    Task<PlanViajeResponse?> GetPlanViajeResponseAsync(int idUsuario, int idComision);
 
 }

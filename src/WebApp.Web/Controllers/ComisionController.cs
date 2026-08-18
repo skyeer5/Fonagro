@@ -155,15 +155,15 @@ public class ComisionController : Controller
     {
         var query = new PlanViajeQueryRequest(idComision);
         var result = await _mediator.Send(query);
-        if (!result.Any())
+        if (!result.IsSuccess)
         {
-            return NotFound("Plan de viaje no encontrado");
+            return NotFound(result.Error);
         }
-        return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PlanViaje_{idComision}.xlsx");
+        return File(result.Value!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PlanViaje_{idComision}.xlsx");
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "ComisionId")
     {
         ViewBag.Estados = ComisionEstados.GetEstadosComision();
         var request = new GetComisionesDetalleRequest
@@ -173,7 +173,8 @@ public class ComisionController : Controller
             Fecha_Inicio = !fecha_inicio.IsNullOrEmpty() ? DateTime.Parse(fecha_inicio!) : null,
             Fecha_Fin = !fecha_fin.IsNullOrEmpty() ? DateTime.Parse(fecha_fin!) : null,
             PageNumber = currentPage,
-            OrderBy = orderBy
+            OrderBy = orderBy,
+            OrderAsc = false
         };
         var query = new GetComisionesDetalleQueryRequest(request);
         var result = await _mediator.Send(query);

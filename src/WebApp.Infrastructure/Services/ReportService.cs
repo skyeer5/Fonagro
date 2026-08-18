@@ -10,25 +10,13 @@ namespace WebApp.Infrastructure.Services;
 public class ReportService : IReportService
 {
     private readonly IWebHostEnvironment _env;
-    private readonly IUsuarioService _usuarioService;
-    private readonly IComisionService _comisionService;
-    private readonly ICurrentUser _currentUser;
-
-    public ReportService(IWebHostEnvironment env, IUsuarioService usuarioService, IComisionService comisionService, ICurrentUser currentUser )
+    public ReportService(IWebHostEnvironment env)
     {
         _env = env;
-        _usuarioService = usuarioService;
-        _comisionService = comisionService;
-        _currentUser = currentUser;
     }
 
-    public async Task<byte[]> GetExcelPlanViajeAsync( int idComision)
+    public byte[] GetExcelPlanViaje(PlanViajeResponse planViaje)
     {
-        var idUsuario = _currentUser.userId;
-        var planviajeresult = await _comisionService.GetPlanViajeResponseAsync(idUsuario, idComision);
-        var planViaje = planviajeresult.Value!;
-        planViaje.Nombre = await _usuarioService.GetNombreUsuarioAsync(idUsuario);
-
         var filasViaticos = ConstruirFilasViaticos(planViaje);
         var filaDestinos = ConstruirFilasDestinos(planViaje);
         planViaje.TotalCombustible = filaDestinos.Sum(d => d.Total);

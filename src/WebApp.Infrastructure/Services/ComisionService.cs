@@ -138,54 +138,47 @@ public class ComisionService : IComisionService
         }).ToList();
     }
 
-    public async Task<Result<PlanViajeResponse>> GetPlanViajeResponseAsync(int idUsuario, int idComision)
+    public async Task<PlanViajeResponse?> GetPlanViajeResponseAsync(int idUsuario, int idComision)
     {
-            var planViaje = await _context.Comisiones
-            .Where(p => p.ComisionId == idComision)
-            .Select(p => new PlanViajeResponse
+        var query = 
+            from n in _context.Nombramientos
+            join c in _context.Comisiones
+                on n.ComisionId equals c.ComisionId
+            join u in _context.Users
+                on n.AsignacionUsuario!.UsuarioId equals u.Id
+            where c.ComisionId == idComision
+            && n.AsignacionUsuario!.UsuarioId == idUsuario
+            select new PlanViajeResponse
             {
-                Departamento = p.Departamento,
-                Fecha_Salida = p.Fecha_Salida,
-                Fecha_Regreso = p.Fecha_Regreso,
-                // Descripcion = p.Nombramientos!.FirstOrDefault(cu => cu.UsuarioId == idUsuario)!.Descripcion,
-                TotalCombustibleAutorizado = p.Presupuesto_Combustible_Aprobado,
-                Es_Gasolina = (CombustibleTipos)p.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
-                Precio_Galon = p.Vehiculo!.Combustible!.GasolinaPrecios!
-                    .OrderByDescending(gp => gp.Fecha)
-                    .Select(gp => gp.Precio)
-                    .FirstOrDefault(),
-                // Viaticos = p.Nombramientos!
-                //     .Where(cu => cu.UsuarioId == idUsuario)
-                //     .SelectMany(cu => cu.ComisionViaticosList!)
-                //     .Select(v => new GetComisionViaticoResponse
-                //     {
-                //         Tipo_viatico = v.Viatico!.Nombre,
-                //         Monto = v.Viatico.Monto,
-                //         Fecha = DateOnly.FromDateTime(v.Fecha)
-                //     })
-                //     .ToList(),
-                Destinos = p.ComisionDestinos!
-                    .Select(d => new GetComisionDestinosDetailResponse
-                    {
-                        Descripcion = d.Descripcion,
-                        Kilometros = d.Kilometros,
-                        Galones = d.Galones,
-                    })
-                    .ToList()
-            }).FirstOrDefaultAsync();
-        if(planViaje is null)
-        {
-            Console.WriteLine("\n\n\n Es nuloooo\n\n\n");
-            return Result<PlanViajeResponse>.Failure("Error al encontrar el plan de viaje");
-        }
-            Console.WriteLine("\n\n\n Si paasaaaa\n\n\n");
-        return Result<PlanViajeResponse>.Success(planViaje);
+                Departamento = c.Departamento,
+                Fecha_Salida = n.Fecha_Salida,
+                Fecha_Regreso = n.Fecha_Regreso,
+                Descripcion = n.Descripcion,
+                TotalCombustibleAutorizado = c.Presupuesto_Combustible_Aprobado,
+                Es_Gasolina = (CombustibleTipos)c.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
+                Precio_Galon = c.Precio_Gasolina_Usado,
+                Viaticos = n.ComisionViaticosList!.Select(cv=> new GetComisionViaticoResponse
+                {
+                    Tipo_viatico = cv.Viatico!.Nombre,
+                    Monto = cv.Viatico.Monto,
+                    Fecha = DateOnly.FromDateTime(cv.Fecha)
+                }).ToList(),
+                Destinos = c.ComisionDestinos!.Select(cd => new GetComisionDestinosDetailResponse
+                {
+                    Descripcion = cd.Descripcion,
+                    Kilometros = cd.Kilometros,
+                    Galones = cd.Galones
+                }).ToList(),
+                Nombre = $"{u.Nombres} {u.Apellidos}"
+            };
+        return await query.FirstOrDefaultAsync();                    
     }
     public async Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request)
     {
         IQueryable<Comision> queryable = _context.Comisiones.AsNoTracking();
         
         var predicate = ExpressionBuilder.New<Comision>();
+
         if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
         {
             predicate = predicate.And(x=>
