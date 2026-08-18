@@ -8,10 +8,10 @@ namespace WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 public class NombramientoPdfQueryHandler : IRequestHandler<NombramientoPdfQueryRequest, Result<byte[]>>
 {
     private readonly INombramientoService _nombramientoService;
-    private readonly INombramientoPdfService _nombramientoPdfService;
+    private readonly IDocumentConverter _nombramientoPdfService;
     private readonly IWordTemplateFiller _wordTemplateFiller;
 
-    public NombramientoPdfQueryHandler(INombramientoService nombramientoService, INombramientoPdfService nombramientoPdfService, IWordTemplateFiller wordTemplateFiller)
+    public NombramientoPdfQueryHandler(INombramientoService nombramientoService, IDocumentConverter nombramientoPdfService, IWordTemplateFiller wordTemplateFiller)
     {
         _nombramientoService = nombramientoService;
         _nombramientoPdfService = nombramientoPdfService;
@@ -30,7 +30,7 @@ public class NombramientoPdfQueryHandler : IRequestHandler<NombramientoPdfQueryR
         {
             return Result<byte[]>.Failure("Error al convertir nombramiento en pdf");
         }
-        var pdf = await _nombramientoPdfService.ConvertToPdfAsync(word,cancellationToken);
+        var pdf = await _nombramientoPdfService.ConvertToPdfAsync(word, ".docx" ,cancellationToken);
         if(pdf is null)
         {
             return Result<byte[]>.Failure("Error al convertir nombramiento en pdf");

@@ -2,7 +2,7 @@ using MediatR;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 
-namespace WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+namespace WebApp.Application.Comisiones.Queries.PlanViajePdf;
 
 public class PlanViajeQuery
 {
@@ -10,12 +10,14 @@ public class PlanViajeQuery
     internal class PlanViajeQueryHandler : IRequestHandler<PlanViajeQueryRequest, Result<Byte[]>>
     {
         private readonly IReportService _reportService;
+        private readonly IDocumentConverter _documentConverter;
         private readonly IComisionService _comisionService;
         private readonly ICurrentUser _currentUser;
 
-        public PlanViajeQueryHandler(IReportService reportService, IComisionService comisionService, ICurrentUser currentUser)
+        public PlanViajeQueryHandler(IReportService reportService, IDocumentConverter documentConverter, IComisionService comisionService, ICurrentUser currentUser)
         {
             _reportService = reportService;
+            _documentConverter = documentConverter;
             _comisionService = comisionService;
             _currentUser = currentUser;
         }
@@ -33,7 +35,13 @@ public class PlanViajeQuery
             {
                 return Result<Byte[]>.Failure("Error al convertir a excel.");
             }
-            return Result<byte[]>.Success(excel);
+
+            var pdf = await _documentConverter.ConvertToPdfAsync(excel, ".xlsx" , cancellationToken);
+            if(pdf is null)
+            {
+                return Result<Byte[]>.Failure("Error al convertir a pdf.");
+            }
+            return Result<byte[]>.Success(pdf);
         }
     }
 }

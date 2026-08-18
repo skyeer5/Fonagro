@@ -22,7 +22,7 @@ using static WebApp.Application.Comisiones.Command.ComisionCancel.ComisionCancel
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComisionesDetalleQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
-using static WebApp.Application.Comisiones.Queries.PlanViajeExcel.PlanViajeQuery;
+using static WebApp.Application.Comisiones.Queries.PlanViajePdf.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomsApproved.GetNomsApprovedQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
@@ -54,6 +54,7 @@ public class ComisionController : Controller
         }
 
         vm.Comision = resultado.Value;
+        vm.TieneComisionCreada = true;
 
         if(resultado.Value!.Piloto)
         {
@@ -157,7 +158,7 @@ public class ComisionController : Controller
         {
             return NotFound(result.Error);
         }
-        return File(result.Value!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PlanViaje_{idComision}.xlsx");
+        return File(result.Value!, "application/pdf", $"PlanViaje_{idComision}.pdf");
     }
 
     [HttpGet]

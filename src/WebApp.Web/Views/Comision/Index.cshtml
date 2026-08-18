@@ -13,38 +13,38 @@
     <!-- ================= MAIN ================= -->
     <div class="col-md-9">
 
-        @* ================= SIN COMISIÓN ================= *@
-        @if (!Model.TieneComisionCreada)
-        {
-            <div class="card border-azul shadow-sm">
-                <div class="card-header bg-azul">
-                    ¿Cómo realizar una comisión?
-                </div>
-
-                <div class="card-body">
-
-                    <p class="mb-3">
-                        Sigue este flujo para gestionar una comisión dentro del sistema:
-                    </p>
-
-                    <ol class="mb-4">
-                        <li><strong>Nombramientos:</strong> El coordinador asigna participantes.</li>
-                        <li><strong>Coordinación:</strong> Se define logística con Servicios Generales.</li>
-                        <li><strong>Destinos:</strong> El resp. del vehículo registra los destinos.</li>
-                        <li><strong>Aprobación:</strong> Se autoriza el combustible.</li>
-                        <li><strong>Ejecución:</strong> La comisión se realiza.</li>
-                    </ol>
-
-                    <div class="alert alert-secondary mb-0">
-                        Cuando tengas un nombramiento asignado, podrás gestionarlo aquí.
-                    </div>
-
-                </div>
+    @* ================= SIN COMISIÓN ================= *@
+    @if (!Model.TieneComisionCreada)
+    {
+        <div class="card border-azul shadow-sm">
+            <div class="card-header bg-azul">
+                ¿Cómo realizar una comisión?
             </div>
-        }
-        else
-        {
-            @* ================= ESTADO ================= *@
+
+            <div class="card-body">
+
+                <p class="mb-3">
+                    Sigue este flujo para gestionar una comisión dentro del sistema:
+                </p>
+
+                <ol class="mb-4">
+                    <li><strong>Nombramientos:</strong> El coordinador asigna participantes.</li>
+                    <li><strong>Coordinación:</strong> Se define logística con Servicios Generales.</li>
+                    <li><strong>Destinos:</strong> El resp. del vehículo registra los destinos.</li>
+                    <li><strong>Aprobación:</strong> Se autoriza el combustible.</li>
+                    <li><strong>Ejecución:</strong> La comisión se realiza.</li>
+                </ol>
+
+                <div class="alert alert-secondary mb-0">
+                    Cuando tengas un nombramiento asignado, podrás gestionarlo aquí.
+                </div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        @* ================= ESTADO ================= *@
             <div class="card border-primary mb-4 shadow-sm">
                 <div class="card-header bg-primary text-white">
                     Estado de la Comisión
@@ -178,7 +178,7 @@
                         </table>
                     </div>
                 </div>
-                                <div class="mb-4">
+                <div class="mb-4">
                     <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.ComisionId"
                        class="btn btn-success me-2">
                         Plan de Viaje
@@ -190,47 +190,68 @@
                     </a>
                 </div>
             }
-        }
-    <!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
-    @if (Model.EsPiloto && !Model.TieneCombustiblesAprobados)
-    {
-        <div class="card">
-            <div class="card-header">
-                Agregar Destinos *Eres el responsable del vehículo asignado, registra los destinos de tu comisión para avanzar al siguiente paso.
-            </div>
+        <!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
+        @if (Model.EsPiloto && !Model.TieneCombustiblesAprobados)
+        {
+            <div class="card">
+                <div class="card-header">
+                    Agregar Destinos *Eres el responsable del vehículo asignado, registra los destinos de tu comisión para avanzar al siguiente paso.
+                </div>
 
-            <div class="card-body">
-                <form asp-controller="Comision"
-                    asp-action="AgregarDestinos"
-                    method="post">
+                <div class="card-body">
+                    <form asp-controller="Comision"
+                        asp-action="AgregarDestinos"
+                        method="post">
 
-                    <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
+                        <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
-                    <div id="destinos-container">
-                        <div class="row mb-2 destino-row">
-                            <div class="col-md-6">
-                                <input name="comisionAddDestinosItemRequests[0].Descripcion" class="form-control" placeholder="Descripción" value="Recorrido interno"/>
-                            </div>
-                            <div class="col-md-4">
-                                <input name="comisionAddDestinosItemRequests[0].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
-                            </div>
+                        <div id="destinos-container">
+                                @if(Model.Comision.Destinos is null)
+                                {
+                                    <div class="row mb-2 destino-row">
+                                        <div class="col-md-6">
+                                            <input name="comisionAddDestinosItemRequests[0].Descripcion" class="form-control" placeholder="Descripción" value="Recorrido Interno")/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input name="comisionAddDestinosItemRequests[0].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    int i = 0;
+                                    foreach(var d in Model.Comision.Destinos)
+                                    {
+                                        <div class="row mb-2 destino-row">
+                                            <div class="col-md-6">
+                                                <input name="comisionAddDestinosItemRequests[@i].Descripcion" class="form-control" placeholder="Descripción" value="@d.descripcion"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input name="comisionAddDestinosItemRequests[@i].Kilometro" type="number" step="0.01" class="form-control" value="@d.kilometros" placeholder="Kilómetros"/>
+                                            </div>
+                                        </div> 
+                                        i++; 
+                                    }
+                                }
+
                         </div>
-                    </div>
 
-                    <button type="button" id="btnAddDestino" class="btn btn-secondary mb-3">
-                        + Agregar otro destino
-                    </button>
+                        <button type="button" id="btnAddDestino" class="btn btn-secondary mb-3">
+                            + Agregar otro destino
+                        </button>
 
-                    <br />
+                        <br />
 
-                    <button type="submit" class="btn btn-primary">
-                        Guardar Destinos
-                    </button>
+                        <button type="submit" class="btn btn-primary">
+                            Guardar Destinos
+                        </button>
 
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        }
     }
+    
     </div>
 
     <!-- ================= SIDEBAR ================= -->
@@ -251,7 +272,7 @@
                 </ul>
             </div>
         </div>
-        @if (Model?.Comision is not null)
+        @if (Model.TieneComisionCreada)
         {
         <div class="card border-negro shadow-sm mt-4">
                 <div class="card-header bg-negro text-white">

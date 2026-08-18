@@ -1,4 +1,4 @@
-using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+using WebApp.Application.Comisiones.Queries.PlanViajePdf;
 
 namespace WebApp.Application.Interfaces;
 

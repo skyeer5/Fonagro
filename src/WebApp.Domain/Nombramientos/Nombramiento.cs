@@ -52,12 +52,23 @@ public class Nombramiento : AuditableEntity
         };
     }
 
-    public static bool TodosTienenMismosMunicipios(List<Nombramiento> nombramientos)
+    public static bool TodosTienenMismosDatos(List<Nombramiento> nombramientos)
     {
         if(nombramientos.Count == 1) 
             return true;
+        var validarMunicipios = ValidarMunicipiosParaComision(nombramientos);
+        if(!validarMunicipios) 
+            return false;
+        
+        var validarHorarios = ValidarHorarioParaComision(nombramientos);
+        if(!validarHorarios) 
+            return false;
+        
+        return true;
+    }
 
-
+    private static bool ValidarMunicipiosParaComision(List<Nombramiento> nombramientos)
+    {
         var primerGrupoIds = nombramientos[0].NomMunicipios!
             .Select(nm => nm.MunicipioId)
             .ToHashSet();
@@ -70,6 +81,18 @@ public class Nombramiento : AuditableEntity
 
             return primerGrupoIds.SetEquals(idsActuales);
         });
+    }
+
+    private static bool ValidarHorarioParaComision(List<Nombramiento> nombramientos)
+    {
+        var nombramientoPiloto = nombramientos.First();
+        foreach(var nom in nombramientos)
+        {
+            if((nom.Fecha_Salida != nombramientoPiloto.Fecha_Salida) 
+                || (nom.Fecha_Regreso != nombramientoPiloto.Fecha_Regreso))
+            return false;
+        }
+        return true;
     }
     public void AprobarNombramiento(int usuarioAprobador)
     {

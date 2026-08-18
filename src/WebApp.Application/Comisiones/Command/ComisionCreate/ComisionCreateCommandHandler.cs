@@ -71,7 +71,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             return Result<int>.Failure("Error al encontrar los nombramientos");
         }
 
-        var nombramientosTienenMismosMunicipios = Nombramiento.TodosTienenMismosMunicipios(nombramientos);
+        var nombramientosTienenMismosMunicipios = Nombramiento.TodosTienenMismosDatos(nombramientos);
         if(!nombramientosTienenMismosMunicipios)
         {
             return Result<int>.Failure("Los nombramientos no coinciden sus municipios asignados para realizar la comisión.");

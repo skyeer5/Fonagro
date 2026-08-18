@@ -3,7 +3,7 @@ using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Domain;
 
-namespace WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+namespace WebApp.Application.Comisiones.Queries.PlanViajePdf;
 
 public class PlanViajeResponse
 {

@@ -1,7 +1,7 @@
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using Microsoft.AspNetCore.Hosting;
-using WebApp.Application.Comisiones.Queries.PlanViajeExcel;
+using WebApp.Application.Comisiones.Queries.PlanViajePdf;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 

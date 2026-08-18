@@ -5,16 +5,21 @@ using WebApp.Application.Interfaces;
 
 namespace WebApp.Infrastructure.Services;
 
-public class NombramientoPdfService : INombramientoPdfService
+public class DocumentConverter : IDocumentConverter
 {
     private static readonly SemaphoreSlim _concurrencyLimiter = new(initialCount: 2, maxCount: 2);
-    private readonly ILogger<NombramientoPdfService> _logger;
+    private readonly ILogger<DocumentConverter> _logger;
     private readonly string _workingDir;
     private readonly string _sofficePath;
     private readonly TimeSpan _timeout = TimeSpan.FromSeconds(30);
 
-    public NombramientoPdfService(
-        ILogger<NombramientoPdfService> logger,
+    private static readonly HashSet<string> _extensionesPermitidas = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".docx", ".xlsx"
+    };
+
+    public DocumentConverter(
+        ILogger<DocumentConverter> logger,
         IOptions<NombramientoOptions> options)
     {
         _logger = logger;
@@ -23,19 +28,25 @@ public class NombramientoPdfService : INombramientoPdfService
         Directory.CreateDirectory(_workingDir);
     }
 
-    public async Task<byte[]> ConvertToPdfAsync(byte[] docxBytes, CancellationToken cancellationToken)
+    public async Task<byte[]> ConvertToPdfAsync(
+        byte[] documentBytes,
+        string sourceExtension,
+        CancellationToken cancellationToken)
     {
+        if (!_extensionesPermitidas.Contains(sourceExtension))
+            throw new ArgumentException($"Extensión no soportada: {sourceExtension}", nameof(sourceExtension));
+
         var jobId = Guid.NewGuid().ToString("N");
-        var docxPath = Path.Combine(_workingDir, $"{jobId}.docx");
+        var sourcePath = Path.Combine(_workingDir, $"{jobId}{sourceExtension}"); 
         var pdfPath = Path.Combine(_workingDir, $"{jobId}.pdf");
         var profileDir = Path.Combine(_workingDir, $"{jobId}_profile");
 
-        await File.WriteAllBytesAsync(docxPath, docxBytes, cancellationToken);
+        await File.WriteAllBytesAsync(sourcePath, documentBytes, cancellationToken);
 
         await _concurrencyLimiter.WaitAsync(cancellationToken);
         try
         {
-            await RunSofficeAsync(docxPath, profileDir, cancellationToken);
+            await RunSofficeAsync(sourcePath, profileDir, cancellationToken);
 
             if (!File.Exists(pdfPath) || new FileInfo(pdfPath).Length == 0)
                 throw new Exception("LibreOffice no generó un PDF válido.");
@@ -45,20 +56,20 @@ public class NombramientoPdfService : INombramientoPdfService
         finally
         {
             _concurrencyLimiter.Release();
-            TryDelete(docxPath);
+            TryDelete(sourcePath);
             TryDelete(pdfPath);
             TryDeleteDirectory(profileDir);
         }
     }
 
-    private async Task RunSofficeAsync(string docxPath, string profileDir, CancellationToken cancellationToken)
+    private async Task RunSofficeAsync(string sourcePath, string profileDir, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(profileDir);
         var profileUri = BuildFileUri(profileDir);
 
         var argument = $"--headless --norestore " +
                         $"-env:UserInstallation={profileUri} " +
-                        $"--convert-to pdf --outdir \"{_workingDir}\" \"{docxPath}\"";
+                        $"--convert-to pdf --outdir \"{_workingDir}\" \"{sourcePath}\"";
 
         var startInfo = new ProcessStartInfo
         {
