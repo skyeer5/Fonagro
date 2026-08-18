@@ -14,7 +14,7 @@
     <div class="col-md-9">
 
         @* ================= SIN COMISIÓN ================= *@
-        @if (Model?.Comision is null)
+        @if (!Model.TieneComisionCreada)
         {
             <div class="card border-azul shadow-sm">
                 <div class="card-header bg-azul">
@@ -60,7 +60,7 @@
                             Nombramientos
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.Creada ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision!.Estado == ComisionEstados.Creada ? "text-primary fw-bold" : "")">
                             <small>2</small><br />
                             Coordinación
                         </div>
@@ -151,7 +151,7 @@
             </div>
 
             @* ================= DESTINOS ================= *@
-            @if (Model.Comision.Destinos?.Any() == true)
+            @if (Model.TieneCombustiblesAprobados)
             {
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-dark text-white">
@@ -167,7 +167,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var d in Model.Comision.Destinos)
+                                @foreach (var d in Model.Comision.Destinos!)
                                 {
                                     <tr>
                                         <td>@d.descripcion</td>
@@ -178,12 +178,7 @@
                         </table>
                     </div>
                 </div>
-            }
-
-            @* ================= ACCIONES ================= *@
-            @if (Model.TieneCombustiblesAprobados)
-            {
-                <div class="mb-4">
+                                <div class="mb-4">
                     <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.ComisionId"
                        class="btn btn-success me-2">
                         Plan de Viaje
@@ -197,7 +192,7 @@
             }
         }
     <!-- FORMULARIO DESTINOS (INLINE OPCIONAL) -->
-    @if (Model!.TieneComisionCreada && Model.Comision!.Piloto && !Model.TieneDestinosDefinidos)
+    @if (Model.EsPiloto && !Model.TieneCombustiblesAprobados)
     {
         <div class="card">
             <div class="card-header">

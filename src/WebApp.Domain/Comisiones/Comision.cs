@@ -6,11 +6,7 @@ using WebApp.Domain.Nombramientos;
 public class Comision : AuditableEntity
 {
     public int ComisionId { get; set; }
-    public string? Departamento { get; set; } //
-    public DateTime Fecha_Salida { get; set; } //
-    public DateTime Fecha_Regreso { get; set; } //
     public decimal Precio_Gasolina_Usado { get; set; }
-    public decimal Galon_Estimado { get; set; }
     public decimal Presupuesto_Combustible_Estimado { get; set; }
     public int? UsuarioId_Aprobador_Combustible { get; set; }
     public decimal Presupuesto_Combustible_Aprobado { get; set; }
@@ -74,7 +70,7 @@ public class Comision : AuditableEntity
             destino.CreatedDate = DateTime.Now;
             this.ComisionDestinos.Add(destino);
         }
-        this.Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
+        var Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
         this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Gasolina_Usado, Galon_Estimado);
         this.Estado = ComisionEstados.DestinosDefinidos;
 

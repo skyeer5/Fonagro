@@ -46,20 +46,18 @@ public class ComisionController : Controller
 
         var resultado = await _mediator.Send(new GetComisionActivaQueryRequest());
 
-        var vm = new ComisionViewModel
-        {
-            Comision = resultado.Value,
-            TieneComisionCreada = resultado.IsSuccess,
-            TieneDestinosDefinidos = false,
-            TieneCombustiblesAprobados = false,
-            TieneComisionLista = false,
-            TieneComisionEnCurso = false
-        };
+        var vm = new ComisionViewModel();
 
         if(!resultado.IsSuccess)
         {
-            vm.TieneComisionCreada = false;
             return View(vm);
+        }
+
+        vm.Comision = resultado.Value;
+
+        if(resultado.Value!.Piloto)
+        {
+            vm.EsPiloto = true;
         }
         if(resultado.Value!.Destinos!.Any())
         {

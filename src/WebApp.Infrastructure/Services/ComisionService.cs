@@ -150,7 +150,6 @@ public class ComisionService : IComisionService
             && n.AsignacionUsuario!.UsuarioId == idUsuario
             select new PlanViajeResponse
             {
-                Departamento = c.Departamento,
                 Fecha_Salida = n.Fecha_Salida,
                 Fecha_Regreso = n.Fecha_Regreso,
                 Descripcion = n.Descripcion,
@@ -179,19 +178,19 @@ public class ComisionService : IComisionService
         
         var predicate = ExpressionBuilder.New<Comision>();
 
-        if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
-        {
-            predicate = predicate.And(x=>
-                            x.Fecha_Salida <= request.Fecha_Fin && x.Fecha_Regreso>=request.Fecha_Inicio 
-                        );
-        }
-        if(!string.IsNullOrEmpty(request.Departamento))
-        {
-            predicate = predicate.And(x=>
-                            x.Departamento!
-                            .Contains(request.Departamento)
-                        );
-        }
+        // if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
+        // {
+        //     predicate = predicate.And(x=>
+        //                     x.Fecha_Salida <= request.Fecha_Fin && x.Fecha_Regreso>=request.Fecha_Inicio 
+        //                 );
+        // }
+        // if(!string.IsNullOrEmpty(request.Departamento))
+        // {
+        //     predicate = predicate.And(x=>
+        //                     x.Departamento!
+        //                     .Contains(request.Departamento)
+        //                 );
+        // }
         if(!string.IsNullOrEmpty(request.Estado))
         {
             predicate = predicate.And(x=>
@@ -199,22 +198,22 @@ public class ComisionService : IComisionService
                             .Contains(request.Estado)
                         );
         }
-        if(!string.IsNullOrEmpty(request.OrderBy))
-        {
-            Expression<Func<Comision, object>> orderBySelector =
-                        request.OrderBy.ToLower() switch
-                        {
-                            "fecha_inicio" => com => com.Fecha_Salida,
-                            "fecha_fin" => com => com.Fecha_Regreso,
-                            "departamento" => com => com.Departamento!,
-                            "estado" => com => com.Estado!,
-                            _ => com => com.ComisionId
-                        };
-            bool orderBy = request.OrderAsc.HasValue
-                            ? request.OrderAsc.Value
-                            : true;
-            queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
-        }
+        // if(!string.IsNullOrEmpty(request.OrderBy))
+        // {
+        //     Expression<Func<Comision, object>> orderBySelector =
+        //                 request.OrderBy.ToLower() switch
+        //                 {
+        //                     "fecha_inicio" => com => com.Fecha_Salida,
+        //                     "fecha_fin" => com => com.Fecha_Regreso,
+        //                     "departamento" => com => com.Departamento!,
+        //                     "estado" => com => com.Estado!,
+        //                     _ => com => com.ComisionId
+        //                 };
+        //     bool orderBy = request.OrderAsc.HasValue
+        //                     ? request.OrderAsc.Value
+        //                     : true;
+        //     queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
+        // }
         queryable = queryable.Where(predicate);
 
         var comisionsQuery = queryable.ProjectTo<GetComisionesDetalleResponse>(_mapper.ConfigurationProvider).AsQueryable();

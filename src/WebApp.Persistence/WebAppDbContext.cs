@@ -76,9 +76,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .Property(c => c.Precio_Gasolina_Usado)
             .HasPrecision(18, 2);
         modelBuilder.Entity<Comision>()
-            .Property(c => c.Galon_Estimado)
-            .HasPrecision(18, 2);
-        modelBuilder.Entity<Comision>()
             .Property(c => c.Presupuesto_Combustible_Estimado)
             .HasPrecision(18, 2);
         modelBuilder.Entity<Comision>()
@@ -96,13 +93,6 @@ public class WebAppDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int
             .HasPrecision(18, 2);
         modelBuilder.Entity<ComisionDestino>()
             .Property(c => c.Galones)
-            .HasPrecision(18, 2);
-
-        modelBuilder.Entity<ComisionViaticos>()
-            .Property(cv => cv.Monto_Unitario_Usado)
-            .HasPrecision(18, 2);
-        modelBuilder.Entity<ComisionViaticos>()
-            .Property(cv => cv.Monto_Total)
             .HasPrecision(18, 2);
 
         // Definicion de las relaciones
