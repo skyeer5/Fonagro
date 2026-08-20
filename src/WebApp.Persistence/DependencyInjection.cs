@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -15,8 +16,10 @@ public static class DependencyInjection
             opt.LogTo(Console.WriteLine, new[]
                 {DbLoggerCategory.Database.Command.Name},
                 LogLevel.Information
-                ).EnableSensitiveDataLogging();
-            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
+                ).EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
+            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"))
+                .ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
         });
         return services;
     }

@@ -55,6 +55,7 @@ public class ComisionRepository : IComisionRepository
                                             .Include(x=>x.Vehiculo)
                                             .Include(x=>x.Nombramientos!)
                                                 .ThenInclude(cu=>cu.ComisionViaticosList)
+                                            .AsSplitQuery()
                                             .ToList();
         if(comisiones.Count == 0)
         {
