@@ -7,10 +7,10 @@ using WebApp.Domain;
 
 namespace WebApp.Infrastructure.Services;
 
-public class ReportService : IReportService
+public class PlanViajeReportService : IPlanViajeReportService
 {
     private readonly IWebHostEnvironment _env;
-    public ReportService(IWebHostEnvironment env)
+    public PlanViajeReportService(IWebHostEnvironment env)
     {
         _env = env;
     }

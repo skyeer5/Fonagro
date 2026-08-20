@@ -28,7 +28,7 @@ builder.Services.AddScoped<IComisionRepository, ComisionRepository>();
 builder.Services.AddScoped<INombramientoPolicy, NombramientoPolicy>();
 builder.Services.AddScoped<IViaticosService, ViaticosService>();
 builder.Services.AddScoped<IComisionService, ComisionService>();
-builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IPlanViajeReportService, PlanViajeReportService>();
 builder.Services.AddScoped<INombramientoService, NombramientoService>();
 builder.Services.AddScoped<IComisionUsuarioRepository, ComisionUsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
