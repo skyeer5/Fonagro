@@ -137,7 +137,7 @@
                     <a class="page-link" href="/Comision/List?currentPage=@i">@i</a>
                 </li>
             }
-            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages || Model.TotalPages == 0 ? "disabled" : "")">
                 <a class="page-link" href="/Comision/List?currentPage=@(Model.CurrentPage != Model.TotalPages ? Model.CurrentPage+1 : Model.CurrentPage)">Siguiente</a>
             </li>
         </ul>

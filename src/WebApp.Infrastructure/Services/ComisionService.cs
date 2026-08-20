@@ -56,7 +56,7 @@ public class ComisionService : IComisionService
                         Fecha_Regreso = n.Fecha_Regreso,
                         Estado = c.Estado,
                         Descripcion = n.Descripcion,
-                        Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado != 0,
+                        Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado.HasValue,
                         Nombramiento = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
                         Piloto = n.NombramientoId == c.NombramientoId_Respon_Vehiculo,
                         Destinos = c.ComisionDestinos!
@@ -153,7 +153,7 @@ public class ComisionService : IComisionService
                 Fecha_Salida = n.Fecha_Salida,
                 Fecha_Regreso = n.Fecha_Regreso,
                 Descripcion = n.Descripcion,
-                TotalCombustibleAutorizado = c.Presupuesto_Combustible_Aprobado,
+                TotalCombustibleAutorizado = c.Presupuesto_Combustible_Aprobado.HasValue ? c.Presupuesto_Combustible_Aprobado.Value : 0,
                 Es_Gasolina = (CombustibleTipos)c.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
                 Precio_Galon = c.Precio_Gasolina_Usado,
                 Viaticos = n.ComisionViaticosList!.Select(cv=> new GetComisionViaticoResponse

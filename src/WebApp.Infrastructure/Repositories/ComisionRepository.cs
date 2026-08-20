@@ -96,8 +96,16 @@ public class ComisionRepository : IComisionRepository
         var destinos = new List<ComisionDestino>();
         foreach(var com in items)
         {
-            var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro, comision.Vehiculo!.ConsumoKmPorGalon);
-            destinos.Add(destino);
+            if(comision.Vehiculo is null)
+            {
+                var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro);
+                destinos.Add(destino);
+            }
+            else
+            {
+                var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro, comision.Vehiculo!.ConsumoKmPorGalon);
+                destinos.Add(destino);
+            }
         }
         
         comision.AgregarDestinos(destinos, userId);

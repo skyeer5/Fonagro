@@ -1,3 +1,4 @@
+@using Microsoft.IdentityModel.Tokens
 @using WebApp.Domain.Comisiones
 @model WebApp.Web.Models.Comisiones.ComisionViewModel
 
@@ -179,10 +180,10 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <a asp-action="ImprimirPlanViaje" asp-route-idComision="@Model.Comision.ComisionId"
-                       class="btn btn-success me-2">
-                        Plan de Viaje
-                    </a>
+                    <button type="button" class="btn btn-sm btn-success btn-imprimir"
+                            data-id="@Model.Comision.ComisionId">
+                             Plan de Viaje
+                    </button>
 
                     <a asp-action="ImprimirViaticos" asp-route-id="@Model.Comision.ComisionId"
                        class="btn btn-success">
@@ -206,7 +207,7 @@
                         <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
                         <div id="destinos-container">
-                                @if(Model.Comision.Destinos is null)
+                                @if(Model.Comision.Destinos.IsNullOrEmpty())
                                 {
                                     <div class="row mb-2 destino-row">
                                         <div class="col-md-6">
@@ -220,7 +221,7 @@
                                 else
                                 {
                                     int i = 0;
-                                    foreach(var d in Model.Comision.Destinos)
+                                    foreach(var d in Model.Comision.Destinos!)
                                     {
                                         <div class="row mb-2 destino-row">
                                             <div class="col-md-6">
@@ -297,6 +298,20 @@
             }
     </div>
 
+    <!-- Modal de generación de PDF -->
+    <div class="modal fade" id="modalGenerandoPdf" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body">
+                    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Generando...</span>
+                    </div>
+                    <h5 class="fw-bold">Generando el PDF</h5>
+                    <p class="text-muted mb-0">Esto puede tardar unos segundos, por favor espera...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -324,5 +339,40 @@ document.getElementById("btnAddDestino")?.addEventListener("click", function () 
     container.appendChild(row);
     index++;
 });
+
+const modalGenerandoPdf = new bootstrap.Modal(document.getElementById('modalGenerandoPdf'));
+
+        document.querySelectorAll('.btn-imprimir').forEach(btn => {
+            btn.addEventListener('click', () => generarPdf(btn.dataset.id));
+        });
+
+async function generarPdf(ComisionId) {
+    modalGenerandoPdf.show();
+
+    try {
+        const response = await fetch(`/Comision/ImprimirPlanViaje?idComision=${ComisionId}`);
+
+        if (!response.ok) {
+            throw new Error(`Error del servidor: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `planDeViaje-${ComisionId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            alert('No se pudo generar el PDF. Intenta de nuevo. ' + error.message);
+        } finally {
+            modalGenerandoPdf.hide();
+        }
+    }
 </script>
 }

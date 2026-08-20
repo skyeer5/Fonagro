@@ -9,7 +9,7 @@ public class Comision : AuditableEntity
     public decimal Precio_Gasolina_Usado { get; set; }
     public decimal Presupuesto_Combustible_Estimado { get; set; }
     public int? UsuarioId_Aprobador_Combustible { get; set; }
-    public decimal Presupuesto_Combustible_Aprobado { get; set; }
+    public decimal? Presupuesto_Combustible_Aprobado { get; set; }
     public decimal Kilometraje_Inicial { get; set; }
     public decimal Kilometraje_Final { get; set; }
     public DateTime? Fecha {get; set; }
@@ -60,10 +60,7 @@ public class Comision : AuditableEntity
     public void AgregarDestinos(List<ComisionDestino> comisionDestinos, int userId)
     {
         this.ComisionDestinos ??= new List<ComisionDestino>();
-        if(!comisionDestinos.Any())
-        {
-            throw new Exception("Debe asignar al menos un destino");
-        }
+
         foreach(var destino in comisionDestinos)
         {
             destino.CreatedBy = userId;
@@ -73,6 +70,19 @@ public class Comision : AuditableEntity
         var Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
         this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Gasolina_Usado, Galon_Estimado);
         this.Estado = ComisionEstados.DestinosDefinidos;
+
+    }
+    public void AgregarDestinosSinVehiculo(List<ComisionDestino> comisionDestinos, int userId)
+    {
+        this.ComisionDestinos ??= new List<ComisionDestino>();
+
+        foreach(var destino in comisionDestinos)
+        {
+            destino.CreatedBy = userId;
+            destino.CreatedDate = DateTime.Now;
+            this.ComisionDestinos.Add(destino);
+        }
+        this.Estado = ComisionEstados.Programada;
 
     }
     public void AgregarPresupuestoGas(decimal prespuestoGas)
