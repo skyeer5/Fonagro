@@ -4,5 +4,5 @@ namespace WebApp.Application.Interfaces;
 
 public interface IReportService
 {
-    byte[] GetExcelPlanViaje(PlanViajeResponse planViaje);
+    byte[] GetExcelPlanViaje(PlanViajeDto planViaje);
 }

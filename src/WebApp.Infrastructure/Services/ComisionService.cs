@@ -138,7 +138,7 @@ public class ComisionService : IComisionService
         }).ToList();
     }
 
-    public async Task<PlanViajeResponse?> GetPlanViajeResponseAsync(int idUsuario, int idComision)
+    public async Task<PlanViajeDto?> GetPlanViajeResponseAsync(int idUsuario, int idComision)
     {
         var query = 
             from n in _context.Nombramientos
@@ -148,7 +148,7 @@ public class ComisionService : IComisionService
                 on n.AsignacionUsuario!.UsuarioId equals u.Id
             where c.ComisionId == idComision
             && n.AsignacionUsuario!.UsuarioId == idUsuario
-            select new PlanViajeResponse
+            select new PlanViajeDto
             {
                 Fecha_Salida = n.Fecha_Salida,
                 Fecha_Regreso = n.Fecha_Regreso,

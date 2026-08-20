@@ -5,7 +5,7 @@ using WebApp.Domain;
 
 namespace WebApp.Application.Comisiones.Queries.PlanViajePdf;
 
-public class PlanViajeResponse
+public class PlanViajeDto
 {
     public string? Departamento { get; set; }
     public DateTime Fecha_Salida { get; set; }

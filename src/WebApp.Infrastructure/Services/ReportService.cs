@@ -15,7 +15,7 @@ public class ReportService : IReportService
         _env = env;
     }
 
-    public byte[] GetExcelPlanViaje(PlanViajeResponse planViaje)
+    public byte[] GetExcelPlanViaje(PlanViajeDto planViaje)
     {
         var filasViaticos = ConstruirFilasViaticos(planViaje);
         var filaDestinos = ConstruirFilasDestinos(planViaje);
@@ -35,7 +35,7 @@ public class ReportService : IReportService
 
         return stream.ToArray();
     }
-    private List<PlanViajeFilaViatico> ConstruirFilasViaticos(PlanViajeResponse planViaje)
+    private List<PlanViajeFilaViatico> ConstruirFilasViaticos(PlanViajeDto planViaje)
     {
         var resultado = new List<PlanViajeFilaViatico>();
 
@@ -94,7 +94,7 @@ public class ReportService : IReportService
 
         return resultado;
     }
-    private List<PlanViajeFilaDestinos> ConstruirFilasDestinos(PlanViajeResponse planViaje)
+    private List<PlanViajeFilaDestinos> ConstruirFilasDestinos(PlanViajeDto planViaje)
     {
         var resultado = new List<PlanViajeFilaDestinos>();
 
@@ -114,7 +114,7 @@ public class ReportService : IReportService
 
         return resultado;
     }
-    private void InsertarDatosSimples(IXLWorksheet sheet, PlanViajeResponse planViaje)
+    private void InsertarDatosSimples(IXLWorksheet sheet, PlanViajeDto planViaje)
     {
         sheet.Cell("B7").Value = planViaje.Departamento;
         sheet.Cell("B10").Value = planViaje.Fecha_Salida.ToShortDateString();
