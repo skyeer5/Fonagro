@@ -17,7 +17,7 @@ public class GetUsuariosActivosQueryHandler : IRequestHandler<GetUsuariosActivos
     public async Task<Result<List<GetUsuariosActivosResponse>>> Handle(GetUsuariosActivosQuery.GetUsuariosActivosQueryRequest request, CancellationToken cancellationToken)
     {
         var usuarios = await _usuarioService.GetUsuariosActivosAsync();
-        if(usuarios.IsNullOrEmpty())
+        if(usuarios.Count == 0 || usuarios is null)
         {
             return Result<List<GetUsuariosActivosResponse>>.Failure("No se encontraron usuarios activos.");
         }

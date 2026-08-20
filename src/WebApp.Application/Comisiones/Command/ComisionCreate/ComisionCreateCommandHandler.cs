@@ -55,7 +55,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             }
 
         var viaticosVigentes = await _viaticosService.GetViaticosVigentesAsync();
-            if(viaticosVigentes.IsNullOrEmpty())
+            if(viaticosVigentes.Count == 0 || viaticosVigentes is null)
             {
                 return Result<int>.Failure("No hay viáticos vigentes para asignar a la comisión");
             }

@@ -18,7 +18,7 @@ public static class DependencyInjection
         });
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddAutoMapper(typeof(MapperProfile).Assembly);
+        services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperProfile).Assembly));
         return services;
     }
 }

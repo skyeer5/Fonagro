@@ -207,7 +207,7 @@
                         <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
                         <div id="destinos-container">
-                                @if(Model.Comision.Destinos.IsNullOrEmpty())
+                                @if(Model.Comision.Destinos is null)
                                 {
                                     <div class="row mb-2 destino-row">
                                         <div class="col-md-6">
@@ -221,7 +221,7 @@
                                 else
                                 {
                                     int i = 0;
-                                    foreach(var d in Model.Comision.Destinos!)
+                                    foreach(var d in Model.Comision.Destinos)
                                     {
                                         <div class="row mb-2 destino-row">
                                             <div class="col-md-6">

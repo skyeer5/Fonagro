@@ -169,8 +169,8 @@ public class ComisionController : Controller
         {
             Departamento = departamento,
             Estado = estado,
-            Fecha_Inicio = !fecha_inicio.IsNullOrEmpty() ? DateTime.Parse(fecha_inicio!) : null,
-            Fecha_Fin = !fecha_fin.IsNullOrEmpty() ? DateTime.Parse(fecha_fin!) : null,
+            Fecha_Inicio = fecha_inicio is not null ? DateTime.Parse(fecha_inicio!) : null,
+            Fecha_Fin = fecha_fin is not null ? DateTime.Parse(fecha_fin!) : null,
             PageNumber = currentPage,
             OrderBy = orderBy,
             OrderAsc = false

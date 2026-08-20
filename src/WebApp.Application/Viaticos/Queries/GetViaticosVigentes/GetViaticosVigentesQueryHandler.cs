@@ -18,7 +18,7 @@ public class GetViaticosVigentesQueryHandler : IRequestHandler<GetViaticosVigent
     public async Task<Result<List<GetViaticosVigentesResponse>>> Handle(GetViaticosVigentesQuery.GetViaticosVigentesQueryRequest request, CancellationToken cancellationToken)
     {
         var viaticos = await _viaticosService.GetViaticosVigentesAsync();
-        if(viaticos.IsNullOrEmpty())
+        if(viaticos.Count == 0 || viaticos is null)
         {
             return Result<List<GetViaticosVigentesResponse>>.Failure("No se encontraron viáticos vigentes.");
         }
