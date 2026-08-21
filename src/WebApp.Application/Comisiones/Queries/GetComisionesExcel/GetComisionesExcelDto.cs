@@ -8,7 +8,7 @@ public class GetComisionesExcelDto
     public DateTime Fecha_Salida { get; set; }
     public DateTime Fecha_Regreso { get; set; }
     public DateTime Fecha_Creacion_Comision { get; set; }
-    public List<string> DepartamentosYMunicipios { get; set; } = [];
+    public List<GetComisionesExcelDestinosDto> DepartamentosYMunicipios { get; set; } = [];
     public List<string> Destinos { get; set; } = [];
     public string Vehiculo { get; set; } = string.Empty;
     public List<string> Nombrados { get; set; } = [];

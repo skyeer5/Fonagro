@@ -5,7 +5,7 @@ using WebApp.Application.Comisiones.Queries.PlanViajePdf;
 using WebApp.Application.Interfaces;
 using WebApp.Domain;
 
-namespace WebApp.Infrastructure.Services;
+namespace WebApp.Infrastructure.Reports;
 
 public class PlanViajeReportService : IPlanViajeReportService
 {

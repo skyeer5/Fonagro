@@ -55,7 +55,7 @@ public class ComisionService : IComisionService
                         Municipio = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Nombre)),
                         Fecha_Salida = n.Fecha_Salida,
                         Fecha_Regreso = n.Fecha_Regreso,
-                        Estado = c.Estado,
+                        Estado = c.Estado.ToString(),
                         Descripcion = n.Descripcion,
                         Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado.HasValue,
                         Nombramiento = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
@@ -192,13 +192,13 @@ public class ComisionService : IComisionService
         //                     .Contains(request.Departamento)
         //                 );
         // }
-        if(!string.IsNullOrEmpty(request.Estado))
-        {
-            predicate = predicate.And(x=>
-                            x.Estado!
-                            .Contains(request.Estado)
-                        );
-        }
+        // if(!string.IsNullOrEmpty(request.Estado))
+        // {
+        //     predicate = predicate.And(x=>
+        //                     x.Estado!
+        //                     .Contains(request.Estado)
+        //                 );
+        // }
         // if(!string.IsNullOrEmpty(request.OrderBy))
         // {
         //     Expression<Func<Comision, object>> orderBySelector =
@@ -226,76 +226,97 @@ public class ComisionService : IComisionService
         return Result<PagedList<GetComisionesDetalleResponse>>.Success(pagination);
     }
 
-    public Task<List<GetComisionesExcelDto>?> GetComisionesExcelDtos(GetComisionesExcelRequest request, CancellationToken cancellationToken)
-    {        
-        var predicate = ExpressionBuilder.New<Comision>();
+    public async Task<List<GetComisionesExcelDto>?> GetComisionesExcelDtos(GetComisionesExcelRequest request, CancellationToken cancellationToken)
+    {
+        var query = _context.Comisiones.AsNoTracking().AsQueryable();
 
-        if(request.Fecha_Salida is not null)
-        {
-            predicate = predicate.And(x=>
-                            x.Nombramiento_Respon_Vehiculo!.Fecha_Salida >= request.Fecha_Salida
-                        );
-        }
-        if(request.Fecha_Regreso is not null)
-        {
-            predicate = predicate.And(x=>
-                            x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Regreso
-                        );
-        }
+        if (request.Fecha_Salida.HasValue)
+            query = query.Where(x => x.Nombramiento_Respon_Vehiculo!.Fecha_Salida >= request.Fecha_Salida);
 
-        if(request.Departamentos is not null)
+        if (request.Fecha_Regreso.HasValue)
+            query = query.Where(x => x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Regreso);
+
+        if (request.Departamentos != null && request.Departamentos.Count != 0)
+            query = query.Where(x => x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm => request.Departamentos.Contains(nm.Municipio!.DepartamentoId)));
+
+        if (request.Municipios != null && request.Municipios.Count != 0)
+            query = query.Where(x => x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm => request.Municipios.Contains(nm.MunicipioId)));
+
+        if (request.Vehiculo.HasValue)
+            query = query.Where(x => x.VehiculoId == request.Vehiculo);
+
+        if (request.Usuario.HasValue)
+            query = query.Where(x => x.Nombramientos!.Any(n => n.AsignacionUsuario!.UsuarioId == request.Usuario));
+
+        if (request.Unidades != null && request.Unidades.Count != 0)
+            query = query.Where(x => x.Nombramientos!.Any(n => request.Unidades.Contains(n.AsignacionUsuario!.Puesto!.UnidadId)));
+
+        if (request.Estado.HasValue)
+            query = query.Where(x => x.Estado == (ComisionEstados)request.Estado);
+
+        var rawComisiones = await query.Select(c => new
         {
-            predicate = predicate.And(x=>
-                            x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm=>
-                                request.Departamentos.Contains(nm.Municipio!.DepartamentoId)
-                                ));
-        }
-        if(request.Municipios is not null)
-        {
-            predicate = predicate.And(x=>
-                            x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm=>
-                                request.Municipios.Contains(nm.MunicipioId)
-                                ));
-        }
-        if(request.Vehiculo.HasValue)
-        {
-            predicate = predicate.And(x=>
-                            x.VehiculoId == request.Vehiculo
-                            );
-        }  
-        if(request.Usuario.HasValue)
-        {
-            predicate = predicate.And(x=>
-                            x.Nombramientos!.Any(x=>x.AsignacionUsuario!.UsuarioId == request.Usuario)
-                            );
-        }
-        if(request.Unidades is not null)
-        {
-            predicate = predicate.And(x=>
-                            x.Nombramientos!.Any(x=>request.Unidades.Contains(x.AsignacionUsuario!.Puesto!.UnidadId))
-                                );
-        }
-        if(request.Estado.HasValue)
-        {
+            Fecha_Salida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
+            Fecha_Regreso = c.Nombramiento_Respon_Vehiculo.Fecha_Regreso,
+            Fecha_Creacion_Comision = c.Fecha,
+            DepartamentosYMunicipios = c.Nombramiento_Respon_Vehiculo.NomMunicipios!.Select(nms => new GetComisionesExcelDestinosDto
+            {
+                Departamento = nms.Municipio!.Departamento.Nombre,
+                Municipio = nms.Municipio.Nombre
+            }).ToList(),
+            Destinos = c.ComisionDestinos!.Select(x => $"{x.Descripcion} - {x.Kilometros}").ToList(),
+            PlacaVehiculo = c.Vehiculo != null ? c.Vehiculo.Placa : "",
+            ModeloVehiculo = c.Vehiculo != null ? c.Vehiculo.Modelo : "",
             
-        }
-        // if(!string.IsNullOrEmpty(request.OrderBy))
-        // {
-        //     Expression<Func<Comision, object>> orderBySelector =
-        //                 request.OrderBy.ToLower() switch
-        //                 {
-        //                     "fecha_inicio" => com => com.Fecha_Salida,
-        //                     "fecha_fin" => com => com.Fecha_Regreso,
-        //                     "departamento" => com => com.Departamento!,
-        //                     "estado" => com => com.Estado!,
-        //                     _ => com => com.ComisionId
-        //                 };
-        //     bool orderBy = request.OrderAsc.HasValue
-        //                     ? request.OrderAsc.Value
-        //                     : true;
-        //     queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
-        // }
-        queryable = queryable.Where(predicate);
+            UsuarioResponsableId = c.Nombramiento_Respon_Vehiculo.AsignacionUsuario!.UsuarioId,
+            UsuariosNombradosIds = c.Nombramientos!.Select(n => n.AsignacionUsuario!.UsuarioId).ToList(),
+            Estado = c.Estado.ToString(),
+            PresupuestoCombustibleEstimado = c.Presupuesto_Combustible_Estimado,
+            PresupuestoCombustibleAprobado = c.Presupuesto_Combustible_Aprobado.HasValue ? c.Presupuesto_Combustible_Aprobado.Value : 0,
+            PrecioCombustible = c.Precio_Gasolina_Usado
+        }).AsSplitQuery().ToListAsync(cancellationToken);
 
+        if (!rawComisiones.Any()) return new List<GetComisionesExcelDto>();
+
+        // 3. Recolectamos TODOS los UsuarioIds únicos para hacer UNA SOLA consulta a Users
+        var userIds = rawComisiones
+            .Select(c => c.UsuarioResponsableId)
+            .Concat(rawComisiones.SelectMany(c => c.UsuariosNombradosIds))
+            .Distinct()
+            .ToList();
+
+        // 4. Consultamos la tabla de usuarios UNA SOLA VEZ y creamos un diccionario en memoria
+        var usuariosDic = await _context.Users
+            .AsNoTracking()
+            .Where(u => userIds.Contains(u.Id))
+            .Select(u => new { u.Id, NombreCompleto = $"{u.Nombres} {u.Apellidos}" })
+            .ToDictionaryAsync(u => u.Id, u => u.NombreCompleto, cancellationToken);
+
+        // 5. Mapeo final ensamblando los nombres desde el Diccionario (búsquedas O(1) ultra rápidas)
+        var resultado = rawComisiones.Select(c => new GetComisionesExcelDto
+        {
+            Fecha_Salida = c.Fecha_Salida,
+            Fecha_Regreso = c.Fecha_Regreso,
+            Fecha_Creacion_Comision = c.Fecha_Creacion_Comision,
+            DepartamentosYMunicipios = c.DepartamentosYMunicipios,
+            Destinos = c.Destinos,
+            Vehiculo = string.IsNullOrEmpty(c.PlacaVehiculo) ? "Sin Vehículo" : $"{c.PlacaVehiculo} - {c.ModeloVehiculo}",
+            
+            // Obtener el nombre del responsable desde el diccionario
+            NombreResponsableVehiculo = usuariosDic.TryGetValue(c.UsuarioResponsableId, out var resp) ? resp : "Desconocido",
+            NombreCreadorComision = usuariosDic.TryGetValue(c.UsuarioResponsableId, out var creador) ? creador : "Desconocido",
+            
+            // Mapear la lista de nombrados
+            Nombrados = c.UsuariosNombradosIds
+                .Where(id => usuariosDic.ContainsKey(id))
+                .Select(id => usuariosDic[id])
+                .ToList(),
+            Estado = c.Estado.ToString(),
+            PresupuestoCombustibleEstimado = c.PresupuestoCombustibleEstimado,
+            PresupuestoCombustibleAprobado = c.PresupuestoCombustibleAprobado,
+            PrecioCombustible = c.PrecioCombustible
+        }).ToList();
+
+        return resultado;
     }
 }

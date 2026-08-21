@@ -160,7 +160,7 @@
 
             try {
                 const response = await fetch(`/Nombramiento/ObtenerDatosById?nombramientoId=${encodeURIComponent(nombramientoId)}`);
-                if (!response.ok) throw new Error("No fue posible obtener los datos del nombramiento.");
+                if (!response.ok) throw new Error("No fue posible obtener los datos del nombramiento. 1");
 
                 const data = await response.json();
                 departamentoVisita.value = data.departamentos ?? "";
@@ -173,7 +173,7 @@
                 fechaSalida.value = "";
                 fechaRegreso.value = "";
                 console.error(error);
-                alert("No fue posible obtener los datos del nombramiento.");
+                alert("No fue posible obtener los datos del nombramiento. 2");
             }
         });
 

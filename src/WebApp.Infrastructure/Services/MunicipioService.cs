@@ -25,8 +25,8 @@ public class MunicipioService : IMunicipioService
             }).ToListAsync();
     }
 
-    public async Task<bool> MunicipiosExistsAsync(List<int> municipiosIds)
+    public async Task<bool> MunicipiosExistsAsync(List<int> municipiosIds, CancellationToken cancellationToken)
     {
-        return await _context.Municipios.AnyAsync(m => municipiosIds.Contains(m.MunicipioId));
+        return await _context.Municipios.AnyAsync(m => municipiosIds.Contains(m.MunicipioId), cancellationToken);
     }
 }

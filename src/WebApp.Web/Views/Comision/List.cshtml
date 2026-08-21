@@ -98,7 +98,7 @@
                         <td>@item.Descripcion_Vehiculo</td>
                         <td>@item.Estado</td>
                         <td class="text-center">
-                            @if(item.Estado != ComisionEstados.Cancelada && item.Estado != ComisionEstados.Completada)
+                            @if(item.Estado != ComisionEstados.Cancelada.ToString() && item.Estado != ComisionEstados.Completada.ToString())
                             {
                                 <a href="/Comision/Edit?id=@item.ComisionId" 
                                 class="btn btn-sm btn-outline-primary">

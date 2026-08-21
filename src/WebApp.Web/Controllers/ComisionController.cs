@@ -9,6 +9,7 @@ using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
+using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
 using WebApp.Application.Core;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Comisiones;
@@ -21,6 +22,7 @@ using static WebApp.Application.Comisiones.Command.ComisionApprovalGas.ComisionA
 using static WebApp.Application.Comisiones.Command.ComisionCancel.ComisionCancelCommand;
 using static WebApp.Application.Comisiones.Queries.GetComisionesActivas.GetComisionesActivasQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComisionesDetalleQuery;
+using static WebApp.Application.Comisiones.Queries.GetComisionesExcel.GetComisionesExcelQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajePdf.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
@@ -164,7 +166,7 @@ public class ComisionController : Controller
     [HttpGet]
     public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "ComisionId")
     {
-        ViewBag.Estados = ComisionEstados.GetEstadosComision();
+        ViewBag.Estados = EnumExtensions.ToSelectList<ComisionEstados>();
         var request = new GetComisionesDetalleRequest
         {
             Departamento = departamento,
@@ -189,6 +191,17 @@ public class ComisionController : Controller
         var command = new ComisionCancelCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
+    }
+    [HttpGet]
+    public async Task<IActionResult> ImprimirReporte(GetComisionesExcelRequest request)
+    {
+        var query = new GetComisionesExcelQueryRequest(request);
+        var result = await _mediator.Send(query);
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Error);
+        }
+        return File(result.Value!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"ComisionReporte {DateTime.Now}.xlsx");
     }
     // [HttpGet("Detalle/{id}")]
     // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(

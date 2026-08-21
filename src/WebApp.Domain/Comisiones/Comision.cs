@@ -12,11 +12,11 @@ public class Comision : AuditableEntity
     public decimal? Presupuesto_Combustible_Aprobado { get; set; }
     public decimal Kilometraje_Inicial { get; set; }
     public decimal Kilometraje_Final { get; set; }
-    public DateTime? Fecha {get; set; }
-    public ComisionEstados? Estado { get; set; }
+    public DateTime Fecha {get; set; }
+    public ComisionEstados Estado { get; set; }
     public int? NombramientoId_Respon_Vehiculo { get; set; }
     public Nombramiento? Nombramiento_Respon_Vehiculo { get; set; }
-    public int? UsuarioId_Creador_Comision { get; set; }
+    public int UsuarioId_Creador_Comision { get; set; }
     public int? VehiculoId { get; set; } 
     public Vehiculo? Vehiculo { get; set; }
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
@@ -39,6 +39,7 @@ public class Comision : AuditableEntity
     public void AgregarCreadoPor(int usuarioId)
     {
         this.UsuarioId_Creador_Comision = usuarioId;
+        this.Fecha = DateTime.Now;
         this.CreatedBy = usuarioId;
         this.CreatedDate = DateTime.Now;
     }

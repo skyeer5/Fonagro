@@ -61,22 +61,22 @@
                             Nombramientos
                         </div>
 
-                        <div class="flex-fill @(Model.Comision!.Estado == ComisionEstados.Creada ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision!.Estado == ComisionEstados.Creada.ToString() ? "text-primary fw-bold" : "")">
                             <small>2</small><br />
                             Coordinación
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.DestinosDefinidos ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.DestinosDefinidos.ToString() ? "text-primary fw-bold" : "")">
                             <small>3</small><br />
                             Destinos
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.Programada ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.Programada.ToString() ? "text-primary fw-bold" : "")">
                             <small>4</small><br />
                             Aprobación
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.EnCurso ? "text-success fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.EnCurso.ToString() ? "text-success fw-bold" : "")">
                             <small>5</small><br />
                             Ejecución
                         </div>
@@ -86,7 +86,7 @@
                     <!-- Mensaje -->
                     <div class="alert alert-light mb-0">
 
-                        @switch (Model.Comision.Estado)
+                        @switch ((ComisionEstados)int.Parse(Model.Comision.Estado!))
                         {
                             case ComisionEstados.Creada:
                                 <span>Se ha asignado resp. del vehiculo. Pendiente registro de destinos.</span>

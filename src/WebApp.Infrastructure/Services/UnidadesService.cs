@@ -31,8 +31,13 @@ public class UnidadService : IUnidadService
                 .Include(p=>p.Puesto)
                 .Where(x=>x.AsignacionUsuarioId == usuarioId)
                 .Select(x=>x.Puesto!.UnidadId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
                 
         return (UnidadesEnum?)unidadId;
+    }
+
+    public async Task<bool> UnidadesExistAsync(List<int> unidades, CancellationToken cancellationToken)
+    {
+        return await _context.Unidades.AnyAsync(x=>unidades.Contains(x.UnidadId), cancellationToken);
     }
 }
