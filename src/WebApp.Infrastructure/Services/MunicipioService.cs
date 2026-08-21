@@ -25,8 +25,8 @@ public class MunicipioService : IMunicipioService
             }).ToListAsync();
     }
 
-    public bool MunicipiosExists(List<int> municipiosIds)
+    public async Task<bool> MunicipiosExistsAsync(List<int> municipiosIds)
     {
-        return _context.Municipios.Any(m => municipiosIds.Contains(m.MunicipioId));
+        return await _context.Municipios.AnyAsync(m => municipiosIds.Contains(m.MunicipioId));
     }
 }

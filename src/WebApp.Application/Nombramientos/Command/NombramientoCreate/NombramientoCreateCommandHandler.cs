@@ -22,7 +22,7 @@ public class NombramientoCreateCommandHandler : IRequestHandler<NombramientoCrea
 
     public async Task<Result<int>> Handle(NombramientoCreateCommandRequest request, CancellationToken cancellationToken)
     {
-        var municipiosExisten = _municipioService.MunicipiosExists(request.request.Municipios!);
+        var municipiosExisten = await _municipioService.MunicipiosExistsAsync(request.request.Municipios!, cancellationToken);
         if(!municipiosExisten)
         {
             return Result<int>.Failure("Uno o más municipios no existen.");

@@ -7,4 +7,5 @@ public interface IUnidadService
 {
     Task<List<GetUnidadesResponse>> GetUnidadesAsync();
     Task<UnidadesEnum?> GetUnidadIdByUsuarioIdAsync(int usuarioId, CancellationToken cancellationToken);
+    Task<bool> UnidadesExistAsync(List<int> unidades, CancellationToken cancellationToken);
 }

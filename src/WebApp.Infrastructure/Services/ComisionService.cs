@@ -16,7 +16,8 @@ using WebApp.Domain.Gasolinas;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.Unidades;
-
+using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
+using System.Linq;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -223,5 +224,78 @@ public class ComisionService : IComisionService
                                     request.PageSize
         );
         return Result<PagedList<GetComisionesDetalleResponse>>.Success(pagination);
+    }
+
+    public Task<List<GetComisionesExcelDto>?> GetComisionesExcelDtos(GetComisionesExcelRequest request, CancellationToken cancellationToken)
+    {        
+        var predicate = ExpressionBuilder.New<Comision>();
+
+        if(request.Fecha_Salida is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramiento_Respon_Vehiculo!.Fecha_Salida >= request.Fecha_Salida
+                        );
+        }
+        if(request.Fecha_Regreso is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Regreso
+                        );
+        }
+
+        if(request.Departamentos is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm=>
+                                request.Departamentos.Contains(nm.Municipio!.DepartamentoId)
+                                ));
+        }
+        if(request.Municipios is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm=>
+                                request.Municipios.Contains(nm.MunicipioId)
+                                ));
+        }
+        if(request.Vehiculo.HasValue)
+        {
+            predicate = predicate.And(x=>
+                            x.VehiculoId == request.Vehiculo
+                            );
+        }  
+        if(request.Usuario.HasValue)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramientos!.Any(x=>x.AsignacionUsuario!.UsuarioId == request.Usuario)
+                            );
+        }
+        if(request.Unidades is not null)
+        {
+            predicate = predicate.And(x=>
+                            x.Nombramientos!.Any(x=>request.Unidades.Contains(x.AsignacionUsuario!.Puesto!.UnidadId))
+                                );
+        }
+        if(request.Estado.HasValue)
+        {
+            
+        }
+        // if(!string.IsNullOrEmpty(request.OrderBy))
+        // {
+        //     Expression<Func<Comision, object>> orderBySelector =
+        //                 request.OrderBy.ToLower() switch
+        //                 {
+        //                     "fecha_inicio" => com => com.Fecha_Salida,
+        //                     "fecha_fin" => com => com.Fecha_Regreso,
+        //                     "departamento" => com => com.Departamento!,
+        //                     "estado" => com => com.Estado!,
+        //                     _ => com => com.ComisionId
+        //                 };
+        //     bool orderBy = request.OrderAsc.HasValue
+        //                     ? request.OrderAsc.Value
+        //                     : true;
+        //     queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
+        // }
+        queryable = queryable.Where(predicate);
+
     }
 }

@@ -9,12 +9,12 @@ public class PlanViajeQuery
     public record PlanViajeQueryRequest(int idComision) : IRequest<Result<Byte[]>>;
     internal class PlanViajeQueryHandler : IRequestHandler<PlanViajeQueryRequest, Result<Byte[]>>
     {
-        private readonly IReportService _reportService;
+        private readonly IPlanViajeReportService _reportService;
         private readonly IDocumentConverter _documentConverter;
         private readonly IComisionService _comisionService;
         private readonly ICurrentUser _currentUser;
 
-        public PlanViajeQueryHandler(IReportService reportService, IDocumentConverter documentConverter, IComisionService comisionService, ICurrentUser currentUser)
+        public PlanViajeQueryHandler(IPlanViajeReportService reportService, IDocumentConverter documentConverter, IComisionService comisionService, ICurrentUser currentUser)
         {
             _reportService = reportService;
             _documentConverter = documentConverter;

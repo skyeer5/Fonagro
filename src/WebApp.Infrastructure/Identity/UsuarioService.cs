@@ -109,9 +109,9 @@ public class UsuarioService : IUsuarioService
             ).ToListAsync();
     }
 
-    public async Task<bool> UsuariosExistsAsync(int usuarioId)
+    public async Task<bool> UsuarioExistsAsync(int usuarioId, CancellationToken cancellationToken)
     {
-        return await _userManager.FindByIdAsync(usuarioId.ToString()) != null;
+        return await _userManager.Users.AnyAsync(x=>x.Id == usuarioId, cancellationToken);
     }
 
     public async Task<bool> UsuariosExistsAsync(int usuarioId, List<int> usuariosIds)
