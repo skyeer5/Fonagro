@@ -13,7 +13,7 @@ public class Comision : AuditableEntity
     public decimal Kilometraje_Inicial { get; set; }
     public decimal Kilometraje_Final { get; set; }
     public DateTime? Fecha {get; set; }
-    public string? Estado { get; set; }
+    public ComisionEstados? Estado { get; set; }
     public int? NombramientoId_Respon_Vehiculo { get; set; }
     public Nombramiento? Nombramiento_Respon_Vehiculo { get; set; }
     public int? UsuarioId_Creador_Comision { get; set; }
