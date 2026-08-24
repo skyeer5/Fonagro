@@ -55,7 +55,7 @@ public class ComisionService : IComisionService
                         Municipio = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Nombre)),
                         Fecha_Salida = n.Fecha_Salida,
                         Fecha_Regreso = n.Fecha_Regreso,
-                        Estado = c.Estado.ToString(),
+                        Estado = c.Estado,
                         Descripcion = n.Descripcion,
                         Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado.HasValue,
                         Nombramiento = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
@@ -68,7 +68,7 @@ public class ComisionService : IComisionService
                                             kilometros = cd.Kilometros
                                         }).ToList()
                     };
-        return await query.FirstOrDefaultAsync();                
+        return await query.AsSplitQuery().FirstOrDefaultAsync();                
 
     }
 
@@ -106,6 +106,7 @@ public class ComisionService : IComisionService
             Kilometros = c.ComisionDestinos!
                 .Sum(x => x.Kilometros)
         })
+        .AsSplitQuery()
         .ToListAsync();
         
         return comisiones.Select(c => new GetComisionesPendApprovResponse

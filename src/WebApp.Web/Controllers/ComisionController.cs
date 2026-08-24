@@ -1,8 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Comisiones.ComisionCreate;
 using WebApp.Application.Comisiones.Command.ComisionAddDescripcion;
 using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
@@ -11,7 +9,6 @@ using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
 using WebApp.Application.Core;
-using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Domain.Comisiones;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Comisiones;
@@ -27,7 +24,6 @@ using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetCo
 using static WebApp.Application.Comisiones.Queries.PlanViajePdf.PlanViajeQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomsApproved.GetNomsApprovedQuery;
-using static WebApp.Application.Usuarios.Queries.GetUsuariosSinComision.GetUsuariosSinComisionQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
 namespace WebApp.Web.Controllers;
@@ -171,8 +167,8 @@ public class ComisionController : Controller
         {
             Departamento = departamento,
             Estado = estado,
-            Fecha_Inicio = fecha_inicio is not null ? DateTime.Parse(fecha_inicio!) : null,
-            Fecha_Fin = fecha_fin is not null ? DateTime.Parse(fecha_fin!) : null,
+            Fecha_Inicio = fecha_inicio != "" ? DateTime.Parse(fecha_inicio!) : null,
+            Fecha_Fin = fecha_fin != "" ? DateTime.Parse(fecha_fin!) : null,
             PageNumber = currentPage,
             OrderBy = orderBy,
             OrderAsc = false

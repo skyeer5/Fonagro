@@ -1,4 +1,3 @@
-@using Microsoft.IdentityModel.Tokens
 @using WebApp.Domain.Comisiones
 @model WebApp.Web.Models.Comisiones.ComisionViewModel
 
@@ -61,22 +60,22 @@
                             Nombramientos
                         </div>
 
-                        <div class="flex-fill @(Model.Comision!.Estado == ComisionEstados.Creada.ToString() ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision!.Estado == ComisionEstados.Creada ? "text-primary fw-bold" : "")">
                             <small>2</small><br />
                             Coordinación
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.DestinosDefinidos.ToString() ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.DestinosDefinidos ? "text-primary fw-bold" : "")">
                             <small>3</small><br />
                             Destinos
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.Programada.ToString() ? "text-primary fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.Programada ? "text-primary fw-bold" : "")">
                             <small>4</small><br />
                             Aprobación
                         </div>
 
-                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.EnCurso.ToString() ? "text-success fw-bold" : "")">
+                        <div class="flex-fill @(Model.Comision.Estado == ComisionEstados.EnCurso ? "text-success fw-bold" : "")">
                             <small>5</small><br />
                             Ejecución
                         </div>
@@ -86,7 +85,7 @@
                     <!-- Mensaje -->
                     <div class="alert alert-light mb-0">
 
-                        @switch ((ComisionEstados)int.Parse(Model.Comision.Estado!))
+                        @switch (Model.Comision.Estado)
                         {
                             case ComisionEstados.Creada:
                                 <span>Se ha asignado resp. del vehiculo. Pendiente registro de destinos.</span>
@@ -207,7 +206,7 @@
                         <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
                         <div id="destinos-container">
-                                @if(Model.Comision.Destinos is null)
+                                @if(Model.Comision.Destinos is null || Model.Comision.Destinos.Count == 0)
                                 {
                                     <div class="row mb-2 destino-row">
                                         <div class="col-md-6">

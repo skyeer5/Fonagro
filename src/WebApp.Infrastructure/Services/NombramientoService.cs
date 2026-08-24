@@ -114,6 +114,7 @@ public class NombramientoService : INombramientoService
                 Fecha_Regreso = x.Fecha_Regreso,
                 Fecha_Salida = x.Fecha_Salida
             })
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
     }
 
