@@ -13,7 +13,6 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<Vehiculo, GetVehiculosDetalleResponse>();
         CreateMap<Vehiculo, GetVehiculoResponse>();
         CreateMap<Domain.Comisiones.Comision, GetComisionesDetalleResponse>()
             .ForMember(dest => dest.Descripcion_Vehiculo, opt => opt.MapFrom(src =>

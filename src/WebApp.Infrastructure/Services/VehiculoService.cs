@@ -41,49 +41,39 @@ public class VehiculoService : IVehiculoService
 
     public async Task<Result<PagedList<GetVehiculosDetalleResponse>>> GetVehiculosDetalleAsync(GetVehiculosDetalleRequest request)
     {
-        IQueryable<Vehiculo> query = _context.Vehiculos.AsNoTracking();
-
-        var predicate = ExpressionBuilder.New<Vehiculo>();
+        var query = _context.Vehiculos.AsNoTracking().AsQueryable();
 
         if(!string.IsNullOrEmpty(request.Marca))
-        {       
-            predicate = predicate.And(x=>
-                            x.Marca!
-                            .Contains(request.Marca)
-                        );
-        }
+            query = query.Where(x=> x.Marca!.Contains(request.Marca));
+        
         if(!string.IsNullOrEmpty(request.Modelo))
-        {
-            predicate = predicate.And(x=>
-                            x.Modelo!
-                            .Contains(request.Modelo)
-                        );
-        }
-        if(!string.IsNullOrEmpty(request.Placa))
-        {
-            predicate = predicate.And(x=>
-                            x.Placa!
-                            .Contains(request.Placa)
-                        );
-        }
-        if(!string.IsNullOrEmpty(request.OrderBy))
-        {
-            Expression<Func<Vehiculo, object>> orderBySelector =
-                        request.OrderBy.ToLower() switch
-                        {
-                            "marca" => v => v.Marca!,
-                            "modelo" => v => v.Modelo!,
-                            "placa" => v => v.Placa!,
-                            _ => v => v.VehiculoId
-                        };
-            bool orderBy = request.OrderAsc.HasValue
-                            ? request.OrderAsc.Value
-                            : true;
-            query = orderBy ? query.OrderBy(orderBySelector) : query.OrderByDescending(orderBySelector);
-        }
-        query = query.Where(predicate);
+            query = query.Where(x=> x.Modelo!.Contains(request.Modelo));
 
-        var vehiculoQuery = query.ProjectTo<GetVehiculosDetalleResponse>(_mapper.ConfigurationProvider).AsQueryable();
+         if(!string.IsNullOrEmpty(request.Placa))
+            query = query.Where(x=>x.Placa!.Contains(request.Placa));
+
+        bool orderBy = request.OrderAsc.HasValue
+                        ? request.OrderAsc.Value
+                        : true;
+        
+        Expression<Func<Vehiculo, object>> orderBySelector =
+                    request.OrderBy?.ToLower() switch
+                    {
+                        "marca" => v => v.Marca!,
+                        "modelo" => v => v.Modelo!,
+                        "placa" => v => v.Placa!,
+                        _ => v => v.VehiculoId
+                    };
+        
+        query = orderBy ? query.OrderBy(orderBySelector) : query.OrderByDescending(orderBySelector);
+        var vehiculoQuery = query.Select(x=> new GetVehiculosDetalleResponse{
+            VehiculoId = x.VehiculoId,
+            Placa = x.Placa,
+            Marca = x.Marca,
+            Modelo = x.Modelo,
+            Estado = x.Estado.ToString()
+        });
+
         var pagination = await PagedList<GetVehiculosDetalleResponse>.CreateAsync(
                                     vehiculoQuery,
                                     request.PageNumber,
