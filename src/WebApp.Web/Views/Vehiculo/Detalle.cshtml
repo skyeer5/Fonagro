@@ -28,20 +28,13 @@
                 <dt class="col-sm-4">Color</dt>
                 <dd class="col-sm-8">@Model.Color</dd>
 
-                <dt class="col-sm-4">Capacidad de Pasajeros</dt>
-                <dd class="col-sm-8">
-                    @(Model.Capacidad_Pasajeros.HasValue 
-                        ? Model.Capacidad_Pasajeros.ToString() 
-                        : "No especificado")
-                </dd>
+                <dt class="col-sm-4">Cilindraje</dt>
+                <dd class="col-sm-8">@Model.Cilindraje</dd>
 
-                <dt class="col-sm-4">Tipo de Motor</dt>
-                <dd class="col-sm-8">@Model.Tipo_Motor</dd>
-
-                <dt class="col-sm-4">Kilometraje</dt>
+                <dt class="col-sm-4">Consumo por Galón</dt>
                 <dd class="col-sm-8">
-                    @(Model.Kilometraje.HasValue 
-                        ? $"{Model.Kilometraje:N0} km" 
+                    @(Model.ConsumoPorGalon.HasValue 
+                        ? Model.ConsumoPorGalon.Value
                         : "No especificado")
                 </dd>
 

@@ -1,32 +1,21 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using WebApp.Application.Core;
-using WebApp.Persistence;
-using Microsoft.EntityFrameworkCore;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculo.GetVehiculoQuery;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
+using WebApp.Application.Interfaces;
 
 namespace WebApp.Application.Vehiculos.Queries.GetVehiculo;
 
 public class GetVehiculoQueryHandler : IRequestHandler<GetVehiculoQueryRequest, Result<GetVehiculoResponse>>
 {
-    private readonly WebAppDbContext _context;
-    private readonly IMapper _mapper;
-
-    public GetVehiculoQueryHandler(WebAppDbContext context, IMapper mapper)
+    private readonly IVehiculoService _vehiculoService;
+    public GetVehiculoQueryHandler(IVehiculoService vehiculoService)
     {
-        _context = context;
-        _mapper = mapper;
+        _vehiculoService = vehiculoService;
     }
 
     public async Task<Result<GetVehiculoResponse>> Handle(GetVehiculoQueryRequest request, CancellationToken cancellationToken)
     {
-        var vehiculo = await _context.Vehiculos.Where(x=>x.VehiculoId == request.Id)
-                                                .ProjectTo<GetVehiculoResponse>(_mapper.ConfigurationProvider)
-                                                .FirstOrDefaultAsync(cancellationToken);
-
+        var vehiculo = await _vehiculoService.GetVehiculoResponseByIdAsync(request.Id, cancellationToken);
 
         if (vehiculo is null)
         {

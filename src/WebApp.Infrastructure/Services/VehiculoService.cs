@@ -1,11 +1,9 @@
 using System.Linq.Expressions;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Application.Vehiculos.Queries.GetVehiculo;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
-using WebApp.Domain;
 using WebApp.Domain.Vehiculos;
 using WebApp.Persistence;
 
@@ -14,12 +12,10 @@ namespace WebApp.Infrastructure.Services;
 public class VehiculoService : IVehiculoService
 {
     private readonly WebAppDbContext _context;
-    private readonly IMapper _mapper;
 
-    public VehiculoService(WebAppDbContext context, IMapper mapper)
+    public VehiculoService(WebAppDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public Task<List<Vehiculo>> GetVehiculosDisponiblesAsync(CancellationToken cancellationToken)
@@ -80,5 +76,23 @@ public class VehiculoService : IVehiculoService
                                     request.PageSize
                                     );
         return Result<PagedList<GetVehiculosDetalleResponse>>.Success(pagination);
+    }
+
+    public async Task<GetVehiculoResponse?> GetVehiculoResponseByIdAsync(int vehiculoId, CancellationToken cancellationToken)
+    {
+        var query = await _context.Vehiculos.FindAsync(vehiculoId, cancellationToken);
+        if(query is null)
+            return null;
+        
+        return new GetVehiculoResponse
+        {
+            Placa = query.Placa,
+            Marca = query.Marca,
+            Modelo = query.Marca,
+            Tipo_Vehiculo = query.Tipo_Vehiculo.ToString(),
+            Color = query.Color,
+            Cilindraje = query.Cilindraje.ToString(),
+            ConsumoPorGalon = query.ConsumoKmPorGalon,
+        };
     }
 }
