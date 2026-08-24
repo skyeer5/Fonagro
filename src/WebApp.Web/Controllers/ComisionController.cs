@@ -160,12 +160,11 @@ public class ComisionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", string? estado = "", int currentPage = 1, string orderBy = "ComisionId")
+    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", int? estado = null, int currentPage = 1, string orderBy = "ComisionId")
     {
         ViewBag.Estados = EnumExtensions.ToSelectList<ComisionEstados>();
         var request = new GetComisionesDetalleRequest
         {
-            Departamento = departamento,
             Estado = estado,
             Fecha_Inicio = fecha_inicio != "" ? DateTime.Parse(fecha_inicio!) : null,
             Fecha_Fin = fecha_fin != "" ? DateTime.Parse(fecha_fin!) : null,

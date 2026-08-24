@@ -92,7 +92,11 @@
                 @foreach(var item in Model.Items)
                 {
                     <tr>
-                        <td>@item.Departamento</td>
+                        <td>@foreach(var dep in item.DepartamentosYMunicipios)
+                            {
+                                @dep <br />
+                            }
+                        </td>
                         <td>@item.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@item.Descripcion_Vehiculo</td>

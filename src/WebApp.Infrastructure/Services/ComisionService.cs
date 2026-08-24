@@ -176,49 +176,45 @@ public class ComisionService : IComisionService
     }
     public async Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request)
     {
-        IQueryable<Comision> queryable = _context.Comisiones.AsNoTracking();
+        var queryable = _context.Comisiones.AsNoTracking().AsQueryable();
         
-        var predicate = ExpressionBuilder.New<Comision>();
+        if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
+            queryable = queryable.Where(x=> 
+            x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Fin 
+            && x.Nombramiento_Respon_Vehiculo.Fecha_Salida>=request.Fecha_Inicio);
 
-        // if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
-        // {
-        //     predicate = predicate.And(x=>
-        //                     x.Fecha_Salida <= request.Fecha_Fin && x.Fecha_Regreso>=request.Fecha_Inicio 
-        //                 );
-        // }
-        // if(!string.IsNullOrEmpty(request.Departamento))
-        // {
-        //     predicate = predicate.And(x=>
-        //                     x.Departamento!
-        //                     .Contains(request.Departamento)
-        //                 );
-        // }
-        // if(!string.IsNullOrEmpty(request.Estado))
-        // {
-        //     predicate = predicate.And(x=>
-        //                     x.Estado!
-        //                     .Contains(request.Estado)
-        //                 );
-        // }
-        // if(!string.IsNullOrEmpty(request.OrderBy))
-        // {
-        //     Expression<Func<Comision, object>> orderBySelector =
-        //                 request.OrderBy.ToLower() switch
-        //                 {
-        //                     "fecha_inicio" => com => com.Fecha_Salida,
-        //                     "fecha_fin" => com => com.Fecha_Regreso,
-        //                     "departamento" => com => com.Departamento!,
-        //                     "estado" => com => com.Estado!,
-        //                     _ => com => com.ComisionId
-        //                 };
-        //     bool orderBy = request.OrderAsc.HasValue
-        //                     ? request.OrderAsc.Value
-        //                     : true;
-        //     queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
-        // }
-        queryable = queryable.Where(predicate);
+        if (request.Departamentos != null && request.Departamentos.Count != 0)
+            queryable = queryable.Where(x => x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm => request.Departamentos.Contains(nm.Municipio!.DepartamentoId)));
 
-        var comisionsQuery = queryable.ProjectTo<GetComisionesDetalleResponse>(_mapper.ConfigurationProvider).AsQueryable();
+        if (request.Municipios != null && request.Municipios.Count != 0)
+            queryable = queryable.Where(x => x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm => request.Municipios.Contains(nm.MunicipioId)));
+
+        if (request.Estado.HasValue)
+            queryable = queryable.Where(x => x.Estado == (ComisionEstados)request.Estado);
+                bool orderBy = request.OrderAsc ?? false;
+        
+        Expression<Func<Comision, object>> orderBySelector =
+                    request.OrderBy?.ToLower() switch
+                    {
+                        "fecha_inicio" => v => v.Nombramiento_Respon_Vehiculo!.Fecha_Salida!,
+                        "fecha_fin" => v => v.Nombramiento_Respon_Vehiculo!.Fecha_Regreso!,
+                        "estado" => v => v.Estado!,
+                        _ => v => v.ComisionId
+                    };
+        
+        queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
+
+
+        var comisionsQuery = queryable.Select(x=> new GetComisionesDetalleResponse
+        {
+            ComisionId = x.ComisionId,
+            DepartamentosYMunicipios = x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Select(nms => 
+                $"{nms.Municipio!.Departamento.Nombre} - {nms.Municipio.Nombre}").ToList(),
+            Descripcion_Vehiculo = $"{x.Vehiculo!.Placa} / {x.Vehiculo.Marca} {x.Vehiculo.Modelo}",
+            Estado = x.Estado.ToString(),
+            Fecha_Salida = x.Nombramiento_Respon_Vehiculo.Fecha_Salida,
+            Fecha_Regreso = x.Nombramiento_Respon_Vehiculo.Fecha_Regreso
+        });
         var pagination = await PagedList<GetComisionesDetalleResponse>.CreateAsync(
                                     comisionsQuery,
                                     request.PageNumber,
