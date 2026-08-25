@@ -199,41 +199,48 @@
                 </div>
 
                 <div class="card-body">
-                    <form asp-controller="Comision"
-                        asp-action="AgregarDestinos"
-                        method="post">
+                    <form asp-controller="Comision" asp-action="AgregarDestinos" method="post">
 
                         <input type="hidden" name="ComisionId" value="@Model.Comision!.ComisionId" />
 
                         <div id="destinos-container">
-                                @if(Model.Comision.Destinos is null || Model.Comision.Destinos.Count == 0)
+                            @if(Model.Comision.Destinos is null || Model.Comision.Destinos.Count == 0)
+                            {
+                                <div class="row mb-2 destino-row">
+                                    <div class="col-md-5">
+                                        <input name="comisionAddDestinosItemRequests[0].Descripcion" class="form-control" placeholder="Descripción" value="Recorrido Interno" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input name="comisionAddDestinosItemRequests[0].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger btn-remove-destino w-100">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach(var d in Model.Comision.Destinos)
                                 {
                                     <div class="row mb-2 destino-row">
-                                        <div class="col-md-6">
-                                            <input name="comisionAddDestinosItemRequests[0].Descripcion" class="form-control" placeholder="Descripción" value="Recorrido Interno")/>
+                                        <div class="col-md-5">
+                                            <input name="comisionAddDestinosItemRequests[@i].Descripcion" class="form-control" placeholder="Descripción" value="@d.descripcion" />
                                         </div>
-                                        <div class="col-md-4">
-                                            <input name="comisionAddDestinosItemRequests[0].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+                                        <div class="col-md-5">
+                                            <input name="comisionAddDestinosItemRequests[@i].Kilometro" type="number" step="0.01" class="form-control" value="@d.kilometros" placeholder="Kilómetros" />
                                         </div>
-                                    </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger btn-remove-destino w-100">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                        </div>
+                                    </div> 
+                                    i++; 
                                 }
-                                else
-                                {
-                                    int i = 0;
-                                    foreach(var d in Model.Comision.Destinos)
-                                    {
-                                        <div class="row mb-2 destino-row">
-                                            <div class="col-md-6">
-                                                <input name="comisionAddDestinosItemRequests[@i].Descripcion" class="form-control" placeholder="Descripción" value="@d.descripcion"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input name="comisionAddDestinosItemRequests[@i].Kilometro" type="number" step="0.01" class="form-control" value="@d.kilometros" placeholder="Kilómetros"/>
-                                            </div>
-                                        </div> 
-                                        i++; 
-                                    }
-                                }
-
+                            }
                         </div>
 
                         <button type="button" id="btnAddDestino" class="btn btn-secondary mb-3">
@@ -319,24 +326,60 @@
 <script>
 let index = 1;
 
-document.getElementById("btnAddDestino")?.addEventListener("click", function () {
-
+document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById("destinos-container");
+    const btnAdd = document.getElementById("btnAddDestino");
 
-    const row = document.createElement("div");
-    row.className = "row mb-2";
+    // Función para reindexar todos los inputs cuando se elimine o agregue una fila
+    function reindexarDestinos() {
+        const rows = container.querySelectorAll(".destino-row");
+        rows.forEach((row, index) => {
+            const inputDesc = row.querySelector("input[name*='.Descripcion']");
+            const inputKms = row.querySelector("input[name*='.Kilometro']");
 
-    row.innerHTML = `
-        <div class="col-md-6">
-            <input name="comisionAddDestinosItemRequests[${index}].Descripcion" class="form-control" placeholder="Descripción" />
-        </div>
-        <div class="col-md-4">
-            <input name="comisionAddDestinosItemRequests[${index}].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
-        </div>
-    `;
+            if (inputDesc) inputDesc.name = `comisionAddDestinosItemRequests[${index}].Descripcion`;
+            if (inputKms) inputKms.name = `comisionAddDestinosItemRequests[${index}].Kilometro`;
+        });
+    }
 
-    container.appendChild(row);
-    index++;
+    // Agregar nuevo destino
+    btnAdd?.addEventListener("click", function () {
+        const index = container.querySelectorAll(".destino-row").length;
+
+        const row = document.createElement("div");
+        row.className = "row mb-2 destino-row";
+
+        row.innerHTML = `
+            <div class="col-md-5">
+                <input name="comisionAddDestinosItemRequests[${index}].Descripcion" class="form-control" placeholder="Descripción" />
+            </div>
+            <div class="col-md-5">
+                <input name="comisionAddDestinosItemRequests[${index}].Kilometro" type="number" step="0.01" class="form-control" placeholder="Kilómetros" />
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-outline-danger btn-remove-destino w-100">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+            </div>
+        `;
+
+        container.appendChild(row);
+    });
+
+    // Delegación de eventos para eliminar fila (sirve para filas iniciales y dinámicas)
+    container.addEventListener("click", function (e) {
+        if (e.target.closest(".btn-remove-destino")) {
+            const row = e.target.closest(".destino-row");
+            
+            // Opcional: Evita eliminar si solo queda una fila
+            if (container.querySelectorAll(".destino-row").length > 1) {
+                row.remove();
+                reindexarDestinos();
+            } else {
+                alert("Debe mantener al menos un destino registrado.");
+            }
+        }
+    });
 });
 
 const modalGenerandoPdf = new bootstrap.Modal(document.getElementById('modalGenerandoPdf'));
