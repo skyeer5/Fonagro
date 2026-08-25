@@ -57,9 +57,9 @@
                 </label>
                 <select name="Estado" id="estado" class="form-control">
                     <option value="">Seleccionar estado</option>
-                    @foreach (var estado in ViewBag.Estados)
+                    @foreach (SelectListItem estado in ViewBag.Estados)
                     {
-                        <option value="@estado">@estado</option>
+                        <option value="@estado.Value">@estado.Text</option>
                     }
                 </select>
             </div>
