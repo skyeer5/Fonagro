@@ -5,5 +5,5 @@ namespace WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 
 public class NombramientoPdfQuery
 {
-    public record NombramientoPdfQueryRequest(int nombramientoId) : IRequest<Result<byte[]>>;
+    public record NombramientoPdfQueryRequest(int nombramientoId) : IRequest<Result<NombramientoPdfResponse>>;
 }

@@ -131,11 +131,11 @@
 <script>
     const modalGenerandoPdf = new bootstrap.Modal(document.getElementById('modalGenerandoPdf'));
 
-        document.querySelectorAll('.btn-imprimir').forEach(btn => {
-            btn.addEventListener('click', () => generarPdf(btn.dataset.id));
-        });
+    document.querySelectorAll('.btn-imprimir').forEach(btn => {
+        btn.addEventListener('click', () => generarPdf(btn.dataset.id));
+    });
 
-        async function generarPdf(nombramientoId) {
+    async function generarPdf(nombramientoId) {
         modalGenerandoPdf.show();
 
         try {
@@ -143,27 +143,39 @@
 
             if (!response.ok) {
                 throw new Error(`Error del servidor: ${response.status}`);
-        }
+            }
+
+            // 1. Extraer el nombre del archivo desde la cabecera Content-Disposition
+            let filename = `nombramiento-${nombramientoId}.pdf`; // Nombre por defecto (fallback)
+            const disposition = response.headers.get('Content-Disposition');
+
+            if (disposition && disposition.includes('filename')) {
+                const filenameMatch = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    // Limpiar comillas extras si vienen en la cabecera
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
 
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
-            // Forzar descarga en vez de abrir pestaña
+            // 2. Forzar descarga con el nombre obtenido del servidor
             const link = document.createElement('a');
             link.href = url;
-            link.download = `nombramiento-${nombramientoId}.pdf`;
+            link.download = filename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
             window.URL.revokeObjectURL(url);
 
-            } catch (error) {
-                alert('No se pudo generar el PDF. Intenta de nuevo. ' + error.message);
-            } finally {
-                modalGenerandoPdf.hide();
-            }
+        } catch (error) {
+            alert('No se pudo generar el PDF. Intenta de nuevo. ' + error.message);
+        } finally {
+            modalGenerandoPdf.hide();
         }
+    }
     // =====================================================
     // MODAL DE CONFIRMACIÓN
     // =====================================================

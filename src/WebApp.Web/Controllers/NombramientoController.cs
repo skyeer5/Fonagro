@@ -115,7 +115,7 @@ public class NombramientoController : Controller
         {
             return NotFound("Nombramiento no encontrado");
         }
-        return File(result.Value!, "application/pdf", $"Nombramiento_{nombramientoId}.pdf");
+        return File(result.Value!.Pdf, "application/pdf", $"Nombramiento_{result.Value.Correlativo}.pdf");
     }
 
 }
