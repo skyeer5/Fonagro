@@ -6,15 +6,15 @@ namespace WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 
 public class GetUsuariosActivosDetalleQueryHandler : IRequestHandler<GetUsuariosActivosDetalleQuery.GetUsuariosActivosDetalleQueryRequest, Result<PagedList<GetUsuariosActivosDetalleResponse>>>
 {
-    private readonly IAsignacionUsuarioService _asignacionUsuario;
+    private readonly IUsuarioService _usuarioService;
 
-    public GetUsuariosActivosDetalleQueryHandler(IAsignacionUsuarioService asignacionUsuario)
+    public GetUsuariosActivosDetalleQueryHandler(IUsuarioService usuarioService)
     {
-        _asignacionUsuario = asignacionUsuario;
+        _usuarioService = usuarioService;
     }
 
     public async Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> Handle(GetUsuariosActivosDetalleQuery.GetUsuariosActivosDetalleQueryRequest request, CancellationToken cancellationToken)
     {
-        return await _asignacionUsuario.GetUsuariosActivosDetalleAsync(request);
+        return await _usuarioService.GetUsuariosActivosDetalleAsync(request.request);
     }
 }

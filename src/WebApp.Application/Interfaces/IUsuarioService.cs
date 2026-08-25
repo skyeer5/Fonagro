@@ -12,7 +12,7 @@ public interface IUsuarioService
     Task<bool> UsuarioExistsAsync(int usuarioId, CancellationToken cancellationToken);
     Task<bool> UsuariosExistsAsync(int usuarioId, List<int> usuariosIds);
     Task<List<GetUsuariosActivosResponse>> GetUsuariosActivosAsync();
-    Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleQueryRequest request);
+    Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleRequest request);
     Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync();
     Task<string?> GetNombreUsuarioAsync(int usuarioId); 
     Task<List<GetUsuariosSinNomResponse>> GetUsuariosSinNomAsync();

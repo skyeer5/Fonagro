@@ -1,6 +1,4 @@
 using System.Linq.Expressions;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
@@ -11,19 +9,16 @@ using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinNom;
 using WebApp.Domain.Usuarios;
 using WebApp.Persistence.Models;
-using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 
 namespace WebApp.Infrastructure.Identity;
 
 public class UsuarioService : IUsuarioService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IMapper _mapper;
 
-    public UsuarioService(UserManager<AppUser> userManager, IMapper mapper)
+    public UsuarioService(UserManager<AppUser> userManager)
     {
         _userManager = userManager;
-        _mapper = mapper;
     }
 
     public async Task<string?> GetNombreUsuarioAsync(int usuarioId)
@@ -45,41 +40,59 @@ public class UsuarioService : IUsuarioService
             .ToListAsync();
     }
 
-    public async Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleQueryRequest request)
+    public async Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleRequest request)
     {
-        IQueryable<AppUser> queryable = _userManager.Users;
+        var queryable = _userManager.Users.AsNoTracking();
 
-        var predicate = ExpressionBuilder.New<AppUser>();
-        if(!string.IsNullOrEmpty(request.request.Nombre))
+        queryable = (UsuarioEstados)request.Estado!.Value switch
         {
-            predicate = predicate
-                        .And(x=>x.Nombres!
-                        .Contains(request.request.Nombre)
-                        );
+            UsuarioEstados.Activo => queryable.Where(x => x.UsuarioPuestos!.Any(up => up.Fecha_Desasignacion == null)),
+            UsuarioEstados.Baja   => queryable.Where(x => !x.UsuarioPuestos!.Any(up => up.Fecha_Desasignacion == null)),
+            _ => queryable.Where(x => x.UsuarioPuestos!.Any(up => up.Fecha_Desasignacion == null))
+        };
+
+        if (!string.IsNullOrWhiteSpace(request.Nombre))
+        {
+            var nombreFiltro = request.Nombre.Trim();
+            queryable = queryable.Where(x => (x.Nombres + " " + x.Apellidos).Contains(nombreFiltro));
         }
 
-        if(!string.IsNullOrEmpty(request.request.OrderBy))
-        {
-            Expression<Func<AppUser, object>> orderBySelector = 
-                        request.request.OrderBy.ToLower() switch
-                        {
-                            "nombre" => user => user.Nombres!,
-                            _ => user => user.Nombres!
-                        };
-            bool orderBy = request.request.OrderAsc.HasValue 
-                            ? request.request.OrderAsc.Value :
-                            true;
-            queryable = orderBy ? queryable.OrderBy(orderBySelector) : queryable.OrderByDescending(orderBySelector);
-        }
-        queryable = queryable.Where(predicate);
+        bool isAscending = request.OrderAsc ?? true;
 
-        var usersQuery = queryable.ProjectTo<GetUsuariosActivosDetalleResponse>(_mapper.ConfigurationProvider).AsQueryable();
+        Expression<Func<AppUser, object>> orderBySelector = (request.OrderBy?.ToLower()) switch
+        {
+            "nombre" => user => user.Nombres!,
+            _        => user => user.Id!
+        };
+
+        queryable = isAscending 
+            ? queryable.OrderBy(orderBySelector) 
+            : queryable.OrderByDescending(orderBySelector);
+
+        var usersQuery = queryable.Select(x => new GetUsuariosActivosDetalleResponse
+        {
+            Id = x.Id,
+            Nombre_Completo = $"{x.Nombres} {x.Apellidos}",
+            Puesto = x.UsuarioPuestos!
+                .Where(up => up.Fecha_Desasignacion == null)
+                .Select(up => up.Puesto!.Nombre)
+                .FirstOrDefault(),
+            Estado = x.UsuarioPuestos!.Any(up => up.Fecha_Desasignacion == null) 
+                ? UsuarioEstados.Activo 
+                : UsuarioEstados.Baja,
+            Unidad = x.UsuarioPuestos!
+                .Where(up => up.Fecha_Desasignacion == null)
+                .Select(up => up.Puesto!.Unidad!.Nombre)
+                .FirstOrDefault(),
+            NIT = x.NIT
+        });
+
         var pagination = await PagedList<GetUsuariosActivosDetalleResponse>.CreateAsync(
-                                        usersQuery,
-                                        request.request.PageNumber,
-                                        request.request.PageSize
-            
+            usersQuery,
+            request.PageNumber,
+            request.PageSize
         );
+
         return Result<PagedList<GetUsuariosActivosDetalleResponse>>.Success(pagination);
     }
 

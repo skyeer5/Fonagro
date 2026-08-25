@@ -1,6 +1,4 @@
 using System.Linq.Expressions;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
@@ -11,13 +9,11 @@ using WebApp.Application.Comisiones.Queries.PlanViajePdf;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Gasolinas;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.Unidades;
 using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
-using System.Linq;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -25,13 +21,11 @@ public class ComisionService : IComisionService
 {
     private readonly WebAppDbContext _context;
     private readonly ICurrentUser _currentUser;
-    private readonly IMapper _mapper;
 
-    public ComisionService(WebAppDbContext context, ICurrentUser currentUser, IMapper mapper)
+    public ComisionService(WebAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
         _currentUser = currentUser;
-        _mapper = mapper;
     }
 
     public async Task<GetComisionActivaResponse?> GetComisionActivaAsync()

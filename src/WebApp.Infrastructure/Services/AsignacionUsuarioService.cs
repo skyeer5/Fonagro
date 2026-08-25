@@ -1,13 +1,8 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
-using WebApp.Domain.AsignacionUsuarios;
-using WebApp.Domain.Usuarios;
 using WebApp.Persistence;
-using static WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle.GetUsuariosActivosDetalleQuery;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -28,7 +23,7 @@ public class AsignacionUsuarioService : IAsignacionUsuarioService
         return asignacionUsuario?.AsignacionUsuarioId;
     }
     
-    public async Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleQueryRequest request)
+    public async Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleRequest request)
     {
         var usersQuery = from au in _context.AsignacionesUsuarios
                         join u in _context.Users
@@ -45,8 +40,8 @@ public class AsignacionUsuarioService : IAsignacionUsuarioService
                         };
         var pagination = await PagedList<GetUsuariosActivosDetalleResponse>.CreateAsync(
                                         usersQuery,
-                                        request.request.PageNumber,
-                                        request.request.PageSize
+                                        request.PageNumber,
+                                        request.PageSize
             
         );
         return Result<PagedList<GetUsuariosActivosDetalleResponse>>.Success(pagination);

@@ -6,6 +6,6 @@ namespace WebApp.Application.Interfaces;
 public interface IAsignacionUsuarioService
 {
     Task<int?> GetAsignacionUsuarioIdByUsuarioIdAsync(int usuarioId, CancellationToken cancellationToken);
-    Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleQueryRequest request);
+    Task<Result<PagedList<GetUsuariosActivosDetalleResponse>>> GetUsuariosActivosDetalleAsync(GetUsuariosActivosDetalleRequest request);
 
 }
