@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Application.Usuarios.Queries.GetUsuarios;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivos;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
@@ -94,6 +95,15 @@ public class UsuarioService : IUsuarioService
         );
 
         return Result<PagedList<GetUsuariosActivosDetalleResponse>>.Success(pagination);
+    }
+
+    public async Task<List<GetUsuariosResponse>?> GetUsuariosAsync(CancellationToken cancellationToken)
+    {
+        return await _userManager.Users.AsNoTracking().Select(x=> new GetUsuariosResponse
+        {
+            UsuarioId = x.Id,
+            Nombre_Completo = $"{x.Nombres} {x.Apellidos}",
+        }).ToListAsync(cancellationToken);
     }
 
     public async Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync()

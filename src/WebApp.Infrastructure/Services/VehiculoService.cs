@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Vehiculos.Queries.GetVehiculo;
+using WebApp.Application.Vehiculos.Queries.GetVehiculos;
 using WebApp.Application.Vehiculos.Queries.GetVehiculosDetalle;
 using WebApp.Domain.Vehiculos;
 using WebApp.Persistence;
@@ -94,5 +95,14 @@ public class VehiculoService : IVehiculoService
             Cilindraje = query.Cilindraje.ToString(),
             ConsumoPorGalon = query.ConsumoKmPorGalon,
         };
+    }
+
+    public async Task<List<GetVehiculosResponse>?> GetVehiculosAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Vehiculos.AsNoTracking().Select(x=> new GetVehiculosResponse
+        {
+            VehiculoId = x.VehiculoId,
+            Descripcion = $"{x.Placa} / {x.Marca} {x.Modelo}"
+        }).ToListAsync(cancellationToken);
     }
 }

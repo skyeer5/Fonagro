@@ -5,5 +5,5 @@ namespace WebApp.Application.Municipios.Queries.GetMunicipiosByDep;
 
 public class GetMunicipiosByDepQuery
 {
-    public record GetMunicipiosByDepQueryRequest(int departamentoId) : IRequest<Result<List<GetMunicipiosByDepResponse>>>;
+    public record GetMunicipiosByDepQueryRequest(List<int> DepartamentosId) : IRequest<Result<List<GetMunicipiosByDepResponse>>>;
 }

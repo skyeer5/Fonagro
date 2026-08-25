@@ -10,6 +10,7 @@ using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
 using WebApp.Application.Core;
 using WebApp.Domain.Comisiones;
+using WebApp.Domain.Unidades;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Comisiones;
 using static WebApp.Application.Comision.ComisionCreate.ComisionCreateCommand;
@@ -22,8 +23,11 @@ using static WebApp.Application.Comisiones.Queries.GetComisionesDetalle.GetComis
 using static WebApp.Application.Comisiones.Queries.GetComisionesExcel.GetComisionesExcelQuery;
 using static WebApp.Application.Comisiones.Queries.GetComisionesPendApprov.GetComisionesPendApprovQuery;
 using static WebApp.Application.Comisiones.Queries.PlanViajePdf.PlanViajeQuery;
+using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
 using static WebApp.Application.Gasolinas.Queries.GetGasolinasWithFecha.GetGasolinasWithFechaQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomsApproved.GetNomsApprovedQuery;
+using static WebApp.Application.Usuarios.Queries.GetUsuarios.GetUsuariosQuery;
+using static WebApp.Application.Vehiculos.Queries.GetVehiculos.GetVehiculosQuery;
 using static WebApp.Application.Vehiculos.Queries.GetVehiculosDisponibles.GetVehiculosDisponiblesQuery;
 
 namespace WebApp.Web.Controllers;
@@ -187,6 +191,33 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Reporte()
+    {
+        var model = new ComisionReportViewModel();
+
+        var departamentos = await _mediator.Send(new GetDepartamentosQueryRequest());
+        var vehiculos =  await _mediator.Send(new GetVehiculosQueryRequest());
+        var usuarios = await _mediator.Send(new GetUsuariosQueryRequest());
+
+        model.DepartamentosList = departamentos.Value!.ToSelectList(
+                x=>x.Id.ToString(),
+                x=>x.Nombre!
+        );
+        model.VehiculosList = vehiculos.Value!.ToSelectList(
+                x=>x.VehiculoId.ToString(),
+                x=>x.Descripcion!
+        );
+        model.UsuariosList = usuarios.Value!.ToSelectList(
+                x=>x.UsuarioId.ToString(),
+                x=>x.Nombre_Completo!
+        );
+        model.EstadosList = EnumExtensions.ToSelectList<ComisionEstados>();
+        model.UnidadesList = EnumExtensions.ToSelectList<UnidadesEnum>();
+        return View(model);
+    }
+
     [HttpGet]
     public async Task<IActionResult> ImprimirReporte(GetComisionesExcelRequest request)
     {

@@ -247,6 +247,7 @@ public class ComisionService : IComisionService
 
         var rawComisiones = await query.Select(c => new
         {
+            ComisionId = c.ComisionId,
             Fecha_Salida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
             Fecha_Regreso = c.Nombramiento_Respon_Vehiculo.Fecha_Regreso,
             Fecha_Creacion_Comision = c.Fecha,
@@ -286,6 +287,7 @@ public class ComisionService : IComisionService
         // 5. Mapeo final ensamblando los nombres desde el Diccionario (búsquedas O(1) ultra rápidas)
         var resultado = rawComisiones.Select(c => new GetComisionesExcelDto
         {
+            ComisionId = c.ComisionId,
             Fecha_Salida = c.Fecha_Salida,
             Fecha_Regreso = c.Fecha_Regreso,
             Fecha_Creacion_Comision = c.Fecha_Creacion_Comision,

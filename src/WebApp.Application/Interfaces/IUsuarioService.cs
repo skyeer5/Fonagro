@@ -1,4 +1,5 @@
 using WebApp.Application.Core;
+using WebApp.Application.Usuarios.Queries.GetUsuarios;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivos;
 using WebApp.Application.Usuarios.Queries.GetUsuariosActivosDetalle;
 using WebApp.Application.Usuarios.Queries.GetUsuariosSinComision;
@@ -16,4 +17,5 @@ public interface IUsuarioService
     Task<List<GetUsuariosSinComisionResponse>> GetUsuariosSinComisionAsync();
     Task<string?> GetNombreUsuarioAsync(int usuarioId); 
     Task<List<GetUsuariosSinNomResponse>> GetUsuariosSinNomAsync();
+    Task<List<GetUsuariosResponse>?> GetUsuariosAsync(CancellationToken cancellationToken);
 }

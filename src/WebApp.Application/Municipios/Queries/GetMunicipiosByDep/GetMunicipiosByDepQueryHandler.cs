@@ -15,7 +15,7 @@ public class GetMunicipiosByDepQueryHandler : IRequestHandler<GetMunicipiosByDep
 
     public async Task<Result<List<GetMunicipiosByDepResponse>>> Handle(GetMunicipiosByDepQuery.GetMunicipiosByDepQueryRequest request, CancellationToken cancellationToken)
     {
-        var municipios = await _municipioService.GetMunicipiosByDepAsync(request.departamentoId);
+        var municipios = await _municipioService.GetMunicipiosByDeptosAsync(request.DepartamentosId);
         if(municipios is null)
         {
             return Result<List<GetMunicipiosByDepResponse>>.Failure("Error al obtener los municipios");

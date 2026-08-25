@@ -1,0 +1,201 @@
+@model WebApp.Web.Models.Comisiones.ComisionReportViewModel
+
+@{
+    ViewData["Title"] = "Reporte de Comisiones";
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-azul text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-file-earmark-excel me-2"></i>Generar Reporte de Comisiones</h5>
+        </div>
+        <div class="card-body">
+            <form id="formReporteComisiones">
+                
+                <!-- Rango de Fechas -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Fecha_Salida" class="form-label font-weight-bold">Fecha Salida (Desde)</label>
+                        <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Fecha_Regreso" class="form-label font-weight-bold">Fecha Regreso (Hasta)</label>
+                        <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" />
+                    </div>
+                </div>
+
+                <!-- Ubicación Geográfica -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">Departamentos</label>
+                        <select id="DepartamentoId" asp-items="Model.DepartamentosList" multiple="multiple" class="form-select select2">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">Municipios</label>
+                        <select id="MunicipioId" multiple="multiple" class="form-select select2">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Vehículo, Usuario y Estado -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="Vehiculo" class="form-label font-weight-bold">Vehículos</label>
+                        <select id="VehiculoId" asp-items="Model.VehiculosList" multiple="multiple" class="form-select select2">
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Usuario" class="form-label font-weight-bold">Personal</label>
+                        <select id="UsuarioId" asp-items="Model.UsuariosList" class="form-select select2-single" >
+                            <option value="">Seleccione un usuario</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Estado" class="form-label font-weight-bold">Estado de Comisión</label>
+                        <select id="EstadoId" asp-items="Model.EstadosList" class="form-select">
+                            <option value="">-- Todos los estados --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Unidades -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <label asp-for="Unidades" class="form-label font-weight-bold">Unidades</label>
+                        <select id="UnidadesId" asp-items="Model.UnidadesList" multiple="multiple" class="form-select select2">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary" id="btnLimpiar">
+                        <i class="bi bi-eraser me-1"></i> Limpiar Filtros
+                    </button>
+                    <button type="submit" id="btnExportar" class="btn btn-success">
+                        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Excel
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 1. Inicializar Select2 en todos los combos
+            $('.select2').select2({
+                placeholder: "Seleccione una o varias opciones...",
+                allowClear: true,
+                width: '100%'
+            });
+            $('.select2-single').select2({
+            placeholder: "Seleccione un usuario",
+            allowClear: true,
+            width: '100%'
+             }); 
+            // 2. Carga dinámica eficiente de Municipios
+            $('#DepartamentoId').on('change', async function () {
+                    const deptoIds = $(this).val();
+                    const $municipioSelect = $('#MunicipioId');
+                    
+                    $municipioSelect.empty().trigger('change');
+
+                    if (!deptoIds || deptoIds.length === 0) return;
+
+                    try {
+                        const queryParams = deptoIds.map(id => `departamentosIds=${id}`).join('&');
+                        const response = await fetch(`/Municipio/GetMunicipiosByDepartamentosIds?${queryParams}`);
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            // 💡 EXTRAER EL ARRAY: Si tu backend usa un Result pattern, la lista viene en data.value o data.data
+                            const municipios = Array.isArray(data) ? data : (data.value || data.data || []);
+
+                            municipios.forEach(m => {
+                                const option = new Option(m.nombre, m.id, false, false);
+                                $municipioSelect.append(option);
+                            });
+                            
+                            $municipioSelect.trigger('change'); // Refrescar Select2
+                        }
+                    } catch (err) {
+                        console.error("Error al cargar municipios:", err);
+                    }
+                });
+
+            // 3. Limpiar Formulario
+            $('#btnLimpiar').on('click', function () {
+                $('#formReporteComisiones')[0].reset();
+                $('.select2').val(null).trigger('change');
+            });
+
+            // 4. Submit y Descarga de Reporte
+            $('#formReporteComisiones').on('submit', async function (e) {
+                e.preventDefault();
+
+                const $btn = $('#btnExportar');
+                const originalHtml = $btn.html();
+                $btn.prop('disabled', true).html(`<span class="spinner-border spinner-border-sm me-2"></span>Generando...`);
+
+                // Construcción limpia de la QueryString para HTTP GET
+                const params = new URLSearchParams();
+
+                const fechaSalida = $('#Fecha_Salida').val();
+                const fechaRegreso = $('#Fecha_Regreso').val();
+                if (fechaSalida) params.append('Fecha_Salida', fechaSalida);
+                if (fechaRegreso) params.append('Fecha_Regreso', fechaRegreso);
+
+                // Agregar arrays para el Model Binder de MVC (ej: Departamentos=1&Departamentos=2)
+                const appendArray = (key, selector) => {
+                    const values = $(selector).val();
+                    if (values && values.length > 0) {
+                        values.forEach(val => params.append(key, val));
+                    }
+                };
+
+                appendArray('Departamentos', '#DepartamentoId');
+                appendArray('Municipios', '#MunicipioId');
+                appendArray('Vehiculo', '#VehiculoId');
+                appendArray('Usuario', '#UsuarioId');
+                appendArray('Unidades', '#UnidadesId');
+
+                const estado = $('#EstadoId').val();
+                if (estado) params.append('Estado', estado);
+
+                try {
+                    // Petición GET con la queryString formateada
+                    const response = await fetch(`/Comision/ImprimirReporte?${params.toString()}`, {
+                        method: 'GET'
+                    });
+
+                    if (!response.ok) {
+                        alert('No se encontraron registros o surgió un error al generar el reporte.');
+                        return;
+                    }
+
+                    // Descargar el archivo Blob
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `ComisionReporte_${new Date().toISOString().slice(0, 10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+                } catch (error) {
+                    console.error("Error de descarga:", error);
+                    alert("Ocurrió un error al intentar comunicar con el servidor.");
+                } finally {
+                    $btn.prop('disabled', false).html(originalHtml);
+                }
+            });
+        });
+    </script>
+}

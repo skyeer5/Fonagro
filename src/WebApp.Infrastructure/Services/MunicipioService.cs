@@ -14,10 +14,11 @@ public class MunicipioService : IMunicipioService
         _context = context;
     }
 
-    public async Task<List<GetMunicipiosByDepResponse>> GetMunicipiosByDepAsync(int departamentoId)
+    public async Task<List<GetMunicipiosByDepResponse>> GetMunicipiosByDeptosAsync(List<int> departamentosId)
     {
         return await _context.Municipios
-            .Where(m => m.DepartamentoId == departamentoId)
+            .Where(m => departamentosId.Contains(m.DepartamentoId))
+            .OrderBy(x=>x.Nombre)
             .Select(m => new GetMunicipiosByDepResponse
             {
                 Id = m.MunicipioId,

@@ -5,8 +5,5 @@ namespace WebApp.Application.Vehiculos.Queries.GetVehiculos;
 
 public class GetVehiculosQuery
 {
-    public record GetVehiculosQueryRequest : IRequest<Result<GetVehiculosResponse>>
-    {
-        public GetVehiculosRequest? request { get; set; }
-    }
+    public record GetVehiculosQueryRequest : IRequest<Result<List<GetVehiculosResponse>>>;
 }
