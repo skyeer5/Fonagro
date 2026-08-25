@@ -9,61 +9,77 @@
 <form id="formCrearNombramiento" asp-action="Crear" method="post" class="max-w-xl">
     <div class="row row-cols-1 row-cols-md-2 g-3">
         
+        <!-- Usuario -->
         <div class="col">
-            <label asp-for="UsuarioId" class="form-label">Usuario</label>
-            <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select">
-                <option>Seleccione un usuario</option>
+            <label asp-for="UsuarioId" class="form-label font-weight-bold">Usuario</label>
+            <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select select2-single" required>
+                <option value="">Seleccione un usuario</option>
             </select>
             <span asp-validation-for="UsuarioId" class="text-danger"></span>
         </div>
 
+        <!-- Propósito -->
         <div class="col">
-            <label>Proposito</label>
-            <textarea asp-for="Proposito" type="text" class="form-control" required></textarea>
+            <label asp-for="Proposito" class="form-label font-weight-bold">Propósito</label>
+            <textarea asp-for="Proposito" class="form-control" rows="2" required></textarea>
+            <span asp-validation-for="Proposito" class="text-danger"></span>
         </div>
 
+        <!-- Departamentos -->
         <div class="col">
-            <label class="form-label">Departamentos</label>
-            <select id="DepartamentoId" asp-items="Model.Departamentos" multiple="multiple" class="form-select select2">
+            <label asp-for="Departamentos" class="form-label font-weight-bold">Departamentos</label>
+            <select asp-for="Departamentos" id="DepartamentoId" asp-items="Model.Departamentos" multiple="multiple" class="form-select select2-multi">
             </select>
-            <span class="text-danger"></span>
+            <span asp-validation-for="Departamentos" class="text-danger"></span>
         </div>
 
+        <!-- Municipios -->
         <div class="col">
             <label asp-for="Municipios" class="form-label font-weight-bold">Municipios</label>
-            <select asp-for="Municipios" id="MunicipioId" multiple="multiple" class="form-select select2">
+            <select asp-for="Municipios" id="MunicipioId" multiple="multiple" class="form-select select2-multi">
             </select>
             <span asp-validation-for="Municipios" class="text-danger"></span>
         </div>
 
+        <!-- Fecha Salida (Con step="1800" para bloques de 30 min) -->
         <div class="col">
-            <label>Fecha salida</label>
-            <input asp-for="Fecha_Salida" type="datetime-local" class="form-control" required value="@Model.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm")"/>
+            <label asp-for="Fecha_Salida" class="form-label font-weight-bold">Fecha salida</label>
+            <input asp-for="Fecha_Salida" id="Fecha_Salida" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                   value="@(Model?.Fecha_Salida != null ? Model.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+            <span asp-validation-for="Fecha_Salida" class="text-danger"></span>
         </div>
 
+        <!-- Fecha Regreso (Con step="1800" para bloques de 30 min) -->
         <div class="col">
-            <label>Fecha regreso</label>
-            <input asp-for="Fecha_Regreso" type="datetime-local" class="form-control" required value="@Model.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm")"/>
+            <label asp-for="Fecha_Regreso" class="form-label font-weight-bold">Fecha regreso</label>
+            <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                   value="@(Model?.Fecha_Regreso != null ? Model.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+            <span asp-validation-for="Fecha_Regreso" class="text-danger"></span>
         </div>
 
     </div>
-    <!-- ERROR -->
+
+    <!-- Mensajes de Error de Servidor -->
     @if (TempData["msg"] != null)
     {
-        <div class="alert alert-danger text-center py-2 mt-2 small">
+        <div class="alert alert-danger text-center py-2 mt-3 small">
             @TempData["msg"]
         </div>
     }
-    <div class="pt-4">
+
+    <div class="pt-4 d-flex gap-2">
         <button type="submit" class="btn btn-primary">Crear nombramiento</button>
         <a asp-action="List" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
+
+<!-- Modal de Confirmación -->
 <div class="modal fade" id="confirmarNombramientoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Confirmar comisión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 ¿Está seguro de crear el nombramiento?
@@ -76,76 +92,112 @@
     </div>
 </div>
 
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
     $(document).ready(function () {
-    // 1. Inicializar Select2 en todos los campos con la clase .select2
-    $('.select2').select2({
-        placeholder: "Seleccione una o varias opciones",
-        allowClear: true,
-        width: '100%'
-    });
+        // 1. Inicialización de Select2
+        $('.select2-single').select2({
+            placeholder: "Seleccione un usuario",
+            allowClear: true,
+            width: '100%'
+        });
 
-    // 2. Carga en Cascada de Municipios al cambiar Departamentos
-    $('#DepartamentoId').on('change', async function () {
-        const deptoIds = $(this).val();
-        const $municipioSelect = $('#MunicipioId');
-        
-        // Limpiar opciones anteriores en Select2
-        $municipioSelect.empty().trigger('change');
+        $('.select2-multi').select2({
+            placeholder: "Seleccione una o varias opciones",
+            allowClear: true,
+            width: '100%'
+        });
 
-        if (!deptoIds || deptoIds.length === 0) return;
-
-        try {
-            const queryParams = deptoIds.map(id => `departamentosIds=${id}`).join('&');
-            const response = await fetch(`/Municipio/GetMunicipiosByDepartamentosIds?${queryParams}`);
+        // 2. Carga en Cascada de Municipios
+        $('#DepartamentoId').on('change', async function () {
+            const deptoIds = $(this).val();
+            const $municipioSelect = $('#MunicipioId');
             
-            if (response.ok) {
-                const data = await response.json();
-                const municipios = Array.isArray(data) ? data : (data.value || data.data || []);
+            $municipioSelect.empty().trigger('change');
 
-                municipios.forEach(m => {
-                    const option = new Option(m.nombre, m.id, false, false);
-                    $municipioSelect.append(option);
-                });
+            if (!deptoIds || deptoIds.length === 0) return;
+
+            try {
+                const queryParams = deptoIds.map(id => `departamentosIds=${id}`).join('&');
+                const response = await fetch(`/Municipio/GetMunicipiosByDepartamentosIds?${queryParams}`);
                 
-                // Refrescar Select2 para visualizar las nuevas opciones agregadas
-                $municipioSelect.trigger('change');
+                if (response.ok) {
+                    const data = await response.json();
+                    const municipios = Array.isArray(data) ? data : (data.value || data.data || []);
+
+                    municipios.forEach(m => {
+                        const option = new Option(m.nombre, m.id, false, false);
+                        $municipioSelect.append(option);
+                    });
+                    
+                    $municipioSelect.trigger('change');
+                }
+            } catch (err) {
+                console.error("Error al cargar municipios:", err);
             }
-        } catch (err) {
-            console.error("Error al cargar municipios:", err);
-        }
+        });
+
+        // 3. Auto-Redondeo / Ajuste a bloques de 30 minutos (00 o 30)
+        $('.input-fecha-30min').on('change blur', function () {
+            const val = $(this).val();
+            if (!val) return;
+
+            const date = new Date(val);
+            if (isNaN(date.getTime())) return;
+
+            let minutes = date.getMinutes();
+
+            // Redondear al intervalo de 30 minutos más cercano
+            if (minutes < 15) {
+                minutes = 0;
+            } else if (minutes < 45) {
+                minutes = 30;
+            } else {
+                minutes = 0;
+                date.setHours(date.getHours() + 1);
+            }
+
+            date.setMinutes(minutes);
+            date.setSeconds(0);
+
+            // Formatear a YYYY-MM-DDTHH:mm para asignar de nuevo al input
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const mins = String(date.getMinutes()).padStart(2, '0');
+
+            const formatted = `${year}-${month}-${day}T${hours}:${mins}`;
+            $(this).val(formatted);
+        });
+
+        // 4. Modal de Confirmación + Validación
+        const $form = $('#formCrearNombramiento');
+        const modalElement = document.getElementById("confirmarNombramientoModal");
+        const btnConfirmarNom = document.getElementById("btnConfirmarNombramiento");
+        let formularioConfirmado = false;
+
+        $form.on("submit", function (event) {
+            if (formularioConfirmado) return;
+
+            if ($form.valid && !$form.valid()) {
+                return;
+            }
+            if (!this.checkValidity()) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modalConfirmacion.show();
+        });
+
+        btnConfirmarNom.addEventListener("click", function () {
+            formularioConfirmado = true;
+            $form[0].requestSubmit();
+        });
     });
-
-    // 3. Manejo del Modal de Confirmación + Validación de ASP.NET Core
-    const $form = $('#formCrearNombramiento');
-    const modalElement = document.getElementById("confirmarNombramientoModal");
-    const btnConfirmarNom = document.getElementById("btnConfirmarNombramiento");
-    let formularioConfirmado = false;
-
-    $form.on("submit", function (event) {
-        if (formularioConfirmado) return;
-
-        // Validar mediante jQuery Unobtrusive Validation y HTML5
-        if ($form.valid && !$form.valid()) {
-            return;
-        }
-        if (!this.checkValidity()) {
-            return;
-        }
-
-        event.preventDefault();
-
-        const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(modalElement);
-        modalConfirmacion.show();
-    });
-
-    btnConfirmarNom.addEventListener("click", function () {
-        formularioConfirmado = true;
-        $form[0].requestSubmit();
-    });
-});
     </script>
 }
