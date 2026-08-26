@@ -71,67 +71,59 @@ public class ComisionService : IComisionService
        return await _context.Comisiones.Where(x=>x.ComisionId == comisionId).Include(x=>x.Vehiculo).FirstOrDefaultAsync();
     }
 
-    public async Task<List<GetComisionesPendApprovResponse>?> GetComisionPendApprovAsync()
+    public async Task<PagedList<GetComisionesPendApprovResponse>> GetComisionPendApprovAsync(GetComisionesPendApprovRequest request)
     {
-        var comisiones = await _context.Comisiones
-        .Where(c => c.Estado == ComisionEstados.DestinosDefinidos)
-        .Select(c => new
-        {
-            c.ComisionId,
-            c.Precio_Gasolina_Usado,
-            c.Presupuesto_Combustible_Estimado,
-
-            FechaSalida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
-            FechaRegreso = c.Nombramiento_Respon_Vehiculo.Fecha_Regreso,
-
-            Departamentos = c.Nombramiento_Respon_Vehiculo.NomMunicipios!
-                .Select(nm => nm.Municipio!.Departamento.Nombre),
-
-            Municipios = c.Nombramiento_Respon_Vehiculo.NomMunicipios!
-                .Select(nm => nm.Municipio!.Nombre),
-
-            Destinos = c.ComisionDestinos!
-                .Select(cd => new
-                {
-                    cd.Descripcion,
-                    cd.Kilometros
-                }),
-
-            Kilometros = c.ComisionDestinos!
-                .Sum(x => x.Kilometros)
-        })
-        .AsSplitQuery()
-        .ToListAsync();
+        var queryable = _context.Comisiones.AsNoTracking().AsSingleQuery();
         
-        return comisiones.Select(c => new GetComisionesPendApprovResponse
+        if(request.Estado != 0)
+            queryable = request.Estado switch
+            {
+                1 => queryable.Where(x=>x.Estado == ComisionEstados.DestinosDefinidos),
+                2 => queryable.Where(x=> x.Estado != ComisionEstados.Creada && x.Estado != ComisionEstados.DestinosDefinidos && x.UsuarioId_Aprobador_Combustible != null),
+                3 => queryable.Where(x=> (x.Estado == ComisionEstados.DestinosDefinidos) || (x.Estado != ComisionEstados.Creada && x.Estado != ComisionEstados.DestinosDefinidos && x.UsuarioId_Aprobador_Combustible != null)),
+                _ => queryable.Where(x=>x.Estado == ComisionEstados.DestinosDefinidos)
+            };
+        if(request.Fecha_Inicio is not null)
+            queryable = queryable.Where(x=>x.Nombramiento_Respon_Vehiculo!.Fecha_Salida>= request.Fecha_Inicio);
+
+        if(request.Fecha_Fin is not null)
+            queryable = queryable.Where(x=>x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso<= request.Fecha_Fin);
+
+        var comisionsQuery = queryable.Select(c => new GetComisionesPendApprovResponse
         {
             ComisionId = c.ComisionId,
 
-            Departamento = string.Join(
-                ", ",
-                c.Departamentos.Distinct()
-            ),
+            DepartamentosYMunicipios = c.Nombramiento_Respon_Vehiculo!.NomMunicipios!
+                .Select(x=> $"{x.Municipio!.Departamento.Nombre} - {x.Municipio.Nombre}")
+                .ToList(),
 
-            Municipio = string.Join(
-                ", ",
-                c.Municipios.Distinct()
-            ),
-
-            Destinos = c.Destinos
+            Destinos = c.ComisionDestinos!
                 .Select(x => $"{x.Descripcion} - {x.Kilometros}")
                 .ToList(),
 
-            Fecha_Salida = c.FechaSalida,
+            Fecha_Salida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
 
-            Fecha_Regreso = c.FechaRegreso,
+            Fecha_Regreso = c.Nombramiento_Respon_Vehiculo!.Fecha_Regreso,
 
-            Kilometros = c.Kilometros,
+            Kilometros = c.ComisionDestinos!.Sum(x=>x.Kilometros),
 
             Precio_Gasolina = c.Precio_Gasolina_Usado,
 
-            Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado
+            Prespuesto_Estimado = c.Presupuesto_Combustible_Estimado,
 
-        }).ToList();
+            GalonesEstimados = c.ComisionDestinos!.Sum(x=>x.Galones),
+
+            ComsumoKmPorGalon = c.Vehiculo!.ConsumoKmPorGalon,
+
+            PresupuestoAprobado = c.Presupuesto_Combustible_Aprobado
+
+        });
+        return await PagedList<GetComisionesPendApprovResponse>.CreateAsync(
+                                    comisionsQuery,
+                                    request.PageNumber,
+                                    request.PageSize
+        );
+        
     }
 
     public async Task<PlanViajeDto?> GetPlanViajeResponseAsync(int idUsuario, int idComision)

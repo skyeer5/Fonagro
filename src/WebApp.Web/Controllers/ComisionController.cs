@@ -8,6 +8,7 @@ using WebApp.Application.Comisiones.Command.ComisionApprovalGas;
 using WebApp.Application.Comisiones.Command.ComisionCancel;
 using WebApp.Application.Comisiones.Queries.GetComisionesDetalle;
 using WebApp.Application.Comisiones.Queries.GetComisionesExcel;
+using WebApp.Application.Comisiones.Queries.GetComisionesPendApprov;
 using WebApp.Application.Core;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.Unidades;
@@ -119,20 +120,32 @@ public class ComisionController : Controller
         return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpGet]
-    public async Task<IActionResult> AgregarGasolina()
+    public async Task<IActionResult> AprobarCombustible(int estado = 1, DateTime? fecha_inicio = null, DateTime? fecha_fin = null, int currentPage = 1)
     {
-        var query = new GetComisionesPendApprovQueryRequest();
+        var request = new GetComisionesPendApprovRequest
+        {
+            Estado = estado,
+            Fecha_Inicio = fecha_inicio,
+            Fecha_Fin = fecha_fin,
+            PageNumber = currentPage
+        };
+        var query = new GetComisionesPendApprovQueryRequest(request);
         var comisiones = await _mediator.Send(query);
         if(!comisiones.IsSuccess)
         {
             TempData["msg"] = comisiones.Error;
             return View();
         }
-        ViewBag.Comisiones = comisiones.Value;
-        return View();
+        var model = new AprobarCombustibleViewModel
+        {
+            ComisionesList = comisiones.Value!.Items,
+            CurrentPage = comisiones.Value!.CurrentPage,
+            TotalPages = comisiones.Value!.TotalPages  
+        };
+        return View(model);
     }
     [HttpPost]
-    public async Task<ActionResult<Result<int>>> AgregarGasolina(
+    public async Task<ActionResult<Result<int>>> AprobarCombustible(
         [FromForm] ComisionApprovalGasRequest request,
         CancellationToken cancellationToken
     )
