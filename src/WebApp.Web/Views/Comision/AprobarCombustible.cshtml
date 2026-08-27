@@ -64,12 +64,12 @@
                     <th>Fecha Salida</th>
                     <th>Fecha Regreso</th>
                     <th>Destinos</th>
-                    <th>Kilometros</th>
-                    <th>Comsumo KmPorGalon</th>
+                    <th>Km's</th>
+                    <th>Km/Gal</th>
                     <th>Galones Estim.</th>
                     <th>Precio Combus.</th>
-                    <th>Prespuesto Estimado</th>
-                    <th>Prespuesto Aprobado</th>
+                    <th>Ppto. Estimado</th>
+                    <th>Ppto. Aprobado</th>
                     <th class="text-center">Acción</th>
                 </tr>
             </thead>
@@ -85,10 +85,10 @@
                         </td>
                         <td>@item.Fecha_Salida.ToString("dd/MM/yyyy")</td>
                         <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy")</td>
-                        <td>
-                            @foreach(var dest in item.Destinos)
+                        <td class="text-nowrap">
+                            @foreach (var dest in item.Destinos)
                             {
-                                @dest <br>
+                                <div>@dest</div>
                             }
                         </td>
                         <td>@item.Kilometros</td>
@@ -161,14 +161,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="PrespuestoAprobado" class="form-label">Presupuesto Aprobado (Montos fijos divisibles en 50) 
-                                <!-- Botón con tooltip -->
-                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ingrese cantidad en múltiplos de 50 (ej. 100, 150, 200…) debido a que los vales de combustible solo manejan valores de 50 y 100">
-                                    <i class="bi bi-info-circle"></i>
-                                </button>
-
-                                
-                            </label>
+                            <label for="PrespuestoAprobado" class="form-label">Presupuesto Aprobado (Montos fijos divisibles en 50)</label>
                             <input type="number" class="form-control" id="PrespuestoAprobado" name="PrespuestoAprobado" required />
                         </div>
 

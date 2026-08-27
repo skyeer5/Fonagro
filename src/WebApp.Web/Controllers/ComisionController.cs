@@ -122,6 +122,47 @@ public class ComisionController : Controller
     [HttpGet]
     public async Task<IActionResult> AprobarCombustible(int estado = 1, DateTime? fecha_inicio = null, DateTime? fecha_fin = null, int currentPage = 1)
     {
+        var model = await CargarAprobarCombustibleViewModelAsync(estado, fecha_inicio, fecha_fin, currentPage);
+
+        if (model == null)
+        {
+            return View(new AprobarCombustibleViewModel());
+        }
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AprobarCombustible(
+        [FromForm] ComisionApprovalGasRequest request,
+        CancellationToken cancellationToken,
+        int estado = 1, 
+        DateTime? fecha_inicio = null, 
+        DateTime? fecha_fin = null, 
+        int currentPage = 1
+    )
+    {
+        var command = new ComisionApprovalGasCommandRequest(request);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+            var model = await CargarAprobarCombustibleViewModelAsync(estado, fecha_inicio, fecha_fin, currentPage);
+            return View(model ?? new AprobarCombustibleViewModel());
+        }
+
+        TempData["SuccessMsg"] = "Aprobación de combustible procesada con éxito.";
+        return RedirectToAction(nameof(AprobarCombustible));
+    }
+    
+    private async Task<AprobarCombustibleViewModel?> CargarAprobarCombustibleViewModelAsync(
+        int estado, 
+        DateTime? fecha_inicio, 
+        DateTime? fecha_fin, 
+        int currentPage)
+    {
         var request = new GetComisionesPendApprovRequest
         {
             Estado = estado,
@@ -129,30 +170,22 @@ public class ComisionController : Controller
             Fecha_Fin = fecha_fin,
             PageNumber = currentPage
         };
+
         var query = new GetComisionesPendApprovQueryRequest(request);
         var comisiones = await _mediator.Send(query);
-        if(!comisiones.IsSuccess)
+
+        if (!comisiones.IsSuccess)
         {
             TempData["msg"] = comisiones.Error;
-            return View();
+            return null;
         }
-        var model = new AprobarCombustibleViewModel
+
+        return new AprobarCombustibleViewModel
         {
             ComisionesList = comisiones.Value!.Items,
             CurrentPage = comisiones.Value!.CurrentPage,
-            TotalPages = comisiones.Value!.TotalPages  
+            TotalPages = comisiones.Value!.TotalPages
         };
-        return View(model);
-    }
-    [HttpPost]
-    public async Task<ActionResult<Result<int>>> AprobarCombustible(
-        [FromForm] ComisionApprovalGasRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        var command = new ComisionApprovalGasCommandRequest(request);
-        var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpPost]
     public async Task<ActionResult<Result<int>>> AgregarDescripcion(
