@@ -7,7 +7,8 @@ public class NombramientoCreateValidator : AbstractValidator<NombramientoCreateR
     public NombramientoCreateValidator()
     {
         RuleFor(x => x.Proposito)
-            .NotEmpty().WithMessage("El propósito es requerido.");
+            .NotEmpty().WithMessage("El propósito es requerido.")
+            .MaximumLength(450).WithMessage("El propósito no puede superar los 450 caracteres");
 
         RuleFor(x => x.Fecha_Salida)
             .NotEmpty().WithMessage("La fecha de salida es requerida.");
