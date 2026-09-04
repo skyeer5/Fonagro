@@ -88,8 +88,8 @@ public class Nombramiento : AuditableEntity
         var nombramientoPiloto = nombramientos.First();
         foreach(var nom in nombramientos)
         {
-            if((nom.Fecha_Salida != nombramientoPiloto.Fecha_Salida) 
-                || (nom.Fecha_Regreso != nombramientoPiloto.Fecha_Regreso))
+            if((nom.Fecha_Salida.Date != nombramientoPiloto.Fecha_Salida.Date) 
+                || (nom.Fecha_Regreso.Date != nombramientoPiloto.Fecha_Regreso.Date))
             return false;
         }
         return true;

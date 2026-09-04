@@ -71,10 +71,10 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
             return Result<int>.Failure("Error al encontrar los nombramientos");
         }
 
-        var nombramientosTienenMismosMunicipios = Nombramiento.TodosTienenMismosDatos(nombramientos);
-        if(!nombramientosTienenMismosMunicipios)
+        var nombramientosTienenMismosDatos = Nombramiento.TodosTienenMismosDatos(nombramientos);
+        if(!nombramientosTienenMismosDatos)
         {
-            return Result<int>.Failure("Los nombramientos no coinciden sus municipios asignados para realizar la comisión.");
+            return Result<int>.Failure("Los nombramientos no coinciden sus datos asignados para realizar la comisión.");
         }
 
         comision.AgregarUsuarios(nombramientos, viaticos);
