@@ -66,4 +66,33 @@ public class NombramientoRepository : INombramientoRepository
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result;
     }
+
+    public async Task CompletarNombramientoStatusAsync(CancellationToken cancellationToken)
+    {
+        var nombramientos = await _context.Nombramientos.Where(x=> x.Estado == NombramientoEstados.Aprobado 
+                                                                && x.Comision == null 
+                                                                && x.Fecha_Regreso <= DateTime.Now)
+                                                        .ToListAsync(cancellationToken);
+        if(nombramientos is null || nombramientos.Count == 0)
+            return;
+        foreach(var nom in nombramientos)
+        {
+            nom.Estado = NombramientoEstados.Completada;
+        }
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task CancelarNombramientoStatusAsync(CancellationToken cancellationToken)
+    {
+        var nombramientos = await _context.Nombramientos.Where(x=> x.Estado == NombramientoEstados.Creado 
+                                                                && x.Fecha_Salida< DateTime.Now)
+                                                        .ToListAsync(cancellationToken);
+        if(nombramientos is null || nombramientos.Count == 0)
+            return;
+        foreach(var nom in nombramientos)
+        {
+            nom.Estado = NombramientoEstados.Cancelada;
+        }
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

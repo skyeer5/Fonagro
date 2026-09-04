@@ -76,14 +76,9 @@ public class ComisionRepository : IComisionRepository
                 else if((comision.Estado == ComisionEstados.Creada || comision.Estado == ComisionEstados.DestinosDefinidos) && comision.Nombramiento_Respon_Vehiculo!.Fecha_Salida <= DateTime.Now)
                 {
                     comision.CancelarComision();
-                    if(comision.ComisionDestinos is not null)
-                    {
-                        _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
-                    }
                     foreach (var cu in comision.Nombramientos!)
                     {
                         _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-                        cu.Estado = NombramientoEstados.Cancelada;
                     }
                 }
                 
