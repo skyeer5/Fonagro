@@ -43,8 +43,8 @@ public class NombramientoController : Controller
                 x => x.Id.ToString(),
                 x => x.Nombre!
             ),
-            Fecha_Salida = DateTime.Now.Date,
-            Fecha_Regreso = DateTime.Now.Date.AddDays(1)
+            Fecha_Salida = DateTime.Now.Date.AddDays(1),
+            Fecha_Regreso = DateTime.Now.Date.AddDays(2)
         };
         return View(model);
     }
