@@ -5,6 +5,8 @@ using WebApp.Application.Nombramientos.Command.NombramientoApprove;
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
 using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
+using WebApp.Domain.Nombramientos;
+using WebApp.Domain.Unidades;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
@@ -72,10 +74,18 @@ public class NombramientoController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List( int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(string? nombre_nombrado = null, int? unidad = null, int? correlativo = null, DateTime? fecha_inicio = null, DateTime? fecha_fin = null, int? estado = null, int currentPage = 1, string orderBy = "")
     {
+        ViewBag.Estados = EnumExtensions.ToSelectList<NombramientoEstados>();
+        ViewBag.Unidades = EnumExtensions.ToSelectList<UnidadesEnum>();
         var request = new GetNombramientosRequest
         {
+            Nombre_Nombrado = nombre_nombrado,
+            Unidad = unidad,
+            Correlativo = correlativo,
+            Fecha_Inicio = fecha_inicio,
+            Fecha_Fin = fecha_fin,
+            Estado = estado,
             PageNumber = currentPage,
             OrderBy = orderBy
         };

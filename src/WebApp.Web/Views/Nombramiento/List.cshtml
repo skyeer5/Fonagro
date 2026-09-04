@@ -13,18 +13,91 @@
             <i class="bi bi-plus-circle"></i> Nuevo Nombramiento
         </a>
     </div>
+    <!-- Barra de búsqueda -->
+    <form action="/Nombramiento/List" method="get" class="mb-4">
+        <div class="row g-3 align-items-end">
 
+            <!-- Buscar por nombre -->
+            <div class="col-md-3">
+                <label for="nombre_nombrado" class="form-label fw-bold">
+                    <i class="bi bi-pin-map"></i> Nombre del nombrado
+                </label>
+                <input type="text" 
+                    class="form-control shadow-sm" 
+                    id="nombre_nombrado" 
+                    name="nombre_nombrado" 
+                    placeholder="Ej. Daniel Pineda">
+            </div>
+
+            <!-- Fecha de inicio -->
+            <div class="col-md-2">
+                <label for="fecha_inicio" class="form-label fw-bold">
+                    <i class="bi bi-calendar-event"></i> Fecha Inicio
+                </label>
+                <input type="date" 
+                    class="form-control shadow-sm" 
+                    id="fecha_inicio" 
+                    name="fecha_inicio">
+            </div>
+
+            <!-- Fecha de fin -->
+            <div class="col-md-2">
+                <label for="fecha_fin" class="form-label fw-bold">
+                    <i class="bi bi-calendar-check"></i> Fecha Fin
+                </label>
+                <input type="date" 
+                    class="form-control shadow-sm" 
+                    id="fecha_fin" 
+                    name="fecha_fin">
+            </div>
+            <!-- Estado -->
+            <div class="col-md-2">
+                <label for="estado" class="form-label fw-bold">
+                    <i class="bi bi-tag"></i> Estado
+                </label>
+                <select name="Estado" id="estado" class="form-control">
+                    <option value="">Seleccionar estado</option>
+                    @foreach (SelectListItem estado in ViewBag.Estados)
+                    {
+                        <option value="@estado.Value">@estado.Text</option>
+                    }
+                </select>
+            </div>
+            <!-- Unidades -->
+            <div class="col-md-2">
+                <label for="unidad" class="form-label fw-bold">
+                    <i class="bi bi-tag"></i> Unidad
+                </label>
+                <select name="unidad" id="unidad" class="form-control">
+                    <option value="">Seleccionar unidad</option>
+                    @foreach (SelectListItem unidad in ViewBag.Unidades)
+                    {
+                        <option value="@unidad.Value">@unidad.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-1">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+            </div>
+
+        </div>
+
+        
+    </form>
     <!-- Tabla de comisiones -->
     <div class="table-responsive">
         <table class="table table-hover align-middle shadow-sm">
             <thead class="bg-azul">
                 <tr>
-                    <th>Nombre del Nombrado</th>
                     <th>Correlativo</th>
+                    <th>Nombre del Nombrado</th>
                     <th>Fecha salida</th>
                     <th>Fecha regreso</th>
-                    <th>Proposito</th>
-                    <th>Creador del nombramiento</th>
+                    <th>Departamentos y Municipios</th>
+                    <th>Estado</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -32,12 +105,17 @@
                 @foreach(var item in Model.Items)
                 {
                     <tr>
-                        <td>@item.Nombre_Nombrado</td>
                         <td>@item.Correlativo</td>
+                        <td>@item.Nombre_Nombrado</td>
                         <td>@item.Fecha_Salida.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@item.Fecha_Regreso.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@item.Proposito</td>
-                        <td>@item.Nombre_Creador_Nombramiento</td>
+                        <td class="text-nowrap">
+                            @foreach (var dest in item.DepartamentosYMunicipios!)
+                            {
+                                <div>@dest</div>
+                            }
+                        </td>
+                        <td>@item.Estado</td>
                         <td class="text-center">
                             <div class="d-flex flex-column align-items-center">
                             @if(item.Estado == NombramientoEstados.Creado)

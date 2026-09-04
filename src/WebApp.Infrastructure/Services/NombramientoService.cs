@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
@@ -6,10 +7,8 @@ using WebApp.Application.Nombramientos.Queries.GetNomDatosById;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
 using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 using WebApp.Domain.Nombramientos;
-using WebApp.Domain.NomMunicipios;
 using WebApp.Domain.Unidades;
 using WebApp.Persistence;
-using WebApp.Persistence.Models;
 
 namespace WebApp.Infrastructure.Services;
 
@@ -45,43 +44,64 @@ public class NombramientoService : INombramientoService
 
     public async Task<PagedList<GetNombramientosResponse>> GetNombramientosAsync(GetNombramientosRequest request,CancellationToken cancellationToken)
     {
-        var query =
-            from n in _context.Nombramientos
 
+        var query = 
+            from n in _context.Nombramientos
             join usuarioNombrado in _context.Users
                 on n.AsignacionUsuario!.UsuarioId equals usuarioNombrado.Id
-
-            join usuarioCreador in _context.Users
-                on n.UsuarioId_Creador equals usuarioCreador.Id
-            orderby n.Fecha_Creado descending
-            select new GetNombramientosResponse
+            select new 
             {
-                NombramientoId = n.NombramientoId,
-
-                Correlativo = $"FON-{((UnidadesEnum)n.AsignacionUsuario!.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
-
-                Nombre_Nombrado =
-                    usuarioNombrado.Nombres + " " +
-                    usuarioNombrado.Apellidos,
-
-                Nombre_Creador_Nombramiento =
-                    usuarioCreador.Nombres + " " +
-                    usuarioCreador.Apellidos,
-
-                Fecha_Salida = n.Fecha_Salida,
-
-                Fecha_Regreso = n.Fecha_Regreso,
-
-                Proposito = n.Proposito,
-
-                Estado = n.Estado
+                n.NombramientoId,
+                UnidadId = n.AsignacionUsuario!.Puesto!.UnidadId,
+                n.Correlativo,
+                Anio = n.Fecha_Creado.Year,
+                Nombre_Nombrado = usuarioNombrado.Nombres + " " + usuarioNombrado.Apellidos,
+                n.Fecha_Salida,
+                n.Fecha_Regreso,
+                Municipios = n.NomMunicipios!.Select(x=> $"{x.Municipio!.Departamento.Nombre} - {x.Municipio.Nombre}"),
+                n.Estado
             };
-        var pagination = await PagedList<GetNombramientosResponse>.CreateAsync(
-                                    query,
-                                    request.PageNumber,
-                                    request.PageSize
+
+        if(request.Correlativo.HasValue) 
+            query = query.Where(x=>x.Correlativo == request.Correlativo);
+
+        if(request.Unidad.HasValue) 
+            query = query.Where(x=> x.UnidadId == request.Unidad);
+        
+        if(request.Fecha_Inicio.HasValue)
+            query = query.Where(x=> x.Fecha_Salida >= request.Fecha_Inicio);
+        
+        if(request.Fecha_Fin.HasValue)
+            query = query.Where(x=>x.Fecha_Regreso <= request.Fecha_Fin);
+        
+        if(!request.Nombre_Nombrado.IsNullOrEmpty())
+            query = query.Where(x=>x.Nombre_Nombrado.Contains(request.Nombre_Nombrado!));
+        if(request.Estado.HasValue)
+            query = query.Where(x=> x.Estado == (NombramientoEstados)request.Estado);
+
+        var pagedListAnonimo = await PagedList<dynamic>.CreateAsync(
+            query,
+            request.PageNumber,
+            request.PageSize
         );
-        return pagination;
+
+        var responseItems = pagedListAnonimo.Items.Select(x => new GetNombramientosResponse
+        {
+            NombramientoId = x.NombramientoId,
+            Correlativo = $"FON-{(UnidadesEnum)x.UnidadId}-{x.Correlativo}-{x.Anio}",
+            Nombre_Nombrado = x.Nombre_Nombrado,
+            Fecha_Salida = x.Fecha_Salida,
+            Fecha_Regreso = x.Fecha_Regreso,
+            DepartamentosYMunicipios = x.Municipios,
+            Estado = x.Estado
+        }).ToList();
+
+        return new PagedList<GetNombramientosResponse>(
+            responseItems,
+            pagedListAnonimo.TotalCount,
+            pagedListAnonimo.CurrentPage,
+            pagedListAnonimo.PageSize
+        );
     }
 
     public async Task<List<GetNomsApprovedResponse>> GetNomsApprovedAsync(CancellationToken cancellationToken)
