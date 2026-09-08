@@ -5,23 +5,16 @@
 }
 
 <div class="container-fluid px-0 max-w-4xl">
-    <!-- Encabezado de Página -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="h3 fw-bold azul mb-1">Actualizar Nombramiento</h2>
-            <p class="text-muted small mb-0">Modifique la información necesaria del nombramiento seleccionado.</p>
         </div>
-        <a asp-action="List" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i> Volver a la lista
-        </a>
     </div>
 
-    <!-- Tarjeta Principal -->
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-4">
             <form id="formEditarNombramiento" asp-action="Editar" method="post" novalidate>
                 
-                <!-- ID Principal del Nombramiento -->
                 <input type="hidden" asp-for="NombramientoId" />
 
                 <!-- Sección 1: Información General -->
@@ -87,6 +80,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Sección 4: Información de la comisión asignada -->
                 <div class="mb-4">
                     <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">4. Comisión asignada</h6>
@@ -106,23 +100,40 @@
                                 </a>
                             </div>
                         }
-
                     </div>
                 </div>
 
-                <!-- Botones de Acción -->
                 <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a asp-action="List" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Atrás
+                    </a>
                     <a asp-action="List" class="btn btn-light border px-4">Cancelar</a>
-                    <button type="submit" class="btn btn-warning text-white px-4 bg-azul">
-                        <i class="bi bi-pencil-square me-1"></i> Guardar Cambios
-                    </button>
+                    @if(Model.NombramientoEstado != WebApp.Domain.Nombramientos.NombramientoEstados.Creado)
+                    {
+                        <button type="submit" class="btn btn-warning text-white px-4 bg-azul">
+                            <i class="bi bi-pencil-square me-1"></i> Guardar Cambios
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" form="formAprobarNombramiento" class="btn btn-success">
+                            <i class="bi bi-check-circle me-1"></i> Aprobar
+                        </button>
+                    }
                 </div>
             </form>
+
+            @if(Model.NombramientoEstado == WebApp.Domain.Nombramientos.NombramientoEstados.Creado)
+            {
+                <form id="formAprobarNombramiento" asp-action="Aprobar" asp-controller="Nombramiento" method="post" class="d-none">
+                    <input type="hidden" name="NombramientoId" value="@Model.NombramientoId" />
+                </form>
+            }
         </div>
     </div>
 </div>
 
-<!-- Modal de Confirmación -->
+<!-- Modal de Confirmación Edición -->
 <div class="modal fade" id="confirmarEdicionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -141,6 +152,24 @@
     </div>
 </div>
 
+<!-- Modal de Confirmación Aprobar -->
+<div class="modal fade" id="confirmarNombramientoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar comisión</h5>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de aprobar el nombramiento?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarNombramiento" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
@@ -151,7 +180,6 @@
 
         // Carga dinámica de municipios SOLO cuando el usuario cambia la selección de departamentos
         $('#DepartamentoId').on('change', async function (e) {
-            // Previene ejecutar la cascada al renderizar la vista la primera vez
             if (!e.originalEvent) return;
 
             const deptoIds = $(this).val();
@@ -205,9 +233,11 @@
             $(this).val(`${year}-${month}-${day}T${hours}:${mins}`);
         });
 
-        // Validación y Confirmación con Modal
+        // =====================================================
+        // MODAL EDICIÓN
+        // =====================================================
         const $form = $('#formEditarNombramiento');
-        const modalElement = document.getElementById("confirmarEdicionModal");
+        const modalEdicion = document.getElementById("confirmarEdicionModal");
         const btnConfirmar = document.getElementById("btnConfirmarEdicion");
         let formularioConfirmado = false;
 
@@ -219,13 +249,41 @@
             }
 
             event.preventDefault();
-            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+            bootstrap.Modal.getOrCreateInstance(modalEdicion).show();
         });
 
-        btnConfirmar.addEventListener("click", function () {
-            formularioConfirmado = true;
-            $form[0].requestSubmit();
-        });
+        if (btnConfirmar) {
+            btnConfirmar.addEventListener("click", function () {
+                formularioConfirmado = true;
+                $form[0].requestSubmit();
+            });
+        }
+
+        // =====================================================
+        // MODAL APROBACIÓN
+        // =====================================================
+        const formularioNom = document.getElementById("formAprobarNombramiento");
+        const modalAprobacion = document.getElementById("confirmarNombramientoModal");
+        const btnConfirmarNom = document.getElementById("btnConfirmarNombramiento");
+
+        let formularioAprobarConfirmado = false;
+
+        if (formularioNom) {
+            formularioNom.addEventListener("submit", function (event) {
+                if (formularioAprobarConfirmado) return;
+
+                event.preventDefault();
+                const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(modalAprobacion);
+                modalConfirmacion.show();
+            });
+        }
+
+        if (btnConfirmarNom) {
+            btnConfirmarNom.addEventListener("click", function () {
+                formularioAprobarConfirmado = true;
+                formularioNom.requestSubmit();
+            });
+        }
     });
     </script>
 }
