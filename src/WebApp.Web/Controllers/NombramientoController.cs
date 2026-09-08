@@ -124,6 +124,8 @@ public class NombramientoController : Controller
             Unidad = nombramiento.Unidad,
             Correlativo = nombramiento.Correlativo,
             NombramientoEstado = nombramiento.NombramientoEstado,
+            ComisionId = nombramiento.ComisionId,
+            ComisionEstado = nombramiento.ComisionEstado,
 
             DepartamentoList = departamentos.Value!.ToSelectList(
                 x => x.Id.ToString(),

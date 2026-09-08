@@ -50,6 +50,7 @@ public class NombramientoService : INombramientoService
             from n in _context.Nombramientos
             join usuarioNombrado in _context.Users
                 on n.AsignacionUsuario!.UsuarioId equals usuarioNombrado.Id
+            orderby n.Correlativo descending
             select new 
             {
                 n.NombramientoId,

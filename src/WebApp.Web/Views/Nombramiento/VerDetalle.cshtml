@@ -69,7 +69,7 @@
                 </div>
 
                 <!-- Sección 3: Programación de Fechas -->
-                <div class="mb-4">
+                <div class="border-bottom pb-3 mb-4">
                     <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">3. Fechas y Horarios</h6>
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
@@ -85,6 +85,28 @@
                                    value="@Model.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm")"/>
                             <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
                         </div>
+                    </div>
+                </div>
+                <!-- Sección 4: Información de la comisión asignada -->
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">4. Comisión asignada</h6>
+                    <div class="row g-3">
+                        @if(Model.ComisionId == null)
+                        {
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">El nombramiento no se encuentra vinculado a ninguna comisión </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">El nombramiento se encuentra asignado a la comisión con estado @Model.ComisionEstado</label>
+                                <a asp-action="List" class="btn btn-success btn-sm">
+                                    <i class="bi bi-arrow-left me-1"></i> Ver Comisión
+                                </a>
+                            </div>
+                        }
+
                     </div>
                 </div>
 
