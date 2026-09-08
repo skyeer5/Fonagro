@@ -4,89 +4,109 @@
     ViewData["Title"] = "Crear Nombramiento";
 }
 
-<h2 class="text-xl font-semibold mb-4">Crear Nombramiento</h2>
-
-<form id="formCrearNombramiento" asp-action="Crear" method="post" class="max-w-xl">
-    <div class="row row-cols-1 row-cols-md-2 g-3">
-        
-        <!-- Usuario -->
-        <div class="col">
-            <label asp-for="UsuarioId" class="form-label font-weight-bold">Usuario</label>
-            <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select select2-single" required>
-                <option value="">Seleccione un usuario</option>
-            </select>
-            <span asp-validation-for="UsuarioId" class="text-danger"></span>
+<div class="container-fluid px-0 max-w-4xl">
+    <!-- Encabezado de Página -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 fw-bold azul mb-1">Crear Nombramiento</h2>
+            <p class="text-muted small mb-0">Ingrese la información requerida para registrar una nueva comisión.</p>
         </div>
-
-        <!-- Propósito -->
-        <div class="col">
-            <label asp-for="Proposito" class="form-label font-weight-bold">Propósito</label>
-            <textarea asp-for="Proposito" class="form-control" rows="2" required></textarea>
-            <span asp-validation-for="Proposito" class="text-danger"></span>
-        </div>
-
-        <!-- Departamentos -->
-        <div class="col">
-            <label asp-for="Departamentos" class="form-label font-weight-bold">Departamentos</label>
-            <select asp-for="Departamentos" id="DepartamentoId" asp-items="Model.Departamentos" multiple="multiple" class="form-select select2-multi">
-            </select>
-            <span asp-validation-for="Departamentos" class="text-danger"></span>
-        </div>
-
-        <!-- Municipios -->
-        <div class="col">
-            <label asp-for="Municipios" class="form-label font-weight-bold">Municipios</label>
-            <select asp-for="Municipios" id="MunicipioId" multiple="multiple" class="form-select select2-multi">
-            </select>
-            <span asp-validation-for="Municipios" class="text-danger"></span>
-        </div>
-
-        <!-- Fecha Salida (Con step="1800" para bloques de 30 min) -->
-        <div class="col">
-            <label asp-for="Fecha_Salida" class="form-label font-weight-bold">Fecha salida</label>
-            <input asp-for="Fecha_Salida" id="Fecha_Salida" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
-                   value="@(Model?.Fecha_Salida != null ? Model.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm") : "")"/>
-            <span asp-validation-for="Fecha_Salida" class="text-danger"></span>
-        </div>
-
-        <!-- Fecha Regreso (Con step="1800" para bloques de 30 min) -->
-        <div class="col">
-            <label asp-for="Fecha_Regreso" class="form-label font-weight-bold">Fecha regreso</label>
-            <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
-                   value="@(Model?.Fecha_Regreso != null ? Model.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm") : "")"/>
-            <span asp-validation-for="Fecha_Regreso" class="text-danger"></span>
-        </div>
-
+        <a asp-action="List" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver a la lista
+        </a>
     </div>
 
-    <!-- Mensajes de Error de Servidor -->
-    @if (TempData["msg"] != null)
-    {
-        <div class="alert alert-danger text-center py-2 mt-3 small">
-            @TempData["msg"]
-        </div>
-    }
+    <!-- Tarjeta Principal -->
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+            <form id="formCrearNombramiento" asp-action="Crear" method="post" novalidate>
+                
+                <!-- Sección 1: Información General -->
+                <div class="border-bottom pb-3 mb-4">
+                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">1. Información General</h6>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="UsuarioId" class="form-label fw-semibold">Usuario <span class="text-danger">*</span></label>
+                            <select asp-for="UsuarioId" asp-items="Model.Usuarios" class="form-select select2-single" required>
+                                <option value="">Seleccione un usuario...</option>
+                            </select>
+                            <span asp-validation-for="UsuarioId" class="invalid-feedback d-block"></span>
+                        </div>
 
-    <div class="pt-4 d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Crear nombramiento</button>
-        <a asp-action="List" class="btn btn-secondary">Cancelar</a>
+                        <div class="col-12">
+                            <label asp-for="Proposito" class="form-label fw-semibold">Propósito de la comisión <span class="text-danger">*</span></label>
+                            <textarea asp-for="Proposito" class="form-control" rows="3" placeholder="Describa brevemente el objetivo..." required></textarea>
+                            <span asp-validation-for="Proposito" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Ubicación Geográfica -->
+                <div class="border-bottom pb-3 mb-4">
+                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">2. Ubicación y Cobertura</h6>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Departamentos" class="form-label fw-semibold">Departamentos</label>
+                            <select asp-for="Departamentos" id="DepartamentoId" asp-items="Model.Departamentos" multiple="multiple" class="form-select select2-multi">
+                            </select>
+                            <span asp-validation-for="Departamentos" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Municipios" class="form-label fw-semibold">Municipios</label>
+                            <select asp-for="Municipios" id="MunicipioId" multiple="multiple" class="form-select select2-multi">
+                            </select>
+                            <span asp-validation-for="Municipios" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Programación de Fechas -->
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">3. Fechas y Horarios</h6>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha y Hora de Salida <span class="text-danger">*</span></label>
+                            <input asp-for="Fecha_Salida" id="Fecha_Salida" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                                   value="@(Model?.Fecha_Salida != DateTime.MinValue ? Model?.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+                            <span asp-validation-for="Fecha_Salida" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha y Hora de Regreso <span class="text-danger">*</span></label>
+                            <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                                   value="@(Model?.Fecha_Regreso != DateTime.MinValue ? Model?.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+                            <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a asp-action="List" class="btn btn-light border px-4">Cancelar</a>
+                    <button type="submit" class="btn bg-azul px-4">
+                        <i class="bi bi-check-lg me-1"></i> Crear Nombramiento
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
+</div>
 
 <!-- Modal de Confirmación -->
 <div class="modal fade" id="confirmarNombramientoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar comisión</h5>
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Confirmar creación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                ¿Está seguro de crear el nombramiento?
+            <div class="modal-body py-3">
+                <p class="mb-0 text-muted">¿Está seguro de que desea registrar este nombramiento con los datos ingresados?</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="btnConfirmarNombramiento" class="btn btn-primary">Confirmar</button>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarNombramiento" class="btn btn-primary px-4">Confirmar</button>
             </div>
         </div>
     </div>
@@ -96,24 +116,14 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
     $(document).ready(function () {
-        // 1. Inicialización de Select2
-        $('.select2-single').select2({
-            placeholder: "Seleccione un usuario",
-            allowClear: true,
-            width: '100%'
-        });
+        // Inicialización Select2
+        $('.select2-single').select2({ placeholder: "Seleccione un usuario", allowClear: true, width: '100%' });
+        $('.select2-multi').select2({ placeholder: "Seleccione opciones", allowClear: true, width: '100%' });
 
-        $('.select2-multi').select2({
-            placeholder: "Seleccione una o varias opciones",
-            allowClear: true,
-            width: '100%'
-        });
-
-        // 2. Carga en Cascada de Municipios
+        // Cascading Dropdown (Departamentos -> Municipios)
         $('#DepartamentoId').on('change', async function () {
             const deptoIds = $(this).val();
             const $municipioSelect = $('#MunicipioId');
-            
             $municipioSelect.empty().trigger('change');
 
             if (!deptoIds || deptoIds.length === 0) return;
@@ -127,10 +137,8 @@
                     const municipios = Array.isArray(data) ? data : (data.value || data.data || []);
 
                     municipios.forEach(m => {
-                        const option = new Option(m.nombre, m.id, false, false);
-                        $municipioSelect.append(option);
+                        $municipioSelect.append(new Option(m.nombre, m.id, false, false));
                     });
-                    
                     $municipioSelect.trigger('change');
                 }
             } catch (err) {
@@ -138,7 +146,7 @@
             }
         });
 
-        // 3. Auto-Redondeo / Ajuste a bloques de 30 minutos (00 o 30)
+        // Redondeo de fecha a bloques de 30 minutos
         $('.input-fecha-30min').on('change blur', function () {
             const val = $(this).val();
             if (!val) return;
@@ -147,32 +155,23 @@
             if (isNaN(date.getTime())) return;
 
             let minutes = date.getMinutes();
-
-            // Redondear al intervalo de 30 minutos más cercano
-            if (minutes < 15) {
-                minutes = 0;
-            } else if (minutes < 45) {
-                minutes = 30;
-            } else {
-                minutes = 0;
-                date.setHours(date.getHours() + 1);
-            }
+            if (minutes < 15) minutes = 0;
+            else if (minutes < 45) minutes = 30;
+            else { minutes = 0; date.setHours(date.getHours() + 1); }
 
             date.setMinutes(minutes);
             date.setSeconds(0);
 
-            // Formatear a YYYY-MM-DDTHH:mm para asignar de nuevo al input
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             const hours = String(date.getHours()).padStart(2, '0');
             const mins = String(date.getMinutes()).padStart(2, '0');
 
-            const formatted = `${year}-${month}-${day}T${hours}:${mins}`;
-            $(this).val(formatted);
+            $(this).val(`${year}-${month}-${day}T${hours}:${mins}`);
         });
 
-        // 4. Modal de Confirmación + Validación
+        // Validación y Confirmación de Modal
         const $form = $('#formCrearNombramiento');
         const modalElement = document.getElementById("confirmarNombramientoModal");
         const btnConfirmarNom = document.getElementById("btnConfirmarNombramiento");
@@ -181,17 +180,12 @@
         $form.on("submit", function (event) {
             if (formularioConfirmado) return;
 
-            if ($form.valid && !$form.valid()) {
-                return;
-            }
-            if (!this.checkValidity()) {
+            if (($form.valid && !$form.valid()) || !this.checkValidity()) {
                 return;
             }
 
             event.preventDefault();
-
-            const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(modalElement);
-            modalConfirmacion.show();
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
         });
 
         btnConfirmarNom.addEventListener("click", function () {

@@ -46,7 +46,10 @@ html {
     align-items: center; /* centra verticalmente el texto */
 }
 
-
+.azul
+{
+    color: #133e5e !important;
+}
 .bg-azul
 {
     background-color: #133e5e;
