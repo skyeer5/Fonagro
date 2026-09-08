@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Application.Nombramientos.Queries.GetNombramientoById;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
 using WebApp.Application.Nombramientos.Queries.GetNomDatosById;
 using WebApp.Application.Nombramientos.Queries.GetNomsApproved;
@@ -176,5 +177,31 @@ public class NombramientoService : INombramientoService
                         EmitidoPor = $"{uc.Nombres} {uc.Apellidos}"
                     };
         return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<GetNombramientoByIdResponse?> GetNombramientoByIdResponseAsync(int nombramientoId, CancellationToken cancellationToken)
+    {
+        var query = from n in _context.Nombramientos
+                    join u in _context.Users
+                        on n.AsignacionUsuario!.UsuarioId equals u.Id
+                    where n.NombramientoId == nombramientoId
+                    select new GetNombramientoByIdResponse
+                    {
+                        NombramientoId = n.NombramientoId,
+                        Nombre_Completo = $"{u.Nombres} {u.Apellidos}",
+                        Puesto = n.AsignacionUsuario!.Puesto!.Nombre!,
+                        Unidad = n.AsignacionUsuario.Puesto.Unidad!.Nombre!,
+                        Correlativo = $"FON-{((UnidadesEnum)n.AsignacionUsuario.Puesto!.UnidadId).ToString()}-{n.Correlativo}-{n.Fecha_Creado.Year}",
+                        Proposito = n.Proposito!,
+                        NombramientoEstado = n.Estado,
+                        Municipios = n.NomMunicipios!.Select(x=> x.MunicipioId).ToList(),
+                        Departamentos = n.NomMunicipios!.Select(x=>x.Municipio!.DepartamentoId).ToList(),
+                        Fecha_Salida = n.Fecha_Salida,
+                        Fecha_Regreso = n.Fecha_Regreso,
+                        ComisionId = n.ComisionId != null ? n.ComisionId : null,
+                        ComisionEstado = n.Comision != null ? n.Comision.Estado : null
+                    };
+                    
+        return await query.AsSplitQuery().FirstOrDefaultAsync(cancellationToken);
     }
 }

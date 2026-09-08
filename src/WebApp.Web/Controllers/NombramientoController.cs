@@ -10,8 +10,10 @@ using WebApp.Domain.Unidades;
 using WebApp.Web.Extensions;
 using WebApp.Web.Models.Nombramientos;
 using static WebApp.Application.Departamentos.Queries.GetDepartamentos.GetDepartamentosQuery;
+using static WebApp.Application.Municipios.Queries.GetMunicipiosByDep.GetMunicipiosByDepQuery;
 using static WebApp.Application.Nombramientos.Command.NombramientoApprove.NombramientoApproveCommand;
 using static WebApp.Application.Nombramientos.Command.NombramientoCreate.NombramientoCreateCommand;
+using static WebApp.Application.Nombramientos.Queries.GetNombramientoById.GetNombramientoByIdQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNombramientos.GetNomParaAprobarQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomDatosById.GetNomDatosByIdQuery;
 using static WebApp.Application.Nombramientos.Queries.NombramientoPdf.NombramientoPdfQuery;
@@ -94,6 +96,50 @@ public class NombramientoController : Controller
         return View(result.Value);
     }
 
+    [HttpGet]
+    public async Task<ActionResult> VerDetalle(int nombramientoId)
+    {
+        var query = new GetNombramientoByIdQueryRequest(nombramientoId);
+        var result = await _mediator.Send(query);
+        
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+            return RedirectToAction(nameof(List));
+        }
+        var nombramiento = result.Value;
+        var departamentos = await _mediator.Send(new GetDepartamentosQueryRequest());
+        var municipios = await _mediator.Send(new GetMunicipiosByDepQueryRequest(result.Value!.Departamentos));
+
+        var model = new NombramientoVerDetalleViewModel
+        {
+            NombramientoId = nombramiento!.NombramientoId,
+            Proposito = nombramiento.Proposito,
+            Municipios = nombramiento.Municipios,
+            Fecha_Salida = nombramiento.Fecha_Salida,
+            Fecha_Regreso = nombramiento.Fecha_Regreso,
+
+            Nombre_Completo = nombramiento.Nombre_Completo,
+            Puesto = nombramiento.Puesto,
+            Unidad = nombramiento.Unidad,
+            Correlativo = nombramiento.Correlativo,
+            NombramientoEstado = nombramiento.NombramientoEstado,
+
+            DepartamentoList = departamentos.Value!.ToSelectList(
+                x => x.Id.ToString(),
+                x => x.Nombre!,
+                nombramiento.Departamentos
+            ),
+            MunicipioList = municipios.Value!.ToSelectList(
+                x => x.Id.ToString(),
+                x => x.Nombre!,
+                nombramiento.Municipios
+            )
+        };
+
+        return View(model);
+    }
+    
     [HttpPost]
     public async Task<ActionResult> Aprobar(
         [FromForm] NombramientoApproveRequest request,
@@ -116,7 +162,7 @@ public class NombramientoController : Controller
         }
         return Json(nombramiento.Value);
     }
-        [HttpGet]
+    [HttpGet]
     public async Task<IActionResult> Imprimir(int nombramientoId)
     {
         var query = new NombramientoPdfQueryRequest(nombramientoId);
