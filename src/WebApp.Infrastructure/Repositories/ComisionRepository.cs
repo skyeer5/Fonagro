@@ -65,15 +65,15 @@ public class ComisionRepository : IComisionRepository
         {
             foreach (var comision in comisiones)
             {
-                if (comision.Estado == ComisionEstados.EnCurso && comision.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= DateTime.Now)
+                if (comision.Estado == ComisionEstados.EnCurso && comision.Nombramiento_Respon_Vehiculo!.Fecha_Regreso.ToDateTime(comision.Hora_Regreso) <= DateTime.Now)
                 {
                     comision.CompletarComision();
                 }
-                else if (comision.Estado == ComisionEstados.Programada && comision.Nombramiento_Respon_Vehiculo!.Fecha_Salida <= DateTime.Now)
+                else if (comision.Estado == ComisionEstados.Programada && comision.Nombramiento_Respon_Vehiculo!.Fecha_Salida.ToDateTime(comision.Hora_Salida) <= DateTime.Now)
                 {
                     comision.Estado = ComisionEstados.EnCurso;
                 }
-                else if((comision.Estado == ComisionEstados.Creada || comision.Estado == ComisionEstados.DestinosDefinidos) && comision.Nombramiento_Respon_Vehiculo!.Fecha_Salida <= DateTime.Now)
+                else if((comision.Estado == ComisionEstados.Creada || comision.Estado == ComisionEstados.DestinosDefinidos) && comision.Nombramiento_Respon_Vehiculo!.Fecha_Salida.ToDateTime(comision.Hora_Salida) <= DateTime.Now)
                 {
                     comision.CancelarComision();
                     foreach (var cu in comision.Nombramientos!)

@@ -45,8 +45,8 @@ public class NombramientoController : Controller
                 x => x.Id.ToString(),
                 x => x.Nombre!
             ),
-            Fecha_Salida = DateTime.Now.Date.AddDays(1),
-            Fecha_Regreso = DateTime.Now.Date.AddDays(2)
+            Fecha_Salida = DateOnly.FromDateTime(DateTime.Now.Date.AddDays(1)),
+            Fecha_Regreso = DateOnly.FromDateTime(DateTime.Now.Date.AddDays(2))
         };
         return View(model);
     }
@@ -76,7 +76,7 @@ public class NombramientoController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? nombre_nombrado = null, int? unidad = null, int? correlativo = null, DateTime? fecha_inicio = null, DateTime? fecha_fin = null, int? estado = null, int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(string? nombre_nombrado = null, int? unidad = null, int? correlativo = null, DateOnly? fecha_inicio = null, DateOnly? fecha_fin = null, int? estado = null, int currentPage = 1, string orderBy = "")
     {
         ViewBag.Estados = EnumExtensions.ToSelectList<NombramientoEstados>();
         ViewBag.Unidades = EnumExtensions.ToSelectList<UnidadesEnum>();

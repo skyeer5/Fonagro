@@ -60,8 +60,8 @@ public class ComisionReportService : IComisionReportService
 
             // Formato de Fechas
             worksheet.Cell(row, 2).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
-            worksheet.Cell(row, 3).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
-            worksheet.Cell(row, 4).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+            worksheet.Cell(row, 3).Style.DateFormat.Format = "dd/MM/yyyy";
+            worksheet.Cell(row, 4).Style.DateFormat.Format = "dd/MM/yyyy";
 
             // Formato de Monedas
             worksheet.Cell(row, 13).Style.NumberFormat.Format = "\"Q\"#,##0.00";

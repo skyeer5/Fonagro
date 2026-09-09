@@ -16,6 +16,8 @@ public class Comision : AuditableEntity
     public ComisionEstados Estado { get; set; }
     public int? NombramientoId_Respon_Vehiculo { get; set; }
     public Nombramiento? Nombramiento_Respon_Vehiculo { get; set; }
+    public TimeOnly Hora_Salida { get; set; }
+    public TimeOnly Hora_Regreso { get; set; }
     public int UsuarioId_Creador_Comision { get; set; }
     public int? VehiculoId { get; set; } 
     public Vehiculo? Vehiculo { get; set; }
@@ -54,7 +56,7 @@ public class Comision : AuditableEntity
 
         foreach(var usuario in usuariosNombrados)
         {
-            usuario.AsignarViaticos(viaticos);            
+            usuario.AsignarViaticos(viaticos, Hora_Salida, Hora_Regreso);            
         }
         
     }

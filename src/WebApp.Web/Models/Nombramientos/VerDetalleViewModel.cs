@@ -7,8 +7,8 @@ namespace WebApp.Web.Models.Nombramientos;
 public class NombramientoVerDetalleViewModel
 {
     public int NombramientoId { get; set; }
-    public DateTime Fecha_Salida { get; set; }
-    public DateTime Fecha_Regreso { get; set; }
+    public DateOnly Fecha_Salida { get; set; }
+    public DateOnly Fecha_Regreso { get; set; }
 
     public string Nombre_Completo { get; set; } = string.Empty;
     public string Puesto { get; set; } = string.Empty;

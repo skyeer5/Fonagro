@@ -14,9 +14,9 @@ public class NombramientoPdfDto
 
     public List<NombramientoPdfDestinosDto> Destinos { get; set; } = [];
 
-    public DateTime FechaInicio { get; set; } 
+    public DateOnly FechaInicio { get; set; } 
 
-    public DateTime FechaFin { get; set; } 
+    public DateOnly FechaFin { get; set; } 
 
     public string EmitidoPor { get; set; } = string.Empty;
 }

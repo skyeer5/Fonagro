@@ -47,8 +47,8 @@ public class ComisionService : IComisionService
                         ComisionId = c.ComisionId,
                         Departamento = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Departamento.Nombre)),
                         Municipio = string.Join(", ", n.NomMunicipios!.Select(nm=>nm.Municipio!.Nombre)),
-                        Fecha_Salida = n.Fecha_Salida,
-                        Fecha_Regreso = n.Fecha_Regreso,
+                        Fecha_Salida = n.Fecha_Salida.ToDateTime(c.Hora_Salida),
+                        Fecha_Regreso = n.Fecha_Regreso.ToDateTime(c.Hora_Regreso),
                         Estado = c.Estado,
                         Descripcion = n.Descripcion,
                         Prespuesto_Aprobado = c.Presupuesto_Combustible_Aprobado.HasValue,
@@ -138,8 +138,8 @@ public class ComisionService : IComisionService
             && n.AsignacionUsuario!.UsuarioId == idUsuario
             select new PlanViajeDto
             {
-                Fecha_Salida = n.Fecha_Salida,
-                Fecha_Regreso = n.Fecha_Regreso,
+                Fecha_Salida = n.Fecha_Salida.ToDateTime(c.Hora_Salida),
+                Fecha_Regreso = n.Fecha_Regreso.ToDateTime(c.Hora_Regreso),
                 Descripcion = n.Descripcion,
                 TotalCombustibleAutorizado = c.Presupuesto_Combustible_Aprobado.HasValue ? c.Presupuesto_Combustible_Aprobado.Value : 0,
                 Es_Gasolina = (CombustibleTipos)c.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
@@ -242,6 +242,8 @@ public class ComisionService : IComisionService
             ComisionId = c.ComisionId,
             Fecha_Salida = c.Nombramiento_Respon_Vehiculo!.Fecha_Salida,
             Fecha_Regreso = c.Nombramiento_Respon_Vehiculo.Fecha_Regreso,
+            Hora_Salida = c.Hora_Salida,
+            Hora_Regreso = c.Hora_Regreso,
             Fecha_Creacion_Comision = c.Fecha,
             DepartamentosYMunicipios = c.Nombramiento_Respon_Vehiculo.NomMunicipios!.Select(nms => new GetComisionesExcelDestinosDto
             {
@@ -280,8 +282,8 @@ public class ComisionService : IComisionService
         var resultado = rawComisiones.Select(c => new GetComisionesExcelDto
         {
             ComisionId = c.ComisionId,
-            Fecha_Salida = c.Fecha_Salida,
-            Fecha_Regreso = c.Fecha_Regreso,
+            Fecha_Salida = c.Fecha_Salida.ToDateTime(c.Hora_Salida),
+            Fecha_Regreso = c.Fecha_Regreso.ToDateTime(c.Hora_Regreso),
             Fecha_Creacion_Comision = c.Fecha_Creacion_Comision,
             DepartamentosYMunicipios = c.DepartamentosYMunicipios,
             Destinos = c.Destinos,

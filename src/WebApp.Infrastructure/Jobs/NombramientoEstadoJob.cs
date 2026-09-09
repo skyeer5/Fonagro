@@ -13,7 +13,7 @@ public class NombramientoEstadoJob : IBackgroundJob
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await _nombramientoRepository.CompletarNombramientoStatusAsync(cancellationToken);
+        // await _nombramientoRepository.CompletarNombramientoStatusAsync(cancellationToken);
         await _nombramientoRepository.CancelarNombramientoStatusAsync(cancellationToken);
     }
 }

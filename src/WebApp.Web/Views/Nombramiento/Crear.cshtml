@@ -68,14 +68,14 @@
                         <div class="col-12 col-md-6">
                             <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha y Hora de Salida <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Salida" id="Fecha_Salida" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
-                                   value="@(Model?.Fecha_Salida != DateTime.MinValue ? Model?.Fecha_Salida.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+                                   value="@(Model?.Fecha_Salida != DateOnly.MinValue ? Model?.Fecha_Salida.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Salida" class="invalid-feedback d-block"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha y Hora de Regreso <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
-                                   value="@(Model?.Fecha_Regreso != DateTime.MinValue ? Model?.Fecha_Regreso.ToString("yyyy-MM-ddTHH:mm") : "")"/>
+                                   value="@(Model?.Fecha_Regreso != DateOnly.MinValue ? Model?.Fecha_Regreso.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
                         </div>
                     </div>

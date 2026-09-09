@@ -7,8 +7,8 @@ public class GetComisionesPendApprovResponse
     public int ComisionId { get; set; }
     public List<string> DepartamentosYMunicipios { get; set; } = [];
     public List<string> Destinos { get; set; } = [];
-    public DateTime Fecha_Salida { get; set; }
-    public DateTime Fecha_Regreso { get; set; }
+    public DateOnly Fecha_Salida { get; set; }
+    public DateOnly Fecha_Regreso { get; set; }
     public decimal Kilometros { get; set; }
     public decimal Precio_Gasolina { get; set; }
     public decimal Prespuesto_Estimado { get; set; }

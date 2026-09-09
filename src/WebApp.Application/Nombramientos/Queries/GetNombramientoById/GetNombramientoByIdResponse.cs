@@ -13,8 +13,8 @@ public class GetNombramientoByIdResponse
     public string Proposito { get; set; } = string.Empty;
     public List<int> Municipios { get; set; } = [];
     public List<int> Departamentos { get; set; } = [];
-    public DateTime Fecha_Salida { get; set; }
-    public DateTime Fecha_Regreso { get; set; }
+    public DateOnly Fecha_Salida { get; set; }
+    public DateOnly Fecha_Regreso { get; set; }
     public NombramientoEstados NombramientoEstado { get; set; }
     public int? ComisionId { get; set; }
     public ComisionEstados? ComisionEstado { get; set; }

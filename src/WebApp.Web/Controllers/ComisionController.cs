@@ -120,7 +120,7 @@ public class ComisionController : Controller
         return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
     }
     [HttpGet]
-    public async Task<IActionResult> AprobarCombustible(int estado = 1, DateTime? fecha_inicio = null, DateTime? fecha_fin = null, int currentPage = 1)
+    public async Task<IActionResult> AprobarCombustible(int estado = 1, DateOnly? fecha_inicio = null, DateOnly? fecha_fin = null, int currentPage = 1)
     {
         var model = await CargarAprobarCombustibleViewModelAsync(estado, fecha_inicio, fecha_fin, currentPage);
 
@@ -138,8 +138,8 @@ public class ComisionController : Controller
         [FromForm] ComisionApprovalGasRequest request,
         CancellationToken cancellationToken,
         int estado = 1, 
-        DateTime? fecha_inicio = null, 
-        DateTime? fecha_fin = null, 
+        DateOnly? fecha_inicio = null, 
+        DateOnly? fecha_fin = null, 
         int currentPage = 1
     )
     {
@@ -159,8 +159,8 @@ public class ComisionController : Controller
     
     private async Task<AprobarCombustibleViewModel?> CargarAprobarCombustibleViewModelAsync(
         int estado, 
-        DateTime? fecha_inicio, 
-        DateTime? fecha_fin, 
+        DateOnly? fecha_inicio, 
+        DateOnly? fecha_fin, 
         int currentPage)
     {
         var request = new GetComisionesPendApprovRequest
@@ -210,14 +210,14 @@ public class ComisionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? fecha_inicio = "", string? fecha_fin = "", string? departamento = "", int? estado = null, int currentPage = 1, string orderBy = "ComisionId")
+    public async Task<IActionResult> List(DateOnly? fecha_inicio, DateOnly? fecha_fin, string? departamento = "", int? estado = null, int currentPage = 1, string orderBy = "ComisionId")
     {
         ViewBag.Estados = EnumExtensions.ToSelectList<ComisionEstados>();
         var request = new GetComisionesDetalleRequest
         {
             Estado = estado,
-            Fecha_Inicio = fecha_inicio != "" ? DateTime.Parse(fecha_inicio!) : null,
-            Fecha_Fin = fecha_fin != "" ? DateTime.Parse(fecha_fin!) : null,
+            Fecha_Inicio = fecha_inicio,
+            Fecha_Fin = fecha_fin,
             PageNumber = currentPage,
             OrderBy = orderBy,
             OrderAsc = false

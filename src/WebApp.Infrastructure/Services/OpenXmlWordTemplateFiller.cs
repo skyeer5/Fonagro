@@ -7,6 +7,10 @@ using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 public sealed class OpenXmlWordTemplateFiller : IWordTemplateFiller
 {
     private static readonly CultureInfo _culturaEs = new("es-GT");
+    private static string FormatFechaLarga(DateOnly fecha)
+    {
+        return fecha.ToString("d 'de' MMMM 'de' yyyy", _culturaEs);
+    }
     private static string FormatFechaLarga(DateTime fecha)
     {
         return fecha.ToString("d 'de' MMMM 'de' yyyy", _culturaEs);
