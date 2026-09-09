@@ -198,8 +198,8 @@ public class ComisionService : IComisionService
                 $"{nms.Municipio!.Departamento.Nombre} - {nms.Municipio.Nombre}").ToList(),
             Descripcion_Vehiculo = $"{x.Vehiculo!.Placa} / {x.Vehiculo.Marca} {x.Vehiculo.Modelo}",
             Estado = x.Estado.ToString(),
-            Fecha_Salida = x.Nombramiento_Respon_Vehiculo.Fecha_Salida,
-            Fecha_Regreso = x.Nombramiento_Respon_Vehiculo.Fecha_Regreso
+            Fecha_Salida = x.Nombramiento_Respon_Vehiculo.Fecha_Salida.ToDateTime(x.Hora_Salida),
+            Fecha_Regreso = x.Nombramiento_Respon_Vehiculo.Fecha_Regreso.ToDateTime(x.Hora_Regreso)
         });
         var pagination = await PagedList<GetComisionesDetalleResponse>.CreateAsync(
                                     comisionsQuery,
