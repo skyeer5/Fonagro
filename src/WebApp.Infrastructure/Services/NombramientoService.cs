@@ -199,7 +199,7 @@ public class NombramientoService : INombramientoService
                         Departamentos = n.NomMunicipios!.Select(x=>x.Municipio!.DepartamentoId).ToList(),
                         Fecha_Salida = n.Fecha_Salida,
                         Fecha_Regreso = n.Fecha_Regreso,
-                        ComisionId = n.ComisionId != null ? n.ComisionId : null,
+                        ComisionId = n.ComisionId,
                         ComisionEstado = n.Comision != null ? n.Comision.Estado : null
                     };
                     

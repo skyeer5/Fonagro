@@ -67,14 +67,14 @@
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
                             <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha y Hora de Salida <span class="text-danger">*</span></label>
-                            <input asp-for="Fecha_Salida" id="Fecha_Salida" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                            <input asp-for="Fecha_Salida" id="Fecha_Salida" type="date" class="form-control" required 
                                    value="@(Model?.Fecha_Salida != DateOnly.MinValue ? Model?.Fecha_Salida.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Salida" class="invalid-feedback d-block"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha y Hora de Regreso <span class="text-danger">*</span></label>
-                            <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="datetime-local" step="1800" class="form-control input-fecha-30min" required 
+                            <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="date" class="form-control" required 
                                    value="@(Model?.Fecha_Regreso != DateOnly.MinValue ? Model?.Fecha_Regreso.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
                         </div>
@@ -144,31 +144,6 @@
             } catch (err) {
                 console.error("Error al cargar municipios:", err);
             }
-        });
-
-        // Redondeo de fecha a bloques de 30 minutos
-        $('.input-fecha-30min').on('change blur', function () {
-            const val = $(this).val();
-            if (!val) return;
-
-            const date = new Date(val);
-            if (isNaN(date.getTime())) return;
-
-            let minutes = date.getMinutes();
-            if (minutes < 15) minutes = 0;
-            else if (minutes < 45) minutes = 30;
-            else { minutes = 0; date.setHours(date.getHours() + 1); }
-
-            date.setMinutes(minutes);
-            date.setSeconds(0);
-
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const mins = String(date.getMinutes()).padStart(2, '0');
-
-            $(this).val(`${year}-${month}-${day}T${hours}:${mins}`);
         });
 
         // Validación y Confirmación de Modal
