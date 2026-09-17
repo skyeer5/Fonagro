@@ -110,38 +110,14 @@ public class ComisionRepository : IComisionRepository
 
          return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al agregar los destinos a la comisión");
     }
-    public async Task<Result<int>> CancelComisionAsync(int comisionId, CancellationToken cancellationToken)
+    public async Task<int> CancelComisionAsync(Comision comision, CancellationToken cancellationToken)
     {
-        var comision = await _context.Comisiones
-                                .Where(x=>x.ComisionId == comisionId)
-                                .Include(x=>x.Vehiculo)
-                                .Include(x=>x.ComisionDestinos)
-                                .Include(x=>x.Nombramientos!)
-                                    .ThenInclude(cu=>cu.ComisionViaticosList)
-                                .FirstOrDefaultAsync(cancellationToken);
-        if(comision is null)       
-        {
-            return Result<int>.Failure("Comision no encontrada");
-        }
-        if(comision.Estado == ComisionEstados.Cancelada)
-        {
-            return Result<int>.Failure("La comisión ya se encuentra cancelada");
-        }
-        if(comision.Estado == ComisionEstados.Completada)
-        {
-            return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
-        }
-        comision.CancelarComision();
-        if(comision.ComisionDestinos is not null)
-        {
-            _context.ComisionDestinos.RemoveRange(comision.ComisionDestinos);
-        }
         foreach (var cu in comision.Nombramientos!)
         {
-            _context.ComisionViaticos.RemoveRange(cu.ComisionViaticosList!);
-            cu.Estado = NombramientoEstados.Cancelada;
+            cu.ComisionViaticosList?.Clear();
+            cu.Comision = null;
         }
         var resultado = await _context.SaveChangesAsync(cancellationToken);
-        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al cancelar la comisión");
+        return resultado;
     }
 }

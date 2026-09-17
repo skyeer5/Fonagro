@@ -1,20 +1,38 @@
 using MediatR;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
+using WebApp.Domain.Comisiones;
 using static WebApp.Application.Comisiones.Command.ComisionCancel.ComisionCancelCommand;
 
 namespace WebApp.Application.Comisiones.Command.ComisionCancel;
 public class ComisionCancelCommandHandler : IRequestHandler<ComisionCancelCommandRequest, Result<int>>
 {
     private readonly IComisionRepository _comisionRepository;
+    private readonly IComisionService _comisionService;
 
-    public ComisionCancelCommandHandler(IComisionService comisionService, IComisionRepository comisionRepository)
+    public ComisionCancelCommandHandler(IComisionRepository comisionRepository, IComisionService comisionService)
     {
         _comisionRepository = comisionRepository;
+        _comisionService = comisionService;
     }
 
     public async Task<Result<int>> Handle(ComisionCancelCommandRequest request, CancellationToken cancellationToken)
     {
-        return await _comisionRepository.CancelComisionAsync(request.ComisionCancelRequest.ComisionId, cancellationToken);
+        var comision = await _comisionService.GetComisionToCancelAsync(request.ComisionCancelRequest.ComisionId, cancellationToken);
+
+        if(comision is null)       
+            return Result<int>.Failure("Comision no encontrada");
+
+        if(comision.Estado == ComisionEstados.Cancelada)
+            return Result<int>.Failure("La comisión ya se encuentra cancelada");
+
+        if(comision.Estado == ComisionEstados.Completada)
+            return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
+            
+        comision.CancelarComision();
+        var result = await _comisionRepository.CancelComisionAsync(comision, cancellationToken);
+        if(result <= 0)
+            return Result<int>.Failure("Error al cancelar la comisión");
+        return Result<int>.Success(result);
     }
 }

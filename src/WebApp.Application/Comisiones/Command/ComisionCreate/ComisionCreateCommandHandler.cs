@@ -29,7 +29,7 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
 
     public async Task<Result<int>> Handle(ComisionCreateCommandRequest request, CancellationToken cancellationToken)
     {
-        var comision = Domain.Comisiones.Comision.Crear();
+        var comision = Domain.Comisiones.Comision.Crear(request.ComisionCreateRequest.Hora_Salida, request.ComisionCreateRequest.Hora_Regreso);
 
         if(request.ComisionCreateRequest.VehiculoId is not null)
         {
