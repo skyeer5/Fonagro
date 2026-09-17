@@ -158,7 +158,7 @@ public class ComisionService : IComisionService
                 }).ToList(),
                 Nombre = $"{u.Nombres} {u.Apellidos}"
             };
-        return await query.FirstOrDefaultAsync();                    
+        return await query.AsSplitQuery().FirstOrDefaultAsync();                    
     }
     public async Task<Result<PagedList<GetComisionesDetalleResponse>>> GetComisionesDetalleAsync(GetComisionesDetalleRequest request)
     {
@@ -305,5 +305,17 @@ public class ComisionService : IComisionService
         }).ToList();
 
         return resultado;
+    }
+
+    public async Task<Comision?> GetComisionToCancelAsync(int comisionId, CancellationToken cancellationToken)
+    {
+        return await _context.Comisiones
+                                .Where(x=>x.ComisionId == comisionId)
+                                .Include(x=>x.Vehiculo)
+                                .Include(x=>x.ComisionDestinos)
+                                .Include(x=>x.Nombramientos!)
+                                    .ThenInclude(cu=>cu.ComisionViaticosList)
+                                .AsSplitQuery()
+                                .FirstOrDefaultAsync(cancellationToken);
     }
 }

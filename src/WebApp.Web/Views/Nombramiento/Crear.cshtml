@@ -9,11 +9,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="h3 fw-bold azul mb-1">Crear Nombramiento</h2>
-            <p class="text-muted small mb-0">Ingrese la información requerida para registrar una nueva comisión.</p>
         </div>
-        <a asp-action="List" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i> Volver a la lista
-        </a>
     </div>
 
     <!-- Tarjeta Principal -->
@@ -63,17 +59,17 @@
 
                 <!-- Sección 3: Programación de Fechas -->
                 <div class="mb-4">
-                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">3. Fechas y Horarios</h6>
+                    <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">3. Fechas</h6>
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
-                            <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha y Hora de Salida <span class="text-danger">*</span></label>
+                            <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha de Salida <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Salida" id="Fecha_Salida" type="date" class="form-control" required 
                                    value="@(Model?.Fecha_Salida != DateOnly.MinValue ? Model?.Fecha_Salida.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Salida" class="invalid-feedback d-block"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha y Hora de Regreso <span class="text-danger">*</span></label>
+                            <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha Regreso <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="date" class="form-control" required 
                                    value="@(Model?.Fecha_Regreso != DateOnly.MinValue ? Model?.Fecha_Regreso.ToString("yyyy-MM-dd") : "")"/>
                             <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
@@ -83,7 +79,9 @@
 
                 <!-- Botones de Acción -->
                 <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                    <a asp-action="List" class="btn btn-light border px-4">Cancelar</a>
+                    <a asp-action="List" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Atrás
+                    </a>
                     <button type="submit" class="btn bg-azul px-4">
                         <i class="bi bi-check-lg me-1"></i> Crear Nombramiento
                     </button>

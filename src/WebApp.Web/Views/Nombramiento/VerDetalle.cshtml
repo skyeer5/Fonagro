@@ -66,16 +66,16 @@
                     <h6 class="text-uppercase text-primary fw-bold fs-7 mb-3 azul">3. Fechas y Horarios</h6>
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
-                            <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha y Hora de Salida <span class="text-danger">*</span></label>
+                            <label asp-for="Fecha_Salida" class="form-label fw-semibold">Fecha de Salida <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Salida" id="Fecha_Salida" type="date" class="form-control" required 
-                                   value="@Model.Fecha_Salida"/>
+                                   value="@( Model.Fecha_Salida.ToString("yyyy-MM-dd"))"/>
                             <span asp-validation-for="Fecha_Salida" class="invalid-feedback d-block"></span>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha y Hora de Regreso <span class="text-danger">*</span></label>
+                            <label asp-for="Fecha_Regreso" class="form-label fw-semibold">Fecha de Regreso <span class="text-danger">*</span></label>
                             <input asp-for="Fecha_Regreso" id="Fecha_Regreso" type="date" class="form-control" required 
-                                   value="@Model.Fecha_Regreso"/>
+                                   value="@(Model.Fecha_Regreso.ToString("yyyy-MM-dd"))"/>
                             <span asp-validation-for="Fecha_Regreso" class="invalid-feedback d-block"></span>
                         </div>
                     </div>
@@ -104,10 +104,10 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                    <a asp-action="List" class="btn btn-outline-secondary">
+                    <a asp-action="List" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i> Atrás
                     </a>
-                    <a asp-action="List" class="btn btn-light border px-4">Cancelar</a>
+                    <a asp-action="List" class="btn btn-danger px-4">Cancelar</a>
                     @if(Model.NombramientoEstado != WebApp.Domain.Nombramientos.NombramientoEstados.Creado)
                     {
                         <button type="submit" class="btn btn-warning text-white px-4 bg-azul">

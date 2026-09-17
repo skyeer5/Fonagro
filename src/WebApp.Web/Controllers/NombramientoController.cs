@@ -150,7 +150,12 @@ public class NombramientoController : Controller
     {
         var command = new NombramientoApproveCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+        }
+        TempData["SuccessMsg"] = "El nombramiento se ha aprobado y registrado con exito!";
+        return RedirectToAction(nameof(List));
     }
 
     [HttpGet]
