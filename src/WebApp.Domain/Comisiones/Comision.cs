@@ -24,10 +24,12 @@ public class Comision : AuditableEntity
     public ICollection<ComisionDestino>? ComisionDestinos { get; set; }
     public ICollection<Nombramiento>? Nombramientos { get; set; } 
 
-    public static Comision Crear()
+    public static Comision Crear(TimeOnly hora_salida, TimeOnly hora_regreso)
     {
         return new Comision
         {
+            Hora_Salida = hora_salida,
+            Hora_Regreso = hora_regreso,
             Fecha = DateTime.Now,
             Estado = ComisionEstados.Creada
         };

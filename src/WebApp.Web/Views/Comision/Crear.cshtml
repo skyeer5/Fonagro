@@ -18,7 +18,6 @@
             <label>Municipio de visita</label>
             <input id="municipioVisita" class="form-control" type="text" disabled readonly>
         </div>
-
         <div class="col">
             <label>Fecha salida</label>
             <input id="fechaSalida" class="form-control" type="text" disabled readonly>
@@ -27,6 +26,18 @@
         <div class="col">
             <label>Fecha regreso</label>
             <input id="fechaRegreso" class="form-control" type="text" disabled readonly>
+        </div>
+
+        <div class="col">
+            <label asp-for="Hora_Salida" class="form-label fw-semibold">Hora de Salida <span class="text-danger">*</span></label>
+            <input asp-for="Hora_Salida" type="time" class="form-control" required/>
+            <span asp-validation-for="Hora_Salida" class="invalid-feedback d-block"></span>
+        </div>
+
+        <div class="col">
+            <label asp-for="Hora_Regreso" class="form-label fw-semibold">Hora de Regreso <span class="text-danger">*</span></label>
+            <input asp-for="Hora_Regreso" type="time" class="form-control" required/>
+            <span asp-validation-for="Hora_Regreso" class="invalid-feedback d-block"></span>
         </div>
         
         <div class="col">
@@ -183,9 +194,7 @@
             return date.toLocaleString("es-GT", {
                 day: "2-digit",
                 month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit"
+                year: "numeric"
             });
         }
 
