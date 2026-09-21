@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
 using WebApp.Domain.Nombramientos;
@@ -79,8 +78,10 @@ public class ComisionCreateCommandHandler : IRequestHandler<ComisionCreateComman
 
         comision.AgregarUsuarios(nombramientos, viaticos);
 
-        var comisionAdded = await _comisionRepository.AddAsync(comision, cancellationToken);
+        _comisionRepository.Add(comision);
 
-        return comisionAdded.IsSuccess ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure(comisionAdded.Error!);
+        var comisionAdded = await _comisionRepository.SaveChangesAsync(cancellationToken);
+
+        return comisionAdded > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al crear la comisión");
     }
 }

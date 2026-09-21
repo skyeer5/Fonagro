@@ -30,9 +30,7 @@ public class ComisionCancelCommandHandler : IRequestHandler<ComisionCancelComman
             return Result<int>.Failure("La comisión ya se encuentra finalizada, no se puede cancelar");
             
         comision.CancelarComision();
-        var result = await _comisionRepository.CancelComisionAsync(comision, cancellationToken);
-        if(result <= 0)
-            return Result<int>.Failure("Error al cancelar la comisión");
-        return Result<int>.Success(result);
+        var result = await _comisionRepository.SaveChangesAsync(cancellationToken);
+        return result > 0 ?  Result<int>.Success(result) : Result<int>.Failure("Error al cancelar la comisión");
     }
 }
