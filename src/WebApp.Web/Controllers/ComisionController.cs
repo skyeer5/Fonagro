@@ -117,7 +117,16 @@ public class ComisionController : Controller
     {
         var command = new ComisionAddDestinosCommandRequest(request);
         var result = await _mediator.Send(command, cancellationToken);
-        return result.IsSuccess ? RedirectToAction(nameof(Index)) : BadRequest(result.Error);
+
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+        }
+        else
+        {
+            TempData["SuccessMsg"] = "Se guardaron con exito los destinos";
+        }
+        return RedirectToAction(nameof(Index));
     }
     [HttpGet]
     public async Task<IActionResult> AprobarCombustible(int estado = 1, DateOnly? fecha_inicio = null, DateOnly? fecha_fin = null, int currentPage = 1)

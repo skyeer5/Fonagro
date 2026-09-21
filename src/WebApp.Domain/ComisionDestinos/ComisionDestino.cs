@@ -19,12 +19,10 @@ public class ComisionDestino : AuditableEntity
             Galones = kilometros/kmPorGalor
         };  
     }
-    public static ComisionDestino Crear(string descripcion, decimal kilometros)
+    public void Modificar(string descripcion, decimal kilometros, int kmPorGalor)
     {
-        return new ComisionDestino
-        {
-            Descripcion = descripcion,
-            Kilometros = kilometros,
-        };  
+        Descripcion = descripcion;
+        Kilometros = kilometros;
+        Galones = kilometros/kmPorGalor;
     }
 }

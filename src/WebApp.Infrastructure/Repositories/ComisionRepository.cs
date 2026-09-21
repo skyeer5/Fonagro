@@ -1,12 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using WebApp.Application.Comisiones.Command.ComisionAddDestinos;
 using WebApp.Application.Core;
 using WebApp.Application.Interfaces;
-using WebApp.Domain.Nombramientos;
 using WebApp.Persistence;
 using WebApp.Domain.Comisiones;
 using WebApp.Domain.ComisionDestinos;
-
 
 namespace WebApp.Infrastructure.Repositories;
 
@@ -21,33 +18,21 @@ public class ComisionRepository : IComisionRepository
         _currentUser = currentUser;
     }
 
-    public async Task<Result<int>> AddAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
+    public void Add(Domain.Comisiones.Comision comision)
+    {
+        AgregarCreadoPor(comision);
+        
+        _context.Comisiones.Add(comision);
+    } 
+    public void AgregarCreadoPor(Domain.Comisiones.Comision comision)
     {
         var userId = _currentUser.userId;
         comision.AgregarCreadoPor(userId);
-        
-        await _context.Comisiones.AddAsync(comision, cancellationToken);
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return result > 0 ? Result<int>.Success(comision.ComisionId) : Result<int>.Failure("Error al agregar la comisión");
-    } 
-    public async Task<Result<int>> AddApprovalGasAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
+    }
+    public void AgregarAprobadoPor(Domain.Comisiones.Comision comision)
     {
         var userId = _currentUser.userId;
         comision.AgregarAprobadoPor(userId);
-
-        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-        var resultado = await _context.SaveChangesAsync(cancellationToken);
-
-        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al aprobar el presupuesto de gasolina para la comisión");
-    }
-    public async Task<Result<int>> UpdateComisionAsync(Domain.Comisiones.Comision comision, CancellationToken cancellationToken)
-    {
-        _context.Entry(comision).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-        var resultado = await _context.SaveChangesAsync(cancellationToken);
-
-        return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al modificar la comisión");
     }
     public async Task<Result<int>> CheckComisionStatusAsync(CancellationToken cancellationToken)
     {
@@ -86,38 +71,14 @@ public class ComisionRepository : IComisionRepository
             return await _context.SaveChangesAsync(cancellationToken) > 0 ? Result<int>.Success(1) : Result<int>.Failure("Error al actualizar el estado de las comisiones");
         }
     }
-    public async Task<Result<int>> AddDestinosAsync(Domain.Comisiones.Comision comision, List<ComisionAddDestinosItemRequest> items, CancellationToken cancellationToken)
+
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        var userId = _currentUser.userId;
-        var destinos = new List<ComisionDestino>();
-        foreach(var com in items)
-        {
-            if(comision.Vehiculo is null)
-            {
-                var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro);
-                destinos.Add(destino);
-            }
-            else
-            {
-                var destino = ComisionDestino.Crear(com.Descripcion!, com.Kilometro, comision.Vehiculo!.ConsumoKmPorGalon);
-                destinos.Add(destino);
-            }
-        }
-        
-        comision.AgregarDestinos(destinos, userId);
-
-         var resultado = await _context.SaveChangesAsync(cancellationToken);
-
-         return resultado > 0 ? Result<int>.Success(resultado) : Result<int>.Failure("Error al agregar los destinos a la comisión");
+        return await _context.SaveChangesAsync(cancellationToken);
     }
-    public async Task<int> CancelComisionAsync(Comision comision, CancellationToken cancellationToken)
+
+    public void RemoveRangeDestinos(List<ComisionDestino> destinos)
     {
-        foreach (var cu in comision.Nombramientos!)
-        {
-            cu.ComisionViaticosList?.Clear();
-            cu.Comision = null;
-        }
-        var resultado = await _context.SaveChangesAsync(cancellationToken);
-        return resultado;
+        _context.ComisionDestinos.RemoveRange(destinos);
     }
 }

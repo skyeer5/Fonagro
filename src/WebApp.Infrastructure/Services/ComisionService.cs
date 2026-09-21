@@ -68,7 +68,11 @@ public class ComisionService : IComisionService
 
     public async Task<Comision?> GetComisionByIdAsync(int comisionId)
     {
-       return await _context.Comisiones.Where(x=>x.ComisionId == comisionId).Include(x=>x.Vehiculo).FirstOrDefaultAsync();
+       return await _context.Comisiones.Where(x=>x.ComisionId == comisionId)
+                                        .Include(x=>x.Vehiculo)
+                                        .Include(x=>x.ComisionDestinos)
+                                        .AsSplitQuery()
+                                        .FirstOrDefaultAsync();
     }
 
     public async Task<PagedList<GetComisionesPendApprovResponse>> GetComisionPendApprovAsync(GetComisionesPendApprovRequest request)

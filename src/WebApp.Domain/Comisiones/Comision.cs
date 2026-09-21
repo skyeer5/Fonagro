@@ -64,18 +64,20 @@ public class Comision : AuditableEntity
     }
     public void AgregarDestinos(List<ComisionDestino> comisionDestinos, int userId)
     {
-        this.ComisionDestinos ??= new List<ComisionDestino>();
-
         foreach(var destino in comisionDestinos)
         {
             destino.CreatedBy = userId;
             destino.CreatedDate = DateTime.Now;
-            this.ComisionDestinos.Add(destino);
+            this.ComisionDestinos!.Add(destino);
         }
-        var Galon_Estimado = comisionDestinos.Sum( x=>x.Galones);
+
+    }
+
+    public void DefinirPrespuestoCombustible()
+    {
+        var Galon_Estimado = ComisionDestinos!.Sum( x=>x.Galones);
         this.Presupuesto_Combustible_Estimado = decimal.Multiply(Precio_Gasolina_Usado, Galon_Estimado);
         this.Estado = ComisionEstados.DestinosDefinidos;
-
     }
     public void AgregarDestinosSinVehiculo(List<ComisionDestino> comisionDestinos, int userId)
     {
@@ -104,9 +106,12 @@ public class Comision : AuditableEntity
     {
         this.Estado = ComisionEstados.Cancelada;
 
-        if(this.Vehiculo is not null)
+        this.Vehiculo?.ModificarEstadoDisponible();
+
+        foreach (var cu in Nombramientos!)
         {
-            this.Vehiculo.ModificarEstadoDisponible();
+            cu.ComisionViaticosList?.Clear();
+            cu.Comision = null;
         }        
     }
     public void CompletarComision()
