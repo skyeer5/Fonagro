@@ -145,10 +145,17 @@ public class ComisionService : IComisionService
                 Fecha_Salida = n.Fecha_Salida.ToDateTime(c.Hora_Salida),
                 Fecha_Regreso = n.Fecha_Regreso.ToDateTime(c.Hora_Regreso),
                 Descripcion = n.Descripcion,
-                TotalCombustibleAutorizado = c.Presupuesto_Combustible_Aprobado.HasValue ? c.Presupuesto_Combustible_Aprobado.Value : 0,
-                Es_Gasolina = (CombustibleTipos)c.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel ? true : false,
-                Precio_Galon = c.Precio_Gasolina_Usado,
-                Viaticos = n.ComisionViaticosList!.Select(cv=> new GetComisionViaticoResponse
+                TotalCombustibleAutorizado = c.NombramientoId_Respon_Vehiculo == n.NombramientoId 
+                    ? (c.Presupuesto_Combustible_Aprobado ?? 0) 
+                    : 0,
+                
+                Es_Gasolina = c.NombramientoId_Respon_Vehiculo == n.NombramientoId  
+                    ? (CombustibleTipos)c.Vehiculo!.Combustible!.CombustibleId != CombustibleTipos.Disel
+                    : null,
+                Precio_Galon = c.NombramientoId_Respon_Vehiculo == n.NombramientoId  
+                    ? c.Precio_Gasolina_Usado
+                    : 0,
+                Viaticos = n.ComisionViaticosList!.Select(cv => new GetComisionViaticoResponse
                 {
                     Tipo_viatico = cv.Viatico!.Nombre,
                     Monto = cv.Viatico.Monto,
@@ -157,8 +164,8 @@ public class ComisionService : IComisionService
                 Destinos = c.ComisionDestinos!.Select(cd => new GetComisionDestinosDetailResponse
                 {
                     Descripcion = cd.Descripcion,
-                    Kilometros = cd.Kilometros,
-                    Galones = cd.Galones
+                    Kilometros = c.NombramientoId_Respon_Vehiculo == n.NombramientoId  ? cd.Kilometros : 0,
+                    Galones = c.NombramientoId_Respon_Vehiculo == n.NombramientoId  ? cd.Galones : 0
                 }).ToList(),
                 Nombre = $"{u.Nombres} {u.Apellidos}"
             };

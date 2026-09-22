@@ -111,7 +111,6 @@ public class PlanViajeReportService : IPlanViajeReportService
                 PrecioGalon = planViaje.Precio_Galon
             });
         }
-
         return resultado;
     }
     private void InsertarDatosSimples(IXLWorksheet sheet, PlanViajeDto planViaje)
@@ -134,14 +133,18 @@ public class PlanViajeReportService : IPlanViajeReportService
         sheet.Cell("C24").Value = planViaje.TotalGalones;
         sheet.Cell("D24").Value = planViaje.Precio_Galon;
         sheet.Cell("E24").Value = planViaje.TotalCombustible;
+        sheet.Cell("F27").Value = planViaje.TotalCombustibleAutorizadoLetras;
 
-        if(planViaje.Es_Gasolina)
+        if(planViaje.Es_Gasolina.HasValue)
         {
-            sheet.Cell("D21").Value = "X";
-        }
-        else
-        {
-            sheet.Cell("F21").Value = "X";
+            if(planViaje.Es_Gasolina.Value)
+            {
+                sheet.Cell("D21").Value = "X";
+            }
+            else
+            {
+                sheet.Cell("F21").Value = "X";
+            }
         }
     }
     private int InsertarTablaViaticos(IXLWorksheet sheet, List<PlanViajeFilaViatico> filas)

@@ -1,4 +1,5 @@
-using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinos;
+using System.Globalization;
+using Humanizer;
 using WebApp.Application.ComisionDestinos.Queries.GetComisionDestinosDetail;
 using WebApp.Application.ComisionViaticos.Queries.GetComisionViatico;
 using WebApp.Domain;
@@ -23,8 +24,18 @@ public class PlanViajeDto
     public decimal TotalCombustible { get; set; }
     public List<GetComisionDestinosDetailResponse>? Destinos { get; set; }
     public decimal Precio_Galon { get; set;}
-    public bool Es_Gasolina { get; set; }
+    public bool? Es_Gasolina { get; set; }
     public decimal TotalCombustibleAutorizado { get; set; }
+    public string TotalCombustibleAutorizadoLetras => TotalCombustible == 0 ? string.Empty : Convertir(TotalCombustibleAutorizado);
     public string? Nombre { get; set; }
-
+    public bool EsPiloto { get; set; }
+    private string Convertir(decimal numero)
+    {
+        var entero = (long)Math.Truncate(numero);
+        var centavos = (long)Math.Round((numero-entero)*100);
+        
+        var parteEnteraTexto = entero.ToWords(new CultureInfo("es-ES")).ToUpper();
+        var parteCentavosTexto = centavos.ToWords(new CultureInfo("es-ES")).ToUpper();
+        return $"{parteEnteraTexto} CON {parteCentavosTexto} CENTAVOS";
+    }
 }
