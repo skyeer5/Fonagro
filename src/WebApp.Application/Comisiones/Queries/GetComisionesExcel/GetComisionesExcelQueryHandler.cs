@@ -28,7 +28,7 @@ public class GetComisionesExcelQueryHandler : IRequestHandler<GetComisionesExcel
 
     public async Task<Result<byte[]>> Handle(GetComisionesExcelQueryRequest request, CancellationToken cancellationToken)
     {
-        if(request.request.Municipios is not null)
+        if(request.request.Municipios is not null && request.request.Municipios.Count != 0)
         {
             var municipiosExisten = await _municipioService.MunicipiosExistsAsync(request.request.Municipios, cancellationToken);
             if(!municipiosExisten) 
@@ -36,7 +36,7 @@ public class GetComisionesExcelQueryHandler : IRequestHandler<GetComisionesExcel
         }
         else
         {
-            if(request.request.Departamentos is not null)
+            if(request.request.Departamentos is not null && request.request.Departamentos.Count != 0)
             {
                 var departamentoExisten = await _departamentoService.DepartamentosExistAsync(request.request.Departamentos, cancellationToken);
                 if(!departamentoExisten) 
@@ -49,7 +49,7 @@ public class GetComisionesExcelQueryHandler : IRequestHandler<GetComisionesExcel
             if(!vehiculoExiste)
                 return Result<byte[]>.Failure("No se encontró el vehiculo."); 
         }
-        if(request.request.Unidades is not null)
+        if(request.request.Unidades is not null && request.request.Unidades.Count != 0)
         {
             var unidadesExisten = await _unidadService.UnidadesExistAsync(request.request.Unidades, cancellationToken);
             if(!unidadesExisten)

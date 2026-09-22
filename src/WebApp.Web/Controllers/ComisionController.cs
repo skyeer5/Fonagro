@@ -273,16 +273,34 @@ public class ComisionController : Controller
         return View(model);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> ImprimirReporte(GetComisionesExcelRequest request)
+    [HttpPost]
+    public async Task<IActionResult> ImprimirReporte([FromBody] ComisionReportViewModel data)
     {
+        var request = new GetComisionesExcelRequest
+        {
+            Fecha_Salida = data.Fecha_Salida,
+            Fecha_Regreso = data.Fecha_Regreso,
+            Departamentos = data.Departamentos,
+            Municipios = data.Municipios,
+            Vehiculo = data.Vehiculo,
+            Usuario = data.Usuario,
+            Unidades = data.Unidades,
+            Estado = data.Estado
+        };
+
         var query = new GetComisionesExcelQueryRequest(request);
         var result = await _mediator.Send(query);
+
         if (!result.IsSuccess)
         {
-            return NotFound(result.Error);
+            TempData["msg"] = result.Error;
+
+            return BadRequest(new { mensaje = result.Error ?? TempData["msg"]?.ToString() });
         }
-        return File(result.Value!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"ComisionReporte {DateTime.Now}.xlsx");
+
+        string fileName = $"ComisionReporte_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+        return File(result.Value!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
     // [HttpGet("Detalle/{id}")]
     // public async Task<ActionResult<Result<GetVehiculoResponse>>> Detalle(

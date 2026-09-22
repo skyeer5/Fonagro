@@ -175,10 +175,13 @@ public class ComisionService : IComisionService
     {
         var queryable = _context.Comisiones.AsNoTracking().AsQueryable();
         
-        if(request.Fecha_Inicio is not null && request.Fecha_Fin is not null)
+        if(request.Fecha_Inicio is not null)
             queryable = queryable.Where(x=> 
-            x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Fin 
-            && x.Nombramiento_Respon_Vehiculo.Fecha_Salida>=request.Fecha_Inicio);
+                x.Nombramiento_Respon_Vehiculo!.Fecha_Salida>=request.Fecha_Inicio);
+
+        if( request.Fecha_Fin is not null)
+            queryable = queryable.Where(x=> 
+                x.Nombramiento_Respon_Vehiculo!.Fecha_Regreso <= request.Fecha_Fin);
 
         if (request.Departamentos != null && request.Departamentos.Count != 0)
             queryable = queryable.Where(x => x.Nombramiento_Respon_Vehiculo!.NomMunicipios!.Any(nm => request.Departamentos.Contains(nm.Municipio!.DepartamentoId)));
