@@ -219,21 +219,47 @@ public class ComisionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(DateOnly? fecha_inicio, DateOnly? fecha_fin, string? departamento = "", int? estado = null, int currentPage = 1, string orderBy = "ComisionId")
+    public async Task<IActionResult> List(DateOnly? fecha_inicio, DateOnly? fecha_fin, List<int> departamentos, List<int> municipios, int? estado, int currentPage = 1, string orderBy = "ComisionId")
     {
-        ViewBag.Estados = EnumExtensions.ToSelectList<ComisionEstados>();
         var request = new GetComisionesDetalleRequest
         {
             Estado = estado,
             Fecha_Inicio = fecha_inicio,
             Fecha_Fin = fecha_fin,
+            Departamentos = departamentos,
+            Municipios = municipios,
             PageNumber = currentPage,
             OrderBy = orderBy,
             OrderAsc = false
         };
+
         var query = new GetComisionesDetalleQueryRequest(request);
         var result = await _mediator.Send(query);
-        return View(result.Value);
+
+        if(!result.IsSuccess)
+        {
+            TempData["msg"] = result.Error;
+        }
+
+        var departamentosList = await _mediator.Send(new GetDepartamentosQueryRequest());
+
+        var model = new ComisionListViewModel
+        {
+            Fecha_Inicio = fecha_inicio,
+            Fecha_Fin = fecha_fin,
+            Departamentos = departamentos ?? [],
+            Municipios = municipios ?? [],
+            Estado = estado,
+
+            CurrentPage = result.Value?.CurrentPage ?? 1,
+            TotalPages = result.Value?.TotalPages ?? 0,
+            ComisionesList = result.Value?.Items ?? [],
+
+            DepartamentosList = departamentosList.Value!.ToSelectList(x => x.Id.ToString(), x => x.Nombre!),
+            EstadosList = EnumExtensions.ToSelectList<ComisionEstados>()
+        };
+
+        return View(model);
     }
 
     [HttpPost]
@@ -246,7 +272,6 @@ public class ComisionController : Controller
         var result = await _mediator.Send(command, cancellationToken);
         return result.IsSuccess ? RedirectToAction(nameof(List)) : BadRequest(result.Error);
     }
-
     [HttpGet]
     public async Task<IActionResult> Reporte()
     {
