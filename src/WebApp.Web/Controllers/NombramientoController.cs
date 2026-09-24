@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Application.Nombramientos.Command.NombramientoApprove;
 using WebApp.Application.Nombramientos.Command.NombramientoCreate;
 using WebApp.Application.Nombramientos.Queries.GetNombramientos;
-using WebApp.Application.Nombramientos.Queries.NombramientoPdf;
 using WebApp.Domain.Nombramientos;
 using WebApp.Domain.Unidades;
 using WebApp.Web.Extensions;
@@ -17,6 +16,7 @@ using static WebApp.Application.Nombramientos.Queries.GetNombramientoById.GetNom
 using static WebApp.Application.Nombramientos.Queries.GetNombramientos.GetNomParaAprobarQuery;
 using static WebApp.Application.Nombramientos.Queries.GetNomDatosById.GetNomDatosByIdQuery;
 using static WebApp.Application.Nombramientos.Queries.NombramientoPdf.NombramientoPdfQuery;
+using static WebApp.Application.Usuarios.Queries.GetUsuarios.GetUsuariosQuery;
 using static WebApp.Application.Usuarios.Queries.GetUsuariosSinNom.GetUsuariosSinNomQuery;
 
 namespace WebApp.Web.Controllers;
@@ -76,13 +76,11 @@ public class NombramientoController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? nombre_nombrado = null, int? unidad = null, int? correlativo = null, DateOnly? fecha_inicio = null, DateOnly? fecha_fin = null, int? estado = null, int currentPage = 1, string orderBy = "")
+    public async Task<IActionResult> List(int? usuario, int? unidad, int? correlativo, DateOnly? fecha_inicio, DateOnly? fecha_fin, int? estado, int currentPage = 1, string orderBy = "")
     {
-        ViewBag.Estados = EnumExtensions.ToSelectList<NombramientoEstados>();
-        ViewBag.Unidades = EnumExtensions.ToSelectList<UnidadesEnum>();
         var request = new GetNombramientosRequest
         {
-            Nombre_Nombrado = nombre_nombrado,
+            Usuario = usuario,
             Unidad = unidad,
             Correlativo = correlativo,
             Fecha_Inicio = fecha_inicio,
@@ -93,7 +91,38 @@ public class NombramientoController : Controller
         };
         var query = new GetNombramientosQueryRequest(request);
         var result = await _mediator.Send(query);
-        return View(result.Value);
+
+        if(!result.IsSuccess)
+            TempData["msg"] = result.Error;
+        
+        var departamentos = await _mediator.Send(new GetDepartamentosQueryRequest());
+        if(!departamentos.IsSuccess)
+            TempData["msg"] = result.Error;
+
+        var usuarios = await _mediator.Send(new GetUsuariosQueryRequest());
+        if(!usuarios.IsSuccess)
+            TempData["msg"] = result.Error;
+
+        var model = new NombramientoListViewModel
+        {
+            Usuario = usuario,
+            Correlativo = correlativo,
+            Fecha_Inicio = fecha_inicio,
+            Fecha_Fin = fecha_fin,
+            Estado = estado,
+            Unidad = unidad,
+            CurrentPage = result.Value?.CurrentPage ?? 1,
+            TotalPages = result.Value?.TotalPages ?? 0,
+            NombramientosList = result.Value?.Items ?? [],
+            UsuariosList = usuarios.Value!.ToSelectList(
+                x => x.UsuarioId.ToString(),
+                x => x.Nombre_Completo!
+            ),
+            EstadoList = EnumExtensions.ToSelectList<NombramientoEstados>(),
+            UnidadList = EnumExtensions.ToSelectList<UnidadesEnum>()
+        };
+
+        return View(model);
     }
 
     [HttpGet]

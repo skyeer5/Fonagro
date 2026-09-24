@@ -57,6 +57,7 @@ public class NombramientoService : INombramientoService
                 UnidadId = n.AsignacionUsuario!.Puesto!.UnidadId,
                 n.Correlativo,
                 Anio = n.Fecha_Creado.Year,
+                UsuarioId = n.AsignacionUsuario.UsuarioId,
                 Nombre_Nombrado = usuarioNombrado.Nombres + " " + usuarioNombrado.Apellidos,
                 n.Fecha_Salida,
                 n.Fecha_Regreso,
@@ -76,8 +77,8 @@ public class NombramientoService : INombramientoService
         if(request.Fecha_Fin.HasValue)
             query = query.Where(x=>x.Fecha_Regreso <= request.Fecha_Fin);
         
-        if(!request.Nombre_Nombrado.IsNullOrEmpty())
-            query = query.Where(x=>x.Nombre_Nombrado.Contains(request.Nombre_Nombrado!));
+        if(request.Usuario.HasValue)
+            query = query.Where(x=>x.UsuarioId == request.Usuario);
         if(request.Estado.HasValue)
             query = query.Where(x=> x.Estado == (NombramientoEstados)request.Estado);
 
